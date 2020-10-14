@@ -1,8 +1,8 @@
 import "phaser"
 import "@babel/polyfill"
 
-import MainScene from "./scenes/Scene_Main";
-import PreloadScene from "./scenes/Scene_Preload";
+import MainScene from "./scenes/Main";
+import PreloadScene from "./scenes/Preload";
 
 class Bingo extends Phaser.Game
 {
@@ -18,12 +18,12 @@ class Bingo extends Phaser.Game
 				width: 1280,
 				height: 720
 			},
-			scene: [PreloadScene, MainScene],
+			scene: [ PreloadScene, MainScene ],
 			physics: {
 				default: "arcade",
 				arcade: {
 					debug: false,
-					gravity: { y: 400 }
+					gravity: {}
 				}
 			}
 		});
