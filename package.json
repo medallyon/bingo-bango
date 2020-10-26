@@ -56,6 +56,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.10.4",
+    "@geckos.io/client": "^1.7.0",
+    "@geckos.io/server": "^1.7.0",
     "phaser": "^3.24.1"
   }
 }
