@@ -1,8 +1,9 @@
-import "phaser"
-import "@babel/polyfill"
+import * as Phaser from "phaser";
+import "@babel/polyfill";
+import * as Colyseus from "colyseus.js";
 
-import MainScene from "./scenes/Main";
 import PreloadScene from "./scenes/Preload";
+import MainScene from "./scenes/Main";
 
 class Bingo extends Phaser.Game
 {
@@ -27,6 +28,15 @@ class Bingo extends Phaser.Game
 				}
 			}
 		});
+
+		this.host = window.location.origin.replace(/^https?/, "ws");
+		this.client = new Colyseus.Client(this.host);
+
+		this.client.joinOrCreate("test")
+			.then(room =>
+			{
+				console.log(room.sessionId, "joined", room.name);
+			}).catch(console.error);
 	}
 }
 

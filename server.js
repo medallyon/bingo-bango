@@ -85,7 +85,9 @@ class TestRoom extends colyseus.Room
 
 	// Authorize client based on provided options before WebSocket handshake is complete
 	onAuth(client, options, request)
-	{ }
+	{
+		return true;
+	}
 
 	// When client successfully join the room
 	onJoin(client, options, auth)
@@ -119,7 +121,7 @@ build()
 			colors: true
 		}));
 
-		console.log(`\nStarting a Server on :${process.env.PORT}.`);
+		console.log(`\nStarting a Server on :${process.env.PORT}`);
 		io.listen(process.env.PORT);
 	})
 	.catch(function(err)
