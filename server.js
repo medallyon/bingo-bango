@@ -1,4 +1,4 @@
-require("dotenv").config();
+console.log( require("dotenv").config({path:__dirname+"/.env"}));
 
 const webpack = require("webpack")
 	, colyseus = require("colyseus")
@@ -116,7 +116,7 @@ io.define("test", TestRoom);
  */
 
 console.log(`\nStarting a Server on :${process.env.PORT}`);
-io.listen(process.env.PORT);
+io.listen(8080);
 
 console.log("Building WebPack using Production Configuration");
 build()
