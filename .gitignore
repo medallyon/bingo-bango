@@ -1,3 +1,7 @@
+# stoobid editors
+.vs
+.idea
+
 # Logs
 logs
 *.log
