@@ -13,7 +13,7 @@ class Bingo extends Phaser.Game
 			type: Phaser.AUTO,
 			backgroundColor: "#ffffff",
 			scale: {
-				parent: anchor.replace(/\#/g, ""),
+				parent: anchor.replace(/^#/, ""),
 				mode: Phaser.Scale.FIT,
 				autoCenter: Phaser.Scale.CENTER_BOTH,
 				width: 1280,
