@@ -1,7 +1,6 @@
 require("dotenv").config();
 
-const fs = require("fs")
-	, webpack = require("webpack")
+const webpack = require("webpack")
 	, colyseus = require("colyseus")
 	, join = require("path").join
 	, http = require("http")
@@ -28,6 +27,7 @@ function build()
 				return reject(err);
 			}
 
+			compiling = false;
 			resolve(stats);
 		});
 	});
@@ -62,7 +62,10 @@ app.use(express.static(join(__dirname, "dist")));
 app.get("/", function(req, res)
 {
 	if (compiling)
-		return res.send("Please wait while the game is being compiled...");
+		return res.status(202).send("Please wait while the game is being compiled...");
+
+	if (webpackError)
+		return res.status(500).send(webpackError);
 
 	res.sendFile(join(__dirname, "dist", "index.html"));
 });
@@ -112,6 +115,9 @@ io.define("test", TestRoom);
  * [ SERVER LISTEN ]
  */
 
+console.log(`\nStarting a Server on :${process.env.PORT}`);
+io.listen(process.env.PORT);
+
 console.log("Building WebPack using Production Configuration");
 build()
 	.then(function(stats)
@@ -120,9 +126,6 @@ build()
 			chunks: false,
 			colors: true
 		}));
-
-		console.log(`\nStarting a Server on :${process.env.PORT}`);
-		io.listen(process.env.PORT);
 	})
 	.catch(function(err)
 	{
@@ -130,7 +133,7 @@ build()
 		console.error(err.stack || err);
 
 		if (err.details)
-		  console.error(err.details);
+			console.error(err.details);
 	});
 
 module.exports = io;

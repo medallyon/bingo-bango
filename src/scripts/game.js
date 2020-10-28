@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import "@babel/polyfill";
-import * as Colyseus from "colyseus.js";
+
+import ConnectionHandler from "./classes/ConnectionHandler.js";
 
 import PreloadScene from "./scenes/Preload";
 import MainScene from "./scenes/Main";
@@ -29,18 +30,11 @@ class Bingo extends Phaser.Game
 			}
 		});
 
-		this.host = window.location.origin.replace(/^https?/, "ws");
-		this.client = new Colyseus.Client(this.host);
-
-		this.client.joinOrCreate("test")
-			.then(room =>
-			{
-				console.log(room.sessionId, "joined", room.name);
-			}).catch(console.error);
+		this.connection = new ConnectionHandler(this);
 	}
 }
 
 window.addEventListener("load", () =>
 {
-	const game = new Bingo("#phaser-game");
+	new Bingo("#phaser-game");
 });
