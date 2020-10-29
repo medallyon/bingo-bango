@@ -1,3 +1,5 @@
+import * as Phaser from "phaser";
+
 class PreloadScene extends Phaser.Scene
 {
 	constructor()
@@ -11,18 +13,18 @@ class PreloadScene extends Phaser.Scene
 
 		// Card Assets
 
-		this.load.image("card/bg_ticket");
+		this.load.image("bg_ticket", "card/bg_ticket.png");
 		for (let i = 1; i <= 5; i++)
-			this.load.image(`card/bg_bingo${i}`);
+			this.load.image(`bg_bingo${i}`, `card/bg_bingo${i}.png`);
 
 		for (let i = 1; i <= 5; i++)
-			this.load.image(`card/bg_numberTile${i}`);
+			this.load.image(`bg_numberTile${i}`, `card/bg_numberTile${i}.png`);
 
 		// Ball Assets
 
-		this.load.image("balls/bg_ballContainer");
+		this.load.image("bg_ballContainer", "balls/bg_ballContainer.png");
 		for (let i = 1; i <= 5; i++)
-			this.load.image(`balls/bg_ball${i}`);
+			this.load.image(`bg_ball${i}`, `balls/bg_ball${i}.png`);
 	}
 
 	create()

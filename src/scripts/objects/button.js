@@ -1,29 +1,34 @@
-class Button extends Phaser.Physics.Arcade.Sprite
+import * as Phaser from "phaser";
+
+class Button extends Phaser.GameObjects.Container
 {
-	constructor(scene, x, y, number)
+	constructor(card, x = 0, y = 0, sprite = "", text = null, clickCallback = null)
 	{
-		super(scene, x, y, "card_button");
-		scene.add.existing(this);
+		super(card.scene, x, y);
+		this.card = card;
 
-		this.setDisplaySize(100, 100);
-		this.setDepth(-100);
+		this.bg = new Phaser.GameObjects.Sprite(this.scene, x, y, sprite);
+		this.bg.setDepth(-100);
 
-		if (number == null)
-			number = Math.floor(Math.random() * 75);
+		this.add(this.bg);
 
-		this.text = this.scene.add.text(this.getCenter().x - 16, this.getCenter().y - 16,
-			number.toString(),
-			{
+		if (text != null)
+		{
+			this.text = new Phaser.GameObjects.Text(this.scene, 0, 0, text, {
 				align: "center",
-				fontSize: 32
-			}
-		);
+				fontSize: 64
+			})
+				.setOrigin(.5, .5)
+				.setResolution(.5);
+			this.add(this.text);
+		}
 
-		this.setInteractive()
-			.on("pointerup", () =>
-			{
-				
-			});
+		if (clickCallback != null)
+			this.setSize(100, 100)
+				.setInteractive()
+				.on("pointerup", clickCallback);
+
+		this.setScale(.5);
 	}
 }
 

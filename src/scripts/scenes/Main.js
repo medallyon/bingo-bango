@@ -1,45 +1,30 @@
-import PhaserLogo from "../objects/phaserLogo";
-import Button from "../objects/button";
-import FpsText from "../objects/fpsText";
+import * as Phaser from "phaser";
+
+import Card from "../objects/Card.js";
 
 class MainScene extends Phaser.Scene
 {
 	constructor()
 	{
 		super({ key: "MainScene" });
+
+		this.cards = null;
 	}
 
 	create()
 	{
-		new PhaserLogo(this, this.cameras.main.width / 2, 0);
-		this.fpsText = new FpsText(this);
+		this.cards = new Phaser.GameObjects.Container(this);
+		this.add.existing(this.cards);
 
-		const bingoButtons = [];
-		for (let i = 0; i < "bingo".length; i++)
-			bingoButtons.push(new Button(this,
-					110 + (i * (bingoButtons.length ? bingoButtons[i - 1].displayWidth : 100) * 1.2),
-					110,
-					"BINGO"[i]
-				)
-			);
+		this.cards.add(new Card(this, this.cameras.main.width * .33, this.cameras.main.height / 2));
+		this.cards.add(new Card(this, this.cameras.main.width * .66, this.cameras.main.height / 2));
 
-		const buttons = [];
-		for (let i = 0; i < 5; i++)
-		{
-			buttons.push([]);
-			for (let j = 0; j < 5; j++)
-				buttons[i].push(
-					new Button(this,
-						110 + (i * (buttons[i].length ? buttons[i][j - 1].displayWidth : 100) * 1.2),
-						250 + (j * (buttons[i].length ? buttons[i][j - 1].displayHeight : 100) * 1.2)
-					)
-				);
-		}
+		this.cards.setScale(.5);
 	}
 
 	update()
 	{
-		this.fpsText.update();
+
 	}
 }
 
