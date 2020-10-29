@@ -1,4 +1,4 @@
-console.log( require("dotenv").config({path:__dirname+"/.env"}));
+require("dotenv").config();
 
 const webpack = require("webpack")
 	, colyseus = require("colyseus")
@@ -22,10 +22,7 @@ function build()
 		compiler.run(function(err, stats)
 		{
 			if (err)
-			{
-				webpackError = err;
-				return reject(err);
-			}
+				return reject(webpackError = err);
 
 			compiling = false;
 			resolve(stats);
@@ -83,7 +80,7 @@ class TestRoom extends colyseus.Room
 	// When room is initialized
 	onCreate(options)
 	{
-		console.log("Test Room created");
+		console.log("Room TestRoom created");
 	}
 
 	// Authorize client based on provided options before WebSocket handshake is complete
@@ -95,13 +92,13 @@ class TestRoom extends colyseus.Room
 	// When client successfully join the room
 	onJoin(client, options, auth)
 	{
-		console.log(`[Client ${client.id}] joined Test Room`);
+		console.log(`[Client ${client.id}] joined room TestRoom`);
 	}
 
 	// When a client leaves the room
 	onLeave(client, consented)
 	{
-		console.log(`[Client ${client.id}] joined Test Room`);
+		console.log(`[Client ${client.id}] left room TestRoom`);
 	}
 
 	// Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)
@@ -116,7 +113,7 @@ io.define("test", TestRoom);
  */
 
 console.log(`\nStarting a Server on :${process.env.PORT}`);
-io.listen(8080);
+io.listen(process.env.PORT);
 
 console.log("Building WebPack using Production Configuration");
 build()
@@ -126,6 +123,7 @@ build()
 			chunks: false,
 			colors: true
 		}));
+		console.log(`\nGame packed and running at http://localhost:${process.env.PORT}`);
 	})
 	.catch(function(err)
 	{
