@@ -2,14 +2,11 @@ import * as Phaser from "phaser";
 
 class Button extends Phaser.GameObjects.Container
 {
-	constructor(card, x = 0, y = 0, sprite = "", text = null, clickCallback = null)
+	constructor(scene, x = 0, y = 0, sprite = "", text = null, clickCallback = null)
 	{
-		super(card.scene, x, y);
-		this.card = card;
+		super(scene, x, y);
 
-		this.bg = new Phaser.GameObjects.Sprite(this.scene, x, y, sprite);
-		this.bg.setDepth(-100);
-
+		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, sprite);
 		this.add(this.bg);
 
 		if (text != null)
@@ -19,16 +16,14 @@ class Button extends Phaser.GameObjects.Container
 				fontSize: 64
 			})
 				.setOrigin(.5, .5)
-				.setResolution(.5);
+				.setResolution(.75);
 			this.add(this.text);
 		}
 
 		if (clickCallback != null)
-			this.setSize(100, 100)
+			this.setSize(this.bg.width, this.bg.height)
 				.setInteractive()
 				.on("pointerup", clickCallback);
-
-		this.setScale(.5);
 	}
 }
 

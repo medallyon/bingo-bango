@@ -1,3 +1,4 @@
 module.exports = {
-	BINGO: "BINGO"
+	BINGO: "BINGO",
+	BUTTON_WIDTH: 160
 };

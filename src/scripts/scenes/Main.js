@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 
-import Card from "../objects/Card.js";
+import CardHolder from "../objects/CardHolder.js";
 
 class MainScene extends Phaser.Scene
 {
@@ -11,15 +11,11 @@ class MainScene extends Phaser.Scene
 		this.cards = null;
 	}
 
-	create()
+	create(data = {})
 	{
-		this.cards = new Phaser.GameObjects.Container(this);
+		const spawnCards = data.cards || 2;
+		this.cards = new CardHolder(spawnCards, this, this.cameras.main.width * .5, this.cameras.main.height * (spawnCards < 3 ? .25 : .12));
 		this.add.existing(this.cards);
-
-		this.cards.add(new Card(this, this.cameras.main.width * .33, this.cameras.main.height / 2));
-		this.cards.add(new Card(this, this.cameras.main.width * .66, this.cameras.main.height / 2));
-
-		this.cards.setScale(.5);
 	}
 
 	update()
