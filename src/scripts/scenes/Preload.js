@@ -11,7 +11,7 @@ class PreloadScene extends Phaser.Scene
 	{
 		this.load.setPath("assets/img/");
 
-		// Card Assets
+		/* Card Assets */
 
 		this.load.image("bg_ticket", "card/bg_ticket.png");
 		for (let i = 1; i <= 5; i++)
@@ -20,11 +20,17 @@ class PreloadScene extends Phaser.Scene
 		for (let i = 1; i <= 5; i++)
 			this.load.image(`bg_numberTile${i}`, `card/bg_numberTile${i}.png`);
 
-		// Ball Assets
+		/* Ball Assets */
 
 		this.load.image("bg_ballContainer", "balls/bg_ballContainer.png");
 		for (let i = 1; i <= 5; i++)
 			this.load.image(`bg_ball${i}`, `balls/bg_ball${i}.png`);
+
+		/* UI Assets */
+
+		this.load.image("coin", "UI/coin.png");
+		this.load.image("bg_score", "UI/bg_score.png");
+		this.load.image("bg_scoreboard", "UI/bg_scoreboard.png");
 	}
 
 	create()

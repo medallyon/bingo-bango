@@ -1,8 +1,10 @@
 import * as Phaser from "phaser";
 
 import { BINGO, BUTTON_WIDTH } from "../globals.js";
-import Button from "./Button.js";
 import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
+import Button from "./buttons/Button.js";
+import TextOverlay from "./buttons/overlays/TextOverlay.js";
+import ImageOverlay from "./buttons/overlays/ImageOverlay.js";
 
 class Card extends Phaser.GameObjects.Container
 {
@@ -13,7 +15,12 @@ class Card extends Phaser.GameObjects.Container
 
 		for (let i = 0; i < BINGO.length; i++)
 		{
-			const button = new Button(this.scene, BINGO_ROW_START_X + (BUTTON_WIDTH * i), BINGO_ROW_START_Y, `bg_bingo${i + 1}`);
+			const button = new Button({
+				scene: this.scene,
+				x: BINGO_ROW_START_X + (BUTTON_WIDTH * i),
+				y: BINGO_ROW_START_Y,
+				texture: `bg_bingo${i + 1}`
+			});
 
 			this.add(button);
 			this.buttons.bingo.push(button);
@@ -28,22 +35,44 @@ class Card extends Phaser.GameObjects.Container
 		for (let i = 0; i < BINGO.length; i++)
 		{
 			const column = BINGO[i];
-			for (let x = 0; x < this.colLength; x++)
+			for (let j = 0; j < this.colLength; j++)
 			{
 				let randomNumber = this.bingoNumbers.random(column)
 					, button;
 
 				// skip center center button
-				if (i === Math.floor(BINGO.length / 2) && x === Math.floor(this.colLength / 2))
+				if (i === Math.floor(BINGO.length / 2) && j === Math.floor(this.colLength / 2))
 				{
-					button = new Button(this.scene, ROW_START_X + (i * BUTTON_WIDTH), ROW_START_Y + (x * BUTTON_WIDTH), `bg_numberTile${i + 1}`, null, null);
+					button = new Button({
+						scene: this.scene,
+						x: ROW_START_X + (i * BUTTON_WIDTH),
+						y: ROW_START_Y + (j * BUTTON_WIDTH),
+						texture: `bg_numberTile${i + 1}`,
+						overlay: new ImageOverlay(this.scene, "coin"),
+						on: {
+							pointerup: function()
+							{
+								this.overlay.wobble(.65);
+							}
+						}
+					});
 				}
 
 				else
 				{
-					button = new Button(this.scene, ROW_START_X + (i * BUTTON_WIDTH), ROW_START_Y + (x * BUTTON_WIDTH), `bg_numberTile${i + 1}`, randomNumber.toString(), function()
-					{
-						console.log(`Clicked on ${this.text.text}`);
+					button = new Button({
+						scene: this.scene,
+						x: ROW_START_X + (i * BUTTON_WIDTH),
+						y: ROW_START_Y + (j * BUTTON_WIDTH),
+						texture: `bg_numberTile${i + 1}`,
+						overlay: new TextOverlay(this.scene, randomNumber.toString()),
+						on: {
+							pointerup: function()
+							{
+								console.log(`Clicked on ${this.overlay.text.text}`);
+								this.overlay.wobble(.65);
+							}
+						}
 					});
 				}
 
