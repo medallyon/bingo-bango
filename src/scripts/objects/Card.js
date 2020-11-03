@@ -30,16 +30,22 @@ class Card extends Phaser.GameObjects.Container
 			const column = BINGO[i];
 			for (let x = 0; x < this.colLength; x++)
 			{
-				const randomNumber = this.bingoNumbers.random(column);
-				let buttonText = randomNumber.toString();
+				let randomNumber = this.bingoNumbers.random(column)
+					, button;
+
 				// skip center center button
 				if (i === Math.floor(BINGO.length / 2) && x === Math.floor(this.colLength / 2))
-					buttonText = null;
-
-				const button = new Button(this.scene, ROW_START_X + (i * BUTTON_WIDTH), ROW_START_Y + (x * BUTTON_WIDTH), `bg_numberTile${i + 1}`, buttonText, function()
 				{
-					console.log(`Clicked on ${this.text.text}`);
-				});
+					button = new Button(this.scene, ROW_START_X + (i * BUTTON_WIDTH), ROW_START_Y + (x * BUTTON_WIDTH), `bg_numberTile${i + 1}`, null, null);
+				}
+
+				else
+				{
+					button = new Button(this.scene, ROW_START_X + (i * BUTTON_WIDTH), ROW_START_Y + (x * BUTTON_WIDTH), `bg_numberTile${i + 1}`, randomNumber.toString(), function()
+					{
+						console.log(`Clicked on ${this.text.text}`);
+					});
+				}
 
 				this.buttons.numbers[column].push(button);
 				this.add(button);
