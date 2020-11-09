@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const webpack = require("webpack")
 	, colyseus = require("colyseus")
-	, colyseusMonit = require("@colyseus/monitor").monitor
 	, join = require("path").join
 	, http = require("http")
 	, express = require("express")
@@ -68,7 +67,19 @@ app.get("/", function(req, res)
 	res.sendFile(join(__dirname, "dist", "index.html"));
 });
 
-app.use("/monitor", colyseusMonit());
+if (process.env.NODE_ENV !== "production")
+{
+	try
+	{
+		const colyseusMonit = require("@colyseus/monitor").monitor;
+		app.use("/monitor", colyseusMonit());
+	}
+
+	catch (err)
+	{
+		console.warn(err);
+	}
+}
 
 /*
  * [ IO Setup ]
