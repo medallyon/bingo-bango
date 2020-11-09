@@ -10,7 +10,7 @@ Install a modern version of [Node.js](https://nodejs.org/) and execute the follo
 
 ```bash
 # Clone this repository
-> git clone https://github.com/medallyon/wgd-2.git bingo-bango
+> git clone https://github.com/medallyon/bingo-bango.git bingo-bango
 
 # cd into the repository
 > cd bingo-bango
@@ -26,4 +26,4 @@ This will start a production-ready build and a multiplayer server, where the gam
 
 ## License
 
-The MIT License (MIT) 2019 - [Yannick Deubel](https://github.com/yandeu), [Tilman Raendchen](https://github.medallyon.me) & [Michalis Antonas](https://github.com/MichalisAntonas). Please have a look at the [LICENSE](LICENSE) for more details.
+The MIT License (MIT) 2020 - [Yannick Deubel](https://github.com/yandeu), [Tilman Raendchen](https://github.medallyon.me) & [Michalis Antonas](https://github.com/MichalisAntonas). Please have a look at the [LICENSE](LICENSE) for more details.
