@@ -6,7 +6,9 @@ class ConnectionHandler
 	{
 		this.game = game;
 
-		this.host = window.location.origin.replace(/^https?/, "ws");
+		this.host = window.location.origin
+			.replace(/^http/, "ws")
+			.replace(/^https/, "wss");
 		this.client = new Colyseus.Client(this.host);
 		this.room = null;
 
