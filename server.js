@@ -67,6 +67,20 @@ app.get("/", function(req, res)
 	res.sendFile(join(__dirname, "dist", "index.html"));
 });
 
+if (process.env.NODE_ENV !== "production")
+{
+	try
+	{
+		const colyseusMonit = require("@colyseus/monitor").monitor;
+		app.use("/monitor", colyseusMonit());
+	}
+
+	catch (err)
+	{
+		console.warn(err);
+	}
+}
+
 /*
  * [ IO Setup ]
  */
@@ -132,6 +146,8 @@ build()
 
 		if (err.details)
 			console.error(err.details);
+
+		process.exit(1);
 	});
 
 module.exports = io;

@@ -54,6 +54,9 @@ class Bingo extends Phaser.Game
 			}
 		});
 
+		this.score = 0;
+		this.xp = 0;
+
 		this.connection = new ConnectionHandler(this);
 	}
 }
