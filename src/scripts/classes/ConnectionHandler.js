@@ -8,11 +8,19 @@ class ConnectionHandler
 
 		this.host = window.location.origin.replace(/^https?/, "ws");
 		this.client = new Colyseus.Client(this.host);
+		this.room = null;
+
+		this.scores = {};
 
 		this.client.joinOrCreate("test")
 			.then(room =>
 			{
 				console.log(room.sessionId, "joined", room.name);
+
+				room.onMessage("score_change", scores =>
+				{
+					// scores[client_id] = { player: <Player>, score: <Number> }
+				});
 			}).catch(console.error);
 	}
 }
