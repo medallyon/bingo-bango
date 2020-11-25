@@ -10,6 +10,7 @@ class MainScene extends Phaser.Scene
 	{
 		super({ key: "MainScene" });
 
+
 		this.cards = null;
 		this.score = {
 			tracker: null,
@@ -19,6 +20,10 @@ class MainScene extends Phaser.Scene
 
 	create(data = {})
 	{
+		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper00");
+		this.wallpaper.setScale(0.7111)
+		this.add.existing(this.wallpaper);
+
 		this.score.tracker = new ScoreTracker({
 			scene: this,
 			x: this.cameras.main.width * .88,

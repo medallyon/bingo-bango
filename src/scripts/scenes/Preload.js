@@ -31,6 +31,8 @@ class PreloadScene extends Phaser.Scene
 		this.load.image("coin", "UI/coin.png");
 		this.load.image("bg_score", "UI/bg_scorebar.png");
 		this.load.image("bg_scoreboard", "UI/bg_scoreboard.png");
+
+		this.load.image("bg_wallpaper00","background/bg_background00.jpg");
 	}
 
 	create()
