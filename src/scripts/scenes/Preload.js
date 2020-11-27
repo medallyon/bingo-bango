@@ -32,12 +32,34 @@ class PreloadScene extends Phaser.Scene
 		this.load.image("bg_score", "UI/bg_scorebar.png");
 		this.load.image("bg_scoreboard", "UI/bg_scoreboard.png");
 
+		/* Menu Buttons */
+		this.load.image("bg_play", "buttons/bg_buttonPlay.png");
+		this.load.image("bg_buttonScoreboard", "buttons/bg_buttonScoreboard.png");
+		this.load.image("bg_settings", "buttons/bg_buttonSettings.png");
+		this.load.image("bg_exit", "buttons/bg_buttonExit.png");
+		this.load.image("bg_back", "buttons/bg_buttonBack.png");
+		this.load.image("bg_multiplayer", "buttons/bg_buttonMultiplayer.png");
+		this.load.image("bg_singleplayer", "buttons/bg_buttonSinglePlayer.png");
+		this.load.image("bg_resume", "buttons/bg_buttonResume.png");
+		this.load.image("bg_pause", "buttons/bg_buttonPause.png");
+
+		/* Wallpaper */
 		this.load.image("bg_wallpaper00","background/bg_background00.jpg");
+		this.load.image("bg_wallpaper01","background/bg_background01.jpg");
+		this.load.image("bg_wallpaper02","background/bg_background02.jpg");
+		this.load.image("bg_wallpaper03","background/bg_background03.jpg");
+
+		/* Logo */
+		this.load.image("bg_logo","Logo/logo.png");
+
+		/* Animations */
+		this.load.video("confetti","animations/anim_confetti.mov","loadeddata", false, true);
 	}
+
 
 	create()
 	{
-		this.scene.start("MainScene");
+		this.scene.start("Menu_MainScene");
 
 		/**
 		 * This is how you would dynamically import the mainScene class (with code splitting),

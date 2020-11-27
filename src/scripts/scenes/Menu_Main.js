@@ -1,14 +1,12 @@
 import * as Phaser from "phaser";
 
-import CardHolder from "../objects/CardHolder.js";
-import ScoreTracker from "../objects/ScoreTracker.js";
-import ScoreBoard from "../objects/ScoreBoard.js";
 
-class MainScene extends Phaser.Scene
+class Menu_MainScene extends Phaser.Scene
 {
+
 	constructor()
 	{
-		super({ key: "MainScene" });
+		super({ key: "Menu_MainScene" });
 
 
 		this.cards = null;
@@ -20,29 +18,47 @@ class MainScene extends Phaser.Scene
 
 	create(data = {})
 	{
-		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper00");
-		this.wallpaper.setScale(0.7111)
+		//var video;
+
+	    /* Wallpaper */
+		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper02");
+		this.wallpaper.setScale(0.7111);
 		this.add.existing(this.wallpaper);
 
-		this.score.tracker = new ScoreTracker({
-			scene: this,
-			x: this.cameras.main.width * .88,
-			y: this.cameras.main.height * .1
-		});
-		this.score.tracker.setScale(.65);
-		this.add.existing(this.score.tracker);
+		/* Animation */
+		var vid = this.add.video(0, 0, "confetti");
 
-		this.score.board = new ScoreBoard({
-			scene: this,
-			x: this.cameras.main.width * .825,
-			y: this.cameras.main.height * .65
-		});
-		this.score.board.setScale(.5);
-		this.add.existing(this.score.board);
+		vid.play(true);
+		//this.add.video("confetti");
+		//video = this.add.video(this.game.renderer.width / 0,0,"confetti");
+		//video.play(true);
 
-		const spawnCards = data.cards || 4;
-		this.cards = new CardHolder(spawnCards, this, this.cameras.main.width * .5, this.cameras.main.height * (spawnCards < 3 ? .25 : .12));
-		this.add.existing(this.cards);
+        /* Logo */
+        this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.20,"bg_logo").setScale(0.5,0.5);
+
+        /* Buttons */
+        var spritePlay = this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.45,"bg_play").setScale(0.5,0.5).setInteractive();
+		var spriteScoreboard = this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.60,"bg_buttonScoreboard").setScale(0.5,0.5).setInteractive();
+		var spriteSettings = this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.75,"bg_settings").setScale(0.5,0.5).setInteractive();
+		var spriteExit = this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.90,"bg_exit").setScale(0.5,0.5).setInteractive();
+
+
+        spritePlay.on("pointerdown", function (pointer) {
+        	this.setTint(0xff0000);
+
+		});
+
+        spritePlay.on("pointerout", function (pointer)
+		{
+			this.clearTint();
+
+		});
+        spritePlay.on("pointerup",function (pointer) {
+			this.clearTint();
+			this.scene.start('MainScene');
+
+		});
+
 	}
 
 	update()
@@ -51,4 +67,4 @@ class MainScene extends Phaser.Scene
 	}
 }
 
-export default MainScene;
+export default Menu_MainScene;
