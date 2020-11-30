@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-
+maximumFileSizeToCacheInBytes:5000000;
 class PreloadScene extends Phaser.Scene
 {
 	constructor()
@@ -53,13 +53,17 @@ class PreloadScene extends Phaser.Scene
 		this.load.image("bg_logo","Logo/logo.png");
 
 		/* Animations */
-		this.load.video("confetti","animations/anim_confetti.mov","loadeddata", false, true);
+		this.load.video("confetti","animations/confetti.gif");
+
+
 	}
 
 
 	create()
 	{
+
 		this.scene.start("Menu_MainScene");
+
 
 		/**
 		 * This is how you would dynamically import the mainScene class (with code splitting),
@@ -68,7 +72,7 @@ class PreloadScene extends Phaser.Scene
 		 * The name of the chunk would be "mainScene.chunk.js
 		 * Find more about code splitting here: https://webpack.js.org/guides/code-splitting/
 		 */
-		// let someCondition = true
+		//let someCondition = true
 		// if (someCondition)
 		//   import(/* webpackChunkName: "mainScene" */ "./mainScene").then(mainScene => {
 		//     this.scene.add("MainScene", mainScene.default, true)

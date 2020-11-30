@@ -6,6 +6,7 @@ import ScoreBoard from "../objects/ScoreBoard.js";
 
 class MainScene extends Phaser.Scene
 {
+
 	constructor()
 	{
 		super({ key: "MainScene" });
@@ -20,6 +21,7 @@ class MainScene extends Phaser.Scene
 
 	create(data = {})
 	{
+
 		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper03");
 		this.wallpaper.setScale(0.7111)
 		this.add.existing(this.wallpaper);

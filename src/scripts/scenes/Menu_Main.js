@@ -18,23 +18,18 @@ class Menu_MainScene extends Phaser.Scene
 
 	create(data = {})
 	{
-		//var video;
 
 	    /* Wallpaper */
-		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper02");
+		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper02").setDepth(0);
 		this.wallpaper.setScale(0.7111);
 		this.add.existing(this.wallpaper);
 
 		/* Animation */
-		var vid = this.add.video(0, 0, "confetti");
 
-		vid.play(true);
-		//this.add.video("confetti");
-		//video = this.add.video(this.game.renderer.width / 0,0,"confetti");
-		//video.play(true);
+
 
         /* Logo */
-        this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.20,"bg_logo").setScale(0.5,0.5);
+        this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.20,"bg_logo").setScale(0.5,0.5).setDepth(2);
 
         /* Buttons */
         var spritePlay = this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.45,"bg_play").setScale(0.5,0.5).setInteractive();
@@ -43,22 +38,21 @@ class Menu_MainScene extends Phaser.Scene
 		var spriteExit = this.add.image(this.game.renderer.width / 2,this.game.renderer.height * 0.90,"bg_exit").setScale(0.5,0.5).setInteractive();
 
 
-        spritePlay.on("pointerdown", function (pointer) {
+        spritePlay.on("pointerdown", function (pointer)
+        {
         	this.setTint(0xff0000);
-
 		});
 
         spritePlay.on("pointerout", function (pointer)
 		{
 			this.clearTint();
-
 		});
-        spritePlay.on("pointerup",function (pointer) {
+
+        spritePlay.on("pointerup", function (pointer)
+        {
 			this.clearTint();
-			this.scene.start('MainScene');
-
+			this.scene.start("MainScene");
 		});
-
 	}
 
 	update()
