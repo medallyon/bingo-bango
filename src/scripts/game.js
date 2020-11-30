@@ -3,10 +3,9 @@ import "@babel/polyfill";
 
 import ConnectionHandler from "./classes/ConnectionHandler.js";
 
-import PreloadScene from "./scenes/Preload.js";
-import Menu_MainScene from "./scenes/Menu_Main.js";
-import MainScene from "./scenes/Main.js";
-
+import Scene_Preload from "./scenes/Scene_Preload.js";
+import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
+import Scene_Game from "./scenes/Scene_Game.js";
 
 Array.prototype.first = function()
 {
@@ -46,7 +45,7 @@ class Bingo extends Phaser.Game
 				width: 1280,
 				height: 720
 			},
-			scene: [ PreloadScene, Menu_MainScene, MainScene ],
+			scene: [ Scene_Preload, Scene_Menu_Main, Scene_Game ],
 			physics: {
 				default: "arcade",
 				arcade: {

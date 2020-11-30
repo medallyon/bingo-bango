@@ -1,10 +1,10 @@
 import * as Phaser from "phaser";
-maximumFileSizeToCacheInBytes:5000000;
-class PreloadScene extends Phaser.Scene
+
+class Scene_Preload extends Phaser.Scene
 {
 	constructor()
 	{
-		super({ key: "PreloadScene" });
+		super({ key: "Scene_Preload" });
 	}
 
 	preload()
@@ -34,7 +34,7 @@ class PreloadScene extends Phaser.Scene
 
 		/* Menu Buttons */
 		this.load.image("bg_play", "buttons/bg_buttonPlay.png");
-		this.load.image("bg_buttonScoreboard", "buttons/bg_buttonScoreboard.png");
+		this.load.image("bg_leaderboard", "buttons/bg_buttonScoreboard.png");
 		this.load.image("bg_settings", "buttons/bg_buttonSettings.png");
 		this.load.image("bg_exit", "buttons/bg_buttonExit.png");
 		this.load.image("bg_back", "buttons/bg_buttonBack.png");
@@ -54,16 +54,12 @@ class PreloadScene extends Phaser.Scene
 
 		/* Animations */
 		this.load.video("confetti","animations/confetti.gif");
-
-
 	}
 
 
 	create()
 	{
-
-		this.scene.start("Menu_MainScene");
-
+		this.scene.start("Scene_Menu_Main");
 
 		/**
 		 * This is how you would dynamically import the mainScene class (with code splitting),
@@ -81,4 +77,4 @@ class PreloadScene extends Phaser.Scene
 	}
 }
 
-export default PreloadScene;
+export default Scene_Preload;

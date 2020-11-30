@@ -141,7 +141,7 @@ build()
 	})
 	.catch(function(err)
 	{
-		console.error("Encountered an error while building WebPack:");
+		console.error("\nEncountered an error while building WebPack:");
 		console.error(err.stack || err);
 
 		if (err.details)
