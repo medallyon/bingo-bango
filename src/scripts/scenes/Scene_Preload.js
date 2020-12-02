@@ -27,8 +27,8 @@ class Scene_Preload extends Phaser.Scene
 		for (let i = 1; i <= 5; i++)
 			this.load.image(`bg_numberTile${i}`, `card/bg_numberTile${i}.png`);
 
-		/* Ball Assets */
-		this.load.image("bg_ballContainer", "balls/bg_ballContainer.png");
+		// Ball Queue
+		this.load.image("bg_ballQueue", "balls/bg_ballQueue.png");
 		for (let i = 1; i <= 5; i++)
 			this.load.image(`bg_ball${i}`, `balls/bg_ball${i}.png`);
 
