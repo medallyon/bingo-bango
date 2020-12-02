@@ -18,9 +18,9 @@ class BingoNumberGenerator
 		do
 		{
 			if (column == null || (column && !BINGO.includes(column)))
-				number = Math.floor(Math.random() * this.max);
+				number = 1 + Math.floor(Math.random() * this.max);
 			else
-				number = (BINGO.indexOf(column) * this.maxPerColumn) + Math.floor(Math.random() * this.maxPerColumn);
+				number = 1 + (BINGO.indexOf(column) * this.maxPerColumn) + Math.floor(Math.random() * this.maxPerColumn);
 		} while (this.usedNumbers.includes(number));
 
 		this.usedNumbers.push(number);
