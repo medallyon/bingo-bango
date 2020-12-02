@@ -8,7 +8,7 @@ class BallQueue extends Phaser.GameObjects.Container
 
 		this.scores = {};
 
-		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_scoreboard");
+		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_ballQueue");
 		this.add(this.bg);
 	}
 }

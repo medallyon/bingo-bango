@@ -36,12 +36,12 @@ class Scene_Menu_Main extends Phaser.Scene
 	create(data = {})
 	{
 		/* Wallpaper */
-		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper02").setDepth(0);
+		this.wallpaper = new Phaser.GameObjects.Image(this, this.cameras.main.width/2, this.cameras.main.height/2, `bg_wallpaper_0${Math.floor(Math.random() * 4)}`).setDepth(0);
 		this.wallpaper.setScale(0.7111);
 		this.add.existing(this.wallpaper);
 
 		/* Logo */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.25, "bg_logo").setScale(0.5);
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.25, "logo").setScale(0.5);
 
 		/* Buttons */
 		for (let i = 0; i < Object.keys(this.buttons).length; i++)
@@ -51,7 +51,7 @@ class Scene_Menu_Main extends Phaser.Scene
 					scene: this,
 					x: this.game.renderer.width * .5,
 					y: this.game.renderer.height * (.5 + (i * .175)),
-					texture: `bg_${key}`,
+					texture: `button_${key}`,
 					on: this._defaultButtonHandlers
 				});
 
@@ -65,7 +65,7 @@ class Scene_Menu_Main extends Phaser.Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.start("Scene_Menu_Lobby");
+			this.scene.start("Scene_Game");
 		});
 	}
 

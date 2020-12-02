@@ -20,7 +20,7 @@ class Scene_Game extends Phaser.Scene
 
 	create(data = {})
 	{
-		this.wallpaper = new Phaser.GameObjects.Image(this,this.cameras.main.width/2,this.cameras.main.height/2,"bg_wallpaper03");
+		this.wallpaper = new Phaser.GameObjects.Image(this, this.cameras.main.width/2, this.cameras.main.height/2, `bg_wallpaper_0${Math.floor(Math.random() * 4)}`);
 		this.wallpaper.setScale(0.7111);
 		this.add.existing(this.wallpaper);
 

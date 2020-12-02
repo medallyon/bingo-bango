@@ -19,7 +19,7 @@ class Card extends Phaser.GameObjects.Container
 				scene: this.scene,
 				x: BINGO_ROW_START_X + (BUTTON_WIDTH * i),
 				y: BINGO_ROW_START_Y,
-				texture: `bg_bingo${i + 1}`
+				texture: `tile_${BINGO[i]}`
 			});
 
 			this.add(button);
@@ -47,7 +47,7 @@ class Card extends Phaser.GameObjects.Container
 						scene: this.scene,
 						x: ROW_START_X + (i * BUTTON_WIDTH),
 						y: ROW_START_Y + (j * BUTTON_WIDTH),
-						texture: `bg_numberTile${i + 1}`,
+						texture: `bg_tile_${BINGO[i]}`,
 						overlay: new ImageOverlay(this.scene, "coin"),
 						on: {
 							pointerup: function()
@@ -64,7 +64,7 @@ class Card extends Phaser.GameObjects.Container
 						scene: this.scene,
 						x: ROW_START_X + (i * BUTTON_WIDTH),
 						y: ROW_START_Y + (j * BUTTON_WIDTH),
-						texture: `bg_numberTile${i + 1}`,
+						texture: `bg_tile_${BINGO[i]}`,
 						overlay: new TextOverlay(this.scene, randomNumber.toString()),
 						on: {
 							pointerup: function()
