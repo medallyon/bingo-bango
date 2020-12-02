@@ -87,6 +87,7 @@ class Scene_Preload extends Phaser.Scene
 
 		// Menu Buttons
 		this.load.image("button_back", "buttons/button_back.png");
+		this.load.image("button_createLobby", "buttons/button_createLobby.png");
 		this.load.image("button_exit", "buttons/button_exit.png");
 		this.load.image("button_icon_resume", "buttons/button_icon_resume.png");
 		this.load.image("button_leaderboard", "buttons/button_leaderboard.png");
@@ -94,6 +95,17 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("button_play", "buttons/button_play.png");
 		this.load.image("button_resume", "buttons/button_resume.png");
 		this.load.image("button_settings", "buttons/button_settings.png");
+
+		// Progress Bars
+		this.load.image("bg_progress", "UI/progress/bg_progress.png");
+		this.load.image("bg_progress_blue", "UI/progress/bg_progress_blue.png");
+		this.load.image("bg_progress_green", "UI/progress/bg_progress_green.png");
+		this.load.image("bg_progress_orange", "UI/progress/bg_progress_orange.png");
+		this.load.image("bg_progress_purple", "UI/progress/bg_progress_purple.png");
+		this.load.image("bg_progress_red", "UI/progress/bg_progress_red.png");
+
+		// Slider
+		this.load.image("slider", "buttons/slider.png");
 
 		// Wallpapers
 		this.load.setPath("/assets/img/wallpapers");
