@@ -1,7 +1,18 @@
 import * as Phaser from "phaser";
 
+import { BINGO } from "../globals.js";
+
 class Scene_Preload extends Phaser.Scene
 {
+	_importImageSeries(prefix, amount, ext, start = 0, pad = 2)
+	{
+		for (let i = 0; i < amount; i++)
+		{
+			const key = prefix + (i + start).toString().padStart(pad);
+			this.load.image(key, key + ext);
+		}
+	}
+
 	constructor()
 	{
 		super({ key: "Scene_Preload" });
@@ -18,13 +29,24 @@ class Scene_Preload extends Phaser.Scene
 		// https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js
 		this.load.plugin("slider", "plugin/slider.js", true);
 
+		/* ========================
+		 * ====== ANIMATIONS ======
+		 * ======================== */
+		this.load.setPath("assets/img/animations");
+
+		// Confetti
+		this.load.spritesheet("confetti", "animations/spritesheet_confetti_01.png", {
+			frameWidth: 512,
+			endFrame: 59
+		});
+
 		/* ====================
 		 * ====== IMAGES ======
 		 * ==================== */
 		this.load.setPath("assets/img/");
 
 		// Logo
-		this.load.image("bg_logo","Logo/logo.png");
+		this.load.image("bg_logo", "logo.png");
 
 		/* Card Assets */
 
@@ -33,50 +55,39 @@ class Scene_Preload extends Phaser.Scene
 
 		// BINGO Tiles
 		for (let i = 1; i <= 5; i++)
-			this.load.image(`bg_bingo${i}`, `card/bg_bingo${i}.png`);
+			this.load.image(`tile_${BINGO[i]}`, `card/tile_${BINGO[i]}.png`);
 
-		// Button Backgrounds
+		// Button Tile Backgrounds
 		for (let i = 1; i <= 5; i++)
-			this.load.image(`bg_numberTile${i}`, `card/bg_numberTile${i}.png`);
+			this.load.image(`bg_tile_${BINGO[i]}`, `card/bg_tile${BINGO[i]}.png`);
 
 		// Ball Queue
 		this.load.image("bg_ballQueue", "balls/bg_ballQueue.png");
 		for (let i = 1; i <= 5; i++)
-			this.load.image(`bg_ball${i}`, `balls/bg_ball${i}.png`);
+			this.load.image(`ball_${BINGO[i]}`, `card/ball_${BINGO[i]}.png`);
 
 		/* UI Assets */
 
 		// Game Elements
-		this.load.image("coin", "UI/coin.png");
-		this.load.image("bg_score", "UI/bg_scorebar.png");
-		this.load.image("bg_scoreboard", "UI/bg_scoreboard.png");
+		this.load.image("coin", "UI/icons/coin.png");
+		this.load.image("heart", "UI/icons/heart.png");
+		this.load.image("star", "UI/icons/star.png");
+
+		this.load.image("bg_score", "UI/bg_score.png");
+		this.load.image("bg_scoreboard", "UI/bg_scoreboard_02.png");
 
 		// Menu Buttons
-		this.load.image("bg_play", "buttons/bg_buttonPlay.png");
-		this.load.image("bg_leaderboard", "buttons/bg_buttonScoreboard.png");
-		this.load.image("bg_settings", "buttons/bg_buttonSettings.png");
-		this.load.image("bg_exit", "buttons/bg_buttonExit.png");
-		this.load.image("bg_back", "buttons/bg_buttonBack.png");
-		this.load.image("bg_multiplayer", "buttons/bg_buttonMultiplayer.png");
-		this.load.image("bg_singleplayer", "buttons/bg_buttonSinglePlayer.png");
-		this.load.image("bg_resume", "buttons/bg_buttonResume.png");
-		this.load.image("bg_pause", "buttons/bg_buttonPause.png");
+		this.load.image("button_back", "buttons/button_back.png");
+		this.load.image("button_exit", "buttons/button_exit.png");
+		this.load.image("button_icon_resume", "buttons/button_icon_resume.png");
+		this.load.image("button_leaderboard", "buttons/button_leaderboard.png");
+		this.load.image("button_pause", "buttons/button_pause.png");
+		this.load.image("button_play", "buttons/button_play.png");
+		this.load.image("button_resume", "buttons/button_resume.png");
+		this.load.image("button_settings", "buttons/button_settings.png");
 
 		// Wallpapers
-		this.load.image("bg_wallpaper00","background/bg_background00.jpg");
-		this.load.image("bg_wallpaper01","background/bg_background01.jpg");
-		this.load.image("bg_wallpaper02","background/bg_background02.jpg");
-		this.load.image("bg_wallpaper03","background/bg_background03.jpg");
-
-		/* ========================
-		 * ====== ANIMATIONS ======
-		 * ======================== */
-
-		// Confetti
-		this.load.spritesheet("confetti", "animations/spritesheet_confetti_01.png", {
-			frameWidth: 512,
-			endFrame: 59
-		});
+		this._importImageSeries("bg_wallpaper_", 4, "jpg", 2); // bg_wallpaper_00, ...
 	}
 
 
