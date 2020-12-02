@@ -9,6 +9,18 @@ class Scene_Preload extends Phaser.Scene
 
 	preload()
 	{
+		/* =====================
+		 * ====== PLUGINS ======
+		 * ===================== */
+		this.load.setPath("assets/plugin");
+
+		// Rex's Slider Plugin
+		// https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js
+		this.load.plugin("slider", "plugin/slider.js", true);
+
+		/* ====================
+		 * ====== IMAGES ======
+		 * ==================== */
 		this.load.setPath("assets/img/");
 
 		// Logo
@@ -56,7 +68,9 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("bg_wallpaper02","background/bg_background02.jpg");
 		this.load.image("bg_wallpaper03","background/bg_background03.jpg");
 
-		/* Animations */
+		/* ========================
+		 * ====== ANIMATIONS ======
+		 * ======================== */
 
 		// Confetti
 		this.load.spritesheet("confetti", "animations/spritesheet_confetti_01.png", {
