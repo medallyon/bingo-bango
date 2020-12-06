@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import "@babel/polyfill";
 
 import ConnectionHandler from "./classes/ConnectionHandler.js";
+import Voicepack from "./classes/Voicepack.js";
 
 import Scene_Preload from "./scenes/Scene_Preload.js";
 import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
@@ -60,7 +61,8 @@ class Bingo extends Phaser.Game
 					game.audio = {
 						master: Phaser.Sound.SoundManagerCreator.create(game),
 						effects: Phaser.Sound.SoundManagerCreator.create(game),
-						music: Phaser.Sound.SoundManagerCreator.create(game)
+						music: Phaser.Sound.SoundManagerCreator.create(game),
+						voice: Phaser.Sound.SoundManagerCreator.create(game)
 					};
 				}
 			}
@@ -68,6 +70,8 @@ class Bingo extends Phaser.Game
 
 		this.score = 0;
 		this.xp = 0;
+
+		this.announcer = new Voicepack();
 
 		this.connection = new ConnectionHandler(this);
 	}

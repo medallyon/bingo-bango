@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 
 import { BINGO } from "../globals.js";
+import Voicepack from "../classes/Voicepack.js";
 
 class Scene_Preload extends Phaser.Scene
 {
@@ -110,6 +111,13 @@ class Scene_Preload extends Phaser.Scene
 		// Wallpapers
 		this.load.setPath("/assets/img/wallpapers");
 		this._importImageSeries("bg_wallpaper_", 4, "jpg", 0, 2); // bg_wallpaper_00, ...
+
+		/* AUDIO */
+		this.load.setPath("/assets/audio");
+
+		// Voicepacks
+		this.load.setPath("/assets/audio/voice-packs/");
+		(new Voicepack("deyan")).preload(this.load);
 	}
 
 

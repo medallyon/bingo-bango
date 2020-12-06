@@ -1,6 +1,8 @@
 import * as Phaser from "phaser";
 
+import { BINGO } from "../globals.js";
 import Button from "../objects/buttons/Button.js";
+import Voicepack from "../classes/Voicepack.js";
 
 class Scene_Menu_Main extends Phaser.Scene
 {
