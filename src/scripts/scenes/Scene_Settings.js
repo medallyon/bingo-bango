@@ -4,11 +4,11 @@ import { BINGO } from "../globals.js";
 import Button from "../objects/buttons/Button.js";
 import Voicepack from "../classes/Voicepack.js";
 
-class Scene_Menu_Main extends Phaser.Scene
+class Scene_Settings extends Phaser.Scene
 {
 	constructor()
 	{
-		super({ key: "Scene_Menu_Main" });
+		super({ key: "Scene_Settings" });
 
 		this.buttons = {
 			play: null,
@@ -42,36 +42,8 @@ class Scene_Menu_Main extends Phaser.Scene
 		this.wallpaper.setScale(0.7111);
 		this.add.existing(this.wallpaper);
 
-		/* Logo */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.25, "logo").setScale(0.5);
-
-		/* Buttons */
-		for (let i = 0; i < Object.keys(this.buttons).length; i++)
-		{
-			const key = Object.keys(this.buttons)[i]
-				, btn = new Button({
-					scene: this,
-					x: this.game.renderer.width * .5,
-					y: this.game.renderer.height * (.5 + (i * .175)),
-					texture: `button_${key}`,
-					on: this._defaultButtonHandlers
-				});
-
-			btn.setScale(.69);
-			this.add.existing(this.buttons[key] = btn);
-		}
-
-		this.buttons.play.on("pointerup", (pointer) =>
-		{
-			// left mouse button
-			if (pointer.button !== 0)
-				return;
-
-				this.scene.start("Scene_Game");
 
 
-
-		});
 
 	}
 
@@ -81,4 +53,4 @@ class Scene_Menu_Main extends Phaser.Scene
 	}
 }
 
-export default Scene_Menu_Main;
+export default Scene_Settings;
