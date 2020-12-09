@@ -84,7 +84,7 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("bg_panel_lobby_alt", "UI/panels/bg_panel_lobby_alt.png");
 		this.load.image("bg_panel_scoreboard", "UI/panels/bg_panel_scoreboard.png");
 		this.load.image("bg_panel_scores", "UI/panels/bg_panel_scores.png");
-		this.load.image("bg_panel_settings", "UI/panels/bg_panel_settings.png");
+		this.load.image("bg_panel_settings", "UI/panels/bg_panel_settings01.png");
 
 		// Menu Buttons
 		this.load.image("button_back", "buttons/button_back.png");

@@ -42,6 +42,8 @@ class Scene_Settings extends Phaser.Scene
 		this.wallpaper.setScale(0.7111);
 		this.add.existing(this.wallpaper);
 
+        /* Panel */
+        this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "bg_panel_settings").setScale(0.7);
 
 
 
