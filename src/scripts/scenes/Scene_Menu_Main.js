@@ -66,12 +66,22 @@ class Scene_Menu_Main extends Phaser.Scene
 			if (pointer.button !== 0)
 				return;
 
+<<<<<<< HEAD
 				this.scene.start("Scene_Settings");
 
-
-
+=======
+			this.scene.start("Scene_Game");
 		});
+>>>>>>> 5b8b14f973d504d0c62d7ff1e7b8775333313bec
 
+		this.buttons.settings.on("pointerup", (pointer) =>
+		{
+			// left mouse button
+			if (pointer.button !== 0)
+				return;
+
+			this.scene.start("Scene_Menu_Settings");
+		});
 	}
 
 	update()

@@ -6,9 +6,8 @@ import Voicepack from "./classes/Voicepack.js";
 
 import Scene_Preload from "./scenes/Scene_Preload.js";
 import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
+import Scene_Menu_Settings from "./scenes/Scene_SliderDemo.js";
 import Scene_Game from "./scenes/Scene_Game.js";
-import Scene_SliderDemo from "./scenes/Scene_SliderDemo.js";
-import Scene_Settings from "./scenes/Scene_Settings";
 
 Array.prototype.first = function()
 {
@@ -48,7 +47,7 @@ class Bingo extends Phaser.Game
 				width: 1280,
 				height: 720
 			},
-			scene: [ Scene_Preload, Scene_Menu_Main, Scene_Settings, Scene_Game, Scene_SliderDemo ],
+			scene: [ Scene_Preload, Scene_Menu_Main, Scene_Menu_Settings, Scene_Game ],
 			physics: {
 				default: "arcade",
 				arcade: {

@@ -21,15 +21,6 @@ class Scene_Preload extends Phaser.Scene
 
 	preload()
 	{
-		/* =====================
-		 * ====== PLUGINS ======
-		 * ===================== */
-		this.load.setPath("assets/plugin");
-
-		// Rex's Slider Plugin
-		// https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js
-		this.load.plugin("slider", "slider.js", true);
-
 		/* ========================
 		 * ====== ANIMATIONS ======
 		 * ======================== */
