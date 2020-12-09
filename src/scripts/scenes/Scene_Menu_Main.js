@@ -46,15 +46,16 @@ class Scene_Menu_Main extends Phaser.Scene
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.25, "logo").setScale(0.5);
 
 		/* Buttons */
-		for (let i = 0; i < Object.keys(this.buttons).length; i++) {
-            const key = Object.keys(this.buttons)[i]
-                , btn = new Button({
-                scene: this,
-                x: this.game.renderer.width * .5,
-                y: this.game.renderer.height * (.5 + (i * .175)),
-                texture: `button_${key}`,
-                on: this._defaultButtonHandlers
-            });
+		for (let i = 0; i < Object.keys(this.buttons).length; i++)
+		{
+			const key = Object.keys(this.buttons)[i]
+				, btn = new Button({
+					scene: this,
+					x: this.game.renderer.width * .5,
+					y: this.game.renderer.height * (.5 + (i * .175)),
+					texture: `button_${key}`,
+					on: this._defaultButtonHandlers
+				});
 
 			btn.setScale(.69);
 			this.add.existing(this.buttons[key] = btn);
@@ -66,13 +67,8 @@ class Scene_Menu_Main extends Phaser.Scene
 			if (pointer.button !== 0)
 				return;
 
-<<<<<<< HEAD
-				this.scene.start("Scene_Settings");
-
-=======
 			this.scene.start("Scene_Game");
 		});
->>>>>>> 5b8b14f973d504d0c62d7ff1e7b8775333313bec
 
 		this.buttons.settings.on("pointerup", (pointer) =>
 		{
