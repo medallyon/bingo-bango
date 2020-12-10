@@ -111,7 +111,6 @@ class Scene_Preload extends Phaser.Scene
 		(new Voicepack("deyan")).preload(this.load);
 	}
 
-
 	create()
 	{
 		this.scene.start("Scene_Menu_Main");

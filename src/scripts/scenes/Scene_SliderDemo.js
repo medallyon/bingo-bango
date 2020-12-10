@@ -34,12 +34,12 @@ class Scene_Menu_Settings extends Phaser.Scene
 
 	preload()
 	{
-		this.load.setPath("assets/plugin");
+		/*this.load.setPath("assets/plugin");
 		this.load.scenePlugin({
 			key: "rexuiplugin",
 			url: "rexui.js",
 			sceneKey: "rexUI"
-		});
+		});*/
 	}
 
 	create()
@@ -52,8 +52,6 @@ class Scene_Menu_Settings extends Phaser.Scene
 		/* Panel */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "bg_panel_settings")
 			.setScale(0.7);
-
-		// TODO: ADD "SETTINGS" menu text at the top
 
 		const settingsText = {
 			volume: {
@@ -75,6 +73,11 @@ class Scene_Menu_Settings extends Phaser.Scene
 				})
 			}
 		};
+
+		// TODO: Figure out implementation of SettingSlider
+		/*new Setting.Slider(this, {
+
+		});*/
 
 		this.add.text(this.width * .31, this.height * .25, "Master", {
 			align: "center",
