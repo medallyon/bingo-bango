@@ -9,7 +9,7 @@ import Voicepack from "./classes/Voicepack.js";
 
 import Scene_Preload from "./scenes/Scene_Preload.js";
 import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
-import Scene_Menu_Settings from "./scenes/Scene_SliderDemo.js";
+import Scene_Menu_Settings from "./scenes/Scene_Menu_Settings.js";
 import Scene_Game from "./scenes/Scene_Game.js";
 
 Array.prototype.first = function()
