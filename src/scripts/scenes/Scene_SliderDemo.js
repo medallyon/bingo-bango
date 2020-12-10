@@ -1,8 +1,9 @@
-const COLOR_PRIMARY = 0x4e342e;
-const COLOR_LIGHT = 0x7b5e57;
-const COLOR_DARK = 0x260e04;
+const COLOR_PRIMARY = 0x23F5FF;
+const COLOR_LIGHT = 0x006A6F;
+const COLOR_DARK = 0xffffff;
 
 import * as Phaser from "phaser";
+import Button from "../objects/buttons/Button.js";
 
 class Scene_Menu_Settings extends Phaser.Scene
 {
@@ -19,6 +20,9 @@ class Scene_Menu_Settings extends Phaser.Scene
 	{
 		super({ key: "Scene_Menu_Settings" });
 
+		this.buttons = {
+			dropdown:null,
+		};
 		this.settings = {
 			volume: {
 				master: .5,
@@ -55,38 +59,37 @@ class Scene_Menu_Settings extends Phaser.Scene
 
 		const settingsText = {
 			volume: {
-				master: this.add.text(this.width * .65, this.height * .25, `${(this.settings.volume.master * 100).toFixed(0)}%`, {
-					color: 0x11111,
+				master: this.add.text(this.width * .65, this.height * .45, `${(this.settings.volume.master * 100).toFixed(0)}%`, {
+					color: 0xffffff,
 					align: "center"
 				}),
-				music: this.add.text(this.width * .65, this.height * .35, `${(this.settings.volume.music * 100).toFixed(0)}%`, {
-					color: 0x11111,
+				music: this.add.text(this.width * .65, this.height * .55, `${(this.settings.volume.music * 100).toFixed(0)}%`, {
+					color: 0xffffff,
 					align: "center"
 				}),
-				voice: this.add.text(this.width * .65, this.height * .45, `${(this.settings.volume.voice * 100).toFixed(0)}%`, {
-					color: 0x11111,
+				voice: this.add.text(this.width * .65, this.height * .65, `${(this.settings.volume.voice * 100).toFixed(0)}%`, {
+					color: 0xffffff,
 					align: "center"
 				}),
-				effects: this.add.text(this.width * .65, this.height * .55, `${(this.settings.volume.effects * 100).toFixed(0)}%`, {
-					color: 0x11111,
+				effects: this.add.text(this.width * .65, this.height * .75, `${(this.settings.volume.effects * 100).toFixed(0)}%`, {
+					color: 0xffffff,
 					align: "center"
 				})
 			}
 		};
-
 		// TODO: Figure out implementation of SettingSlider
 		/*new Setting.Slider(this, {
 
 		});*/
 
-		this.add.text(this.width * .31, this.height * .25, "Master", {
+		this.add.text(this.width * .31, this.height * .45, "Master", {
 			align: "center",
-			color: 0x11111,
+			color: 0xffffff,
 			fontSize: 18
 		});
 		this.rexUI.add.slider({
 			x: this.width * .5, // from
-			y: this.height * .3, // to
+			y: this.height * .5, // to
 			width: this.width * .4, // length
 			height: 20, // thiccness
 
@@ -105,14 +108,14 @@ class Scene_Menu_Settings extends Phaser.Scene
 			}
 		}).layout();
 
-		this.add.text(this.width * .31, this.height * .35, "Music", {
+		this.add.text(this.width * .31, this.height * .55, "Music", {
 			align: "center",
-			color: 0x11111,
+			color: 0xffffff,
 			fontSize: 18
 		});
 		this.rexUI.add.slider({
 			x: this.width * .5, // from
-			y: this.height * .4, // to
+			y: this.height * .6, // to
 			width: this.width * .4, // length
 			height: 20, // thiccness
 
@@ -131,14 +134,14 @@ class Scene_Menu_Settings extends Phaser.Scene
 			}
 		}).layout();
 
-		this.add.text(this.width * .31, this.height * .45, "Voice", {
+		this.add.text(this.width * .31, this.height * .65, "Voice", {
 			align: "center",
-			color: 0x11111,
+			color: 0xffffff,
 			fontSize: 18
 		});
 		this.rexUI.add.slider({
 			x: this.width * .5, // from
-			y: this.height * .5, // to
+			y: this.height * .7, // to
 			width: this.width * .4, // length
 			height: 20, // thiccness
 
@@ -157,14 +160,14 @@ class Scene_Menu_Settings extends Phaser.Scene
 			}
 		}).layout();
 
-		this.add.text(this.width * .31, this.height * .55, "Effects", {
+		this.add.text(this.width * .31, this.height * .75, "Effects", {
 			align: "center",
-			color: 0x11111,
+			color: 0xffffff,
 			fontSize: 18
 		});
 		this.rexUI.add.slider({
 			x: this.width * .5, // from
-			y: this.height * .6, // to
+			y: this.height * .8, // to
 			width: this.width * .4, // length
 			height: 20, // thiccness
 
