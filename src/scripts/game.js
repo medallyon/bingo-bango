@@ -1,6 +1,9 @@
-import * as Phaser from "phaser";
 import "@babel/polyfill";
+import * as Phaser from "phaser";
+import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
+import SettingsManager from "./classes/SettingsManager.js";
+import AudioManager from "./classes/AudioManager.js";
 import ConnectionHandler from "./classes/ConnectionHandler.js";
 import Voicepack from "./classes/Voicepack.js";
 
@@ -56,15 +59,26 @@ class Bingo extends Phaser.Game
 				}
 			},
 			callbacks: {
-				preBoot: game =>
+				preBoot: (game) =>
 				{
-					game.audio = {
+					game.settings = new SettingsManager();
+					game.audio = new AudioManager({
 						master: Phaser.Sound.SoundManagerCreator.create(game),
-						effects: Phaser.Sound.SoundManagerCreator.create(game),
 						music: Phaser.Sound.SoundManagerCreator.create(game),
-						voice: Phaser.Sound.SoundManagerCreator.create(game)
-					};
+						voice: Phaser.Sound.SoundManagerCreator.create(game),
+						effects: Phaser.Sound.SoundManagerCreator.create(game)
+					});
+
+					for (const [ key, man ] of Object.entries(game.audio))
+						man.setVolume(game.settings.get("volumes")[key]);
 				}
+			},
+			plugins: {
+				scene: [{
+					key: "rexUI",
+					plugin: RexUIPlugin,
+					mapping: "rexUI"
+				}]
 			}
 		});
 
@@ -80,4 +94,11 @@ class Bingo extends Phaser.Game
 window.addEventListener("load", () =>
 {
 	new Bingo("#phaser-game");
+
+	// Disable the RMB context menu in the game
+	/*document.getElementById("phaser-game").oncontextmenu = function(e)
+	{
+		e.preventDefault();
+		e.stopPropagation();
+	};*/
 });
