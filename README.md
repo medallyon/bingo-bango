@@ -2,7 +2,7 @@
   Bingo Bango
 </h1>
 
-<h4 align="center">[Description Pending]</h4>
+<h4 align="center">An online multiplayer Bingo adaptation, built with Phaser 3 & Colyseus.js.</h4>
 
 ## Installation
 
