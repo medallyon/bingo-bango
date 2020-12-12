@@ -78,7 +78,7 @@ class Scene_Menu_Main extends Scene
 				return;
 
 			this.scene.start("Scene_Menu_Settings", {
-				previousScene: "Scene_Menu_Main"
+				previousScene:"Scene_Menu_Main"
 			});
 		});
 	}

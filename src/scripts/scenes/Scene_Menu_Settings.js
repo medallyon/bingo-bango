@@ -3,7 +3,7 @@ import * as Phaser from "phaser";
 import Scene from "../objects/Scene.js";
 import Slider from "../objects/settings/variations/Slider.js";
 import Dropdown from "../objects/settings/variations/Dropdown.js";
-
+import Button from "../objects/buttons/Button.js";
 class Scene_Menu_Settings extends Scene
 {
 	constructor()
@@ -12,6 +12,26 @@ class Scene_Menu_Settings extends Scene
 			key: "Scene_Menu_Settings",
 			wallpaper: true
 		});
+		this.buttons = {
+			back: null
+		};
+	}
+	get _defaultButtonHandlers()
+	{
+		return {
+			pointerdown: function()
+			{
+				this.bg.setTint(0X000000);
+			},
+			pointerout: function()
+			{
+				this.bg.clearTint(0X000000);
+			},
+			pointerup: function()
+			{
+				this.bg.clearTint(0X000000);
+			}
+		};
 	}
 
 	create(data = {})
@@ -34,6 +54,34 @@ class Scene_Menu_Settings extends Scene
 				name: "deyan"
 			}]
 		}));
+
+		/* Back Button */
+
+		for (let i = 0; i < Object.keys(this.buttons).length; i++)
+		{
+			const key = Object.keys(this.buttons)[i]
+				, btn = new Button({
+					scene: this,
+					x: this.game.renderer.width * .09,
+					y: this.game.renderer.height * (0.95 + (i * .175)),
+					texture: `button_${key}`,
+					on: this._defaultButtonHandlers
+				});
+
+			btn.setScale(.5);
+			this.add.existing(this.buttons[key] = btn);
+		}
+
+		this.buttons.back.on("pointerup", (pointer) =>
+		{
+			// left mouse button
+			if (pointer.button !== 0)
+				return;
+
+			this.scene.start("Scene_Menu_Main", {
+				previousScene: "Scene_Menu_Settings"
+			});
+		});
 
 		/* Volume Sliders */
 
