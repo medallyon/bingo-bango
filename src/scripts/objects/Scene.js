@@ -28,12 +28,14 @@ class Scene extends Phaser.Scene
 
 	constructor(config)
 	{
+		console.log(config);
 		super(config);
+		this.key = config.key;
 
 		this.wallpaper = config.wallpaper;
 	}
 
-	create()
+	_generateWallpaper()
 	{
 		if (this.wallpaper)
 		{
@@ -42,6 +44,16 @@ class Scene extends Phaser.Scene
 			this.wallpaper.setScale(0.7111);
 			this.add.existing(this.wallpaper);
 		}
+	}
+
+	create()
+	{
+		this._generateWallpaper();
+	}
+
+	resume()
+	{
+		this._generateWallpaper();
 	}
 }
 

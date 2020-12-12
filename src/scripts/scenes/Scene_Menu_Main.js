@@ -28,11 +28,11 @@ class Scene_Menu_Main extends Scene
 			},
 			pointerout: function()
 			{
-				this.bg.clearTint(0X000000);
+				this.bg.clearTint();
 			},
 			pointerup: function()
 			{
-				this.bg.clearTint(0X000000);
+				this.bg.clearTint();
 			}
 		};
 	}
@@ -77,9 +77,8 @@ class Scene_Menu_Main extends Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.start("Scene_Menu_Settings", {
-				previousScene:"Scene_Menu_Main"
-			});
+			this.scene.sleep();
+			this.scene.run("Scene_Menu_Settings");
 		});
 	}
 
