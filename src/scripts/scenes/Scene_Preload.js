@@ -3,6 +3,8 @@ import * as Phaser from "phaser";
 import { BINGO } from "../globals.js";
 import Voicepack from "../classes/Voicepack.js";
 
+import * as objects from "../objects/objects.js";
+
 class Scene_Preload extends Phaser.Scene
 {
 	_importImageSeries(prefix, amount, ext, start = 0, pad = 2)
@@ -32,6 +34,12 @@ class Scene_Preload extends Phaser.Scene
 			endFrame: 59
 		});
 
+		for (const Class of Object.values(objects))
+		{
+			if (Class.preload != null)
+				Class.preload(this.load);
+		}
+
 		/* ====================
 		 * ====== IMAGES ======
 		 * ==================== */
@@ -39,21 +47,6 @@ class Scene_Preload extends Phaser.Scene
 
 		// Logo
 		this.load.image("logo", "logo.png");
-
-		/* Card Assets */
-
-		// BINGO Tiles
-		for (let i = 0; i < 5; i++)
-			this.load.image(`tile_${BINGO[i]}`, `card/tile_${BINGO[i]}.png`);
-
-		// Button Tile Backgrounds
-		for (let i = 0; i < 5; i++)
-			this.load.image(`bg_tile_${BINGO[i]}`, `card/bg_tile_${BINGO[i]}.png`);
-
-		// Ball Queue
-		this.load.image("bg_ballQueue", "balls/bg_ballQueue.png");
-		for (let i = 0; i < 5; i++)
-			this.load.image(`ball_${BINGO[i]}`, `balls/ball_${BINGO[i]}.png`);
 
 		/* UI Assets */
 
@@ -77,26 +70,6 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("panel_scores", "UI/panels/bg_panel_scores.png");
 		this.load.image("panel_settings", "UI/panels/bg_panel_settings01.png");
 
-		// Dropdowns
-		this.load.image("dropdown_arrow", "UI/dropdown/arrow.png");
-		this.load.image("dropdown_main", "UI/dropdown/main.png");
-		this.load.image("dropdown_main_hover", "UI/dropdown/main_hover.png");
-		this.load.image("dropdown_item", "UI/dropdown/item.png");
-		this.load.image("dropdown_item_hover", "UI/dropdown/item_hover.png");
-		this.load.image("dropdown_item_last", "UI/dropdown/item_last.png");
-		this.load.image("dropdown_item_last_hover", "UI/dropdown/item_last_hover.png");
-
-		// Menu Buttons
-		this.load.image("button_back", "buttons/button_back.png");
-		this.load.image("button_createLobby", "buttons/button_createLobby.png");
-		this.load.image("button_exit", "buttons/button_exit.png");
-		this.load.image("button_icon_resume", "buttons/button_icon_resume.png");
-		this.load.image("button_leaderboard", "buttons/button_leaderboard.png");
-		this.load.image("button_pause", "buttons/button_pause.png");
-		this.load.image("button_play", "buttons/button_play.png");
-		this.load.image("button_resume", "buttons/button_resume.png");
-		this.load.image("button_settings", "buttons/button_settings.png");
-
 		// Progress Bars
 		this.load.image("progress", "UI/progress/bg_progress.png");
 		this.load.image("progress_blue", "UI/progress/bg_progress_blue.png");
@@ -104,9 +77,6 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("progress_orange", "UI/progress/bg_progress_orange.png");
 		this.load.image("progress_purple", "UI/progress/bg_progress_purple.png");
 		this.load.image("progress_red", "UI/progress/bg_progress_red.png");
-
-		// Slider
-		this.load.image("slider", "buttons/slider.png");
 
 		// Wallpapers
 		this.load.setPath("/assets/img/wallpapers");
