@@ -1,30 +1,22 @@
 import * as Phaser from "phaser";
 
+import Scene from "../objects/Scene.js";
 import Slider from "../objects/settings/variations/Slider.js";
 import Dropdown from "../objects/settings/variations/Dropdown.js";
 
-class Scene_Menu_Settings extends Phaser.Scene
+class Scene_Menu_Settings extends Scene
 {
-	get width()
-	{
-		return this.cameras.main.width;
-	}
-	get height()
-	{
-		return this.cameras.main.height;
-	}
-
 	constructor()
 	{
-		super({ key: "Scene_Menu_Settings" });
+		super({
+			key: "Scene_Menu_Settings",
+			wallpaper: true
+		});
 	}
 
-	create()
+	create(data = {})
 	{
-		/* Wallpaper */
-		this.wallpaper = new Phaser.GameObjects.Image(this, this.cameras.main.width / 2, this.cameras.main.height / 2, `bg_wallpaper_0${Math.floor(Math.random() * 4)}`).setDepth(0);
-		this.wallpaper.setScale(0.7111);
-		this.add.existing(this.wallpaper);
+		super.create(data);
 
 		/* Setting Panel Background */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_settings")
@@ -32,7 +24,7 @@ class Scene_Menu_Settings extends Phaser.Scene
 
 		/* Dropdown Menus */
 
-		this.voicepack = this.add.existing(new Dropdown({
+		this.add.existing(new Dropdown({
 			scene: this,
 			x: this.width * .6,
 			y: this.height * .35,

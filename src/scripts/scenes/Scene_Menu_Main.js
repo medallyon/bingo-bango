@@ -1,14 +1,16 @@
 import * as Phaser from "phaser";
 
-import { BINGO } from "../globals.js";
+import Scene from "../objects/Scene.js";
 import Button from "../objects/buttons/Button.js";
-import Voicepack from "../classes/Voicepack.js";
 
-class Scene_Menu_Main extends Phaser.Scene
+class Scene_Menu_Main extends Scene
 {
 	constructor()
 	{
-		super({ key: "Scene_Menu_Main" });
+		super({
+			key: "Scene_Menu_Main",
+			wallpaper: true
+		});
 
 		this.buttons = {
 			play: null,
@@ -37,10 +39,7 @@ class Scene_Menu_Main extends Phaser.Scene
 
 	create(data = {})
 	{
-		/* Wallpaper */
-		this.wallpaper = new Phaser.GameObjects.Image(this, this.cameras.main.width/2, this.cameras.main.height/2, `bg_wallpaper_0${Math.floor(Math.random() * 4)}`).setDepth(0);
-		this.wallpaper.setScale(0.7111);
-		this.add.existing(this.wallpaper);
+		super.create(data);
 
 		/* Logo */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.25, "logo").setScale(0.5);
@@ -67,7 +66,9 @@ class Scene_Menu_Main extends Phaser.Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.start("Scene_Game");
+			this.scene.start("Scene_Game", {
+				previousScene: "Scene_Menu_Main"
+			});
 		});
 
 		this.buttons.settings.on("pointerup", (pointer) =>
@@ -76,7 +77,9 @@ class Scene_Menu_Main extends Phaser.Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.start("Scene_Menu_Settings");
+			this.scene.start("Scene_Menu_Settings", {
+				previousScene: "Scene_Menu_Main"
+			});
 		});
 	}
 

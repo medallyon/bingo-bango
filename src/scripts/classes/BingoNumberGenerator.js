@@ -17,24 +17,23 @@ class BingoNumberGenerator
 
 	/**
 	 * @param {string} [column] - If specified, retrieves a number from the desired BINGO column
-	 * @return {number} - Retrieves a random, not yet called, number from the available pool of Bingo Numbers. Ensures that numbers cannot be duplicate.
+	 * @return {object} - Retrieves a random, not yet called, number from the available pool of Bingo Numbers. Ensures that numbers cannot be duplicate.
 	 */
 	random(column = null)
 	{
-		if (column && (typeof column) === "string")
-			column.toUpperCase();
+		if (column != null && (typeof column) === "string")
+			column = column.toUpperCase();
+		else
+			column = BINGO[Math.floor(Math.random() * BINGO.length)];
 
 		let number;
 		do
 		{
-			if (column == null || (column && !BINGO.includes(column)))
-				number = 1 + Math.floor(Math.random() * this.max);
-			else
-				number = 1 + (BINGO.indexOf(column) * this.maxPerColumn) + Math.floor(Math.random() * this.maxPerColumn);
+			number = 1 + (BINGO.indexOf(column) * this.maxPerColumn) + Math.floor(Math.random() * this.maxPerColumn);
 		} while (this.usedNumbers.includes(number));
 
 		this.usedNumbers.push(number);
-		return number;
+		return { column, number };
 	}
 }
 

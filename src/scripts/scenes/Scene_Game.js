@@ -1,48 +1,97 @@
 import * as Phaser from "phaser";
 
+import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
+
+import Scene from "../objects/Scene.js";
 import CardHolder from "../objects/CardHolder.js";
 import ScoreTracker from "../objects/ScoreTracker.js";
 import ScoreBoard from "../objects/ScoreBoard.js";
+import BallQueue from "../objects/BallQueue.js";
 
-class Scene_Game extends Phaser.Scene
+class Scene_Game extends Scene
 {
 	constructor()
 	{
-		super({ key: "Scene_Game" });
+		super({
+			key: "Scene_Game",
+			wallpaper: true
+		});
 
 		this.connection = null;
-		this.cards = null;
+		this.flow = {
+			bingo: new BingoNumberGenerator(),
+			counted: 0,
+			interval: null
+		};
+
 		this.score = {
 			tracker: null,
 			board: null
 		};
+
+		this.cards = null;
+		this.queue = null;
+	}
+
+	_createCards(layout = 2)
+	{
+		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
+		this.add.existing(this.cards);
+	}
+
+	_createScoreBoard()
+	{
+		this.score.board = new ScoreBoard({
+			scene: this,
+			x: this.width * .825,
+			y: this.height * .65
+		});
+		this.score.board.setScale(.5);
+		this.add.existing(this.score.board);
+	}
+
+	_createBallQueue()
+	{
+		this.queue = new BallQueue({
+			scene: this,
+			x: this.width * .5,
+			y: this.height * .15
+		});
+		this.queue.setScale(.5);
+		this.add.existing(this.queue);
 	}
 
 	create(data = {})
 	{
-		this.wallpaper = new Phaser.GameObjects.Image(this, this.cameras.main.width/2, this.cameras.main.height/2, `bg_wallpaper_0${Math.floor(Math.random() * 4)}`);
-		this.wallpaper.setScale(0.7111);
-		this.add.existing(this.wallpaper);
+		super.create(data);
+
+		this.connection = this.game.connection;
 
 		this.score.tracker = new ScoreTracker({
 			scene: this,
-			x: this.cameras.main.width * .88,
-			y: this.cameras.main.height * .1
+			x: this.width * .88,
+			y: this.height * .1
 		});
 		this.score.tracker.setScale(.65);
 		this.add.existing(this.score.tracker);
 
-		this.score.board = new ScoreBoard({
-			scene: this,
-			x: this.cameras.main.width * .825,
-			y: this.cameras.main.height * .65
-		});
-		this.score.board.setScale(.5);
-		this.add.existing(this.score.board);
+		this._createCards(data.cards || 4);
+		this._createScoreBoard();
+		this._createBallQueue();
 
-		const spawnCards = data.cards || 4;
-		this.cards = new CardHolder(spawnCards, this, this.cameras.main.width * .5, this.cameras.main.height * (spawnCards < 3 ? .25 : .12));
-		this.add.existing(this.cards);
+		this.flow.bingo = new BingoNumberGenerator();
+		this.flow.counted = 0;
+		this.flow.interval = setInterval(() =>
+		{
+			const { column, number } = this.flow.bingo.random();
+			const voicepack = this.game.announcer
+				, variation = voicepack[column].get(number).random();
+
+			this.game.audio.voice.play(variation);
+
+			if (++this.flow.counted === 45)
+				clearInterval(this.flow.interval);
+		}, 5000);
 	}
 
 	update()

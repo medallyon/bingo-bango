@@ -37,7 +37,7 @@ class Card extends Phaser.GameObjects.Container
 			const column = BINGO[i];
 			for (let j = 0; j < this.colLength; j++)
 			{
-				let randomNumber = this.bingoNumbers.random(column)
+				let { number } = this.bingoNumbers.random(column)
 					, button;
 
 				// skip center center button
@@ -65,7 +65,7 @@ class Card extends Phaser.GameObjects.Container
 						x: ROW_START_X + (i * BUTTON_WIDTH),
 						y: ROW_START_Y + (j * BUTTON_WIDTH),
 						texture: `bg_tile_${BINGO[i]}`,
-						overlay: new TextOverlay(this.scene, randomNumber.toString()),
+						overlay: new TextOverlay(this.scene, number.toString()),
 						on: {
 							pointerup: function()
 							{

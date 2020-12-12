@@ -6,10 +6,16 @@ class BallQueue extends Phaser.GameObjects.Container
 	{
 		super(data.scene, data.x, data.y);
 
-		this.scores = {};
+		this.balls = [];
 
-		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_ballQueue");
+		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_ballQueue")
+			.setRotation(Math.PI / 2);
 		this.add(this.bg);
+	}
+
+	addBall()
+	{
+
 	}
 }
 

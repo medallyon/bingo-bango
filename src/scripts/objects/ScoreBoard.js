@@ -8,7 +8,7 @@ class ScoreBoard extends Phaser.GameObjects.Container
 
 		this.scores = {};
 
-		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_panel_scoreboard");
+		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "panel_scoreboard");
 		this.add(this.bg);
 	}
 }
