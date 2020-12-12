@@ -4,6 +4,12 @@ import Setting from "../Setting.js";
 
 class Slider extends Setting
 {
+	static preload(load)
+	{
+		load.setPath("assets/img/buttons/");
+		load.image("slider_knob", "slider.png");
+	}
+
 	get value()
 	{
 		return super.value;

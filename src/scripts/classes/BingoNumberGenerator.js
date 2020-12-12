@@ -5,6 +5,38 @@ import { BINGO } from "../globals.js";
  */
 class BingoNumberGenerator
 {
+	get B()
+	{
+		return new Array(this.maxPerColumn).fill(0).map((x, i) => this.maxPerColumn * 0 + i + 1);
+	}
+	get I()
+	{
+		return new Array(this.maxPerColumn).fill(0).map((x, i) => this.maxPerColumn * 1 + i + 1);
+	}
+	get N()
+	{
+		return new Array(this.maxPerColumn).fill(0).map((x, i) => this.maxPerColumn * 2 + i + 1);
+	}
+	get G()
+	{
+		return new Array(this.maxPerColumn).fill(0).map((x, i) => this.maxPerColumn * 3 + i + 1);
+	}
+	get O()
+	{
+		return new Array(this.maxPerColumn).fill(0).map((x, i) => this.maxPerColumn * 4 + i + 1);
+	}
+
+	getLetter(number) { return this.getColumn(number); }
+	/**
+	 * @param {number} number - A valid number in the current bingo generator configuration
+	 * @return {string} - The letter in the "BINGO" column that the number corresponds to
+	 */
+	getColumn(number)
+	{
+		// subtract a single fraction so that the last number in this configuration is included
+		return BINGO[Math.floor((number / this.maxPerColumn) - (1 / this.maxPerColumn))];
+	}
+
 	/**
 	 * @param {number} [maxPerColumn=15] - The maximum amount of numbers that can be present in a BINGO column
 	 */

@@ -4,9 +4,9 @@ import ButtonOverlay from "./ButtonOverlay.js";
 
 class ImageOverlay extends ButtonOverlay
 {
-	constructor(scene, texture)
+	constructor(scene, texture, data = { image: {} })
 	{
-		super(scene);
+		super(Object.assign({ scene }, data));
 
 		this.image = new Phaser.GameObjects.Image(this.scene, 0, 0, texture);
 		this.add(this.image);

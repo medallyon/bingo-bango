@@ -8,6 +8,19 @@ import ImageOverlay from "./buttons/overlays/ImageOverlay.js";
 
 class Card extends Phaser.GameObjects.Container
 {
+	static preload(load)
+	{
+		load.setPath("assets/img/card/");
+
+		// BINGO Tiles
+		for (let i = 0; i < 5; i++)
+			load.image(`tile_${BINGO[i]}`, `tile_${BINGO[i]}.png`);
+
+		// Button Tile Backgrounds
+		for (let i = 0; i < 5; i++)
+			load.image(`bg_tile_${BINGO[i]}`, `bg_tile_${BINGO[i]}.png`);
+	}
+
 	_generateBingoRow()
 	{
 		const BINGO_ROW_START_X = 0 - (Math.floor(BINGO.length / 2) * BUTTON_WIDTH)

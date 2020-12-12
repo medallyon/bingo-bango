@@ -6,6 +6,19 @@ import Button from "../../buttons/Button.js";
 
 class Dropdown extends Setting
 {
+	static preload(load)
+	{
+		load.setPath("assets/img/UI/dropdown/");
+
+		load.image("dropdown_arrow", "arrow.png");
+		load.image("dropdown_main", "main.png");
+		load.image("dropdown_main_hover", "main_hover.png");
+		load.image("dropdown_item", "item.png");
+		load.image("dropdown_item_hover", "item_hover.png");
+		load.image("dropdown_item_last", "item_last.png");
+		load.image("dropdown_item_last_hover", "item_last_hover.png");
+	}
+
 	get value()
 	{
 		return super.value;

@@ -54,10 +54,10 @@ class Scene_Game extends Scene
 	{
 		this.queue = new BallQueue({
 			scene: this,
-			x: this.width * .5,
-			y: this.height * .15
+			x: this.width * .15,
+			y: this.height * .5
 		});
-		this.queue.setScale(.5);
+		this.queue.setScale(.6);
 		this.add.existing(this.queue);
 	}
 
@@ -84,14 +84,17 @@ class Scene_Game extends Scene
 		this.flow.interval = setInterval(() =>
 		{
 			const { column, number } = this.flow.bingo.random();
+
+			const ball = this.queue.createBall(column, number);
+			this.queue.push(ball);
+
 			const voicepack = this.game.announcer
 				, variation = voicepack[column].get(number).random();
-
 			this.game.audio.voice.play(variation);
 
 			if (++this.flow.counted === 45)
 				clearInterval(this.flow.interval);
-		}, 5000);
+		}, data.timeBetweenCalls || 7500);
 	}
 
 	update()

@@ -2,12 +2,12 @@ import * as Phaser from "phaser";
 
 class ButtonOverlay extends Phaser.GameObjects.Container
 {
-	constructor(scene)
+	constructor(data)
 	{
 		if (new.target === ButtonOverlay)
 			throw new TypeError("Cannot construct ButtonOverlay instances directly");
 
-		super(scene, 0, 0);
+		super(data.scene, data.x, data.y);
 
 		this.text = null;
 		this.image = null;
