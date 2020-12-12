@@ -15,7 +15,7 @@ class SettingsManager extends Map
 				voice: 1,
 				effects: 1
 			},
-			"voicePack": "deyan"
+			"voicepack": "deyan"
 		};
 	}
 
