@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 
 import Slider from "../objects/settings/variations/Slider.js";
+import Dropdown from "../objects/settings/variations/Dropdown.js";
 
 class Scene_Menu_Settings extends Phaser.Scene
 {
@@ -26,12 +27,23 @@ class Scene_Menu_Settings extends Phaser.Scene
 		this.add.existing(this.wallpaper);
 
 		/* Setting Panel Background */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "bg_panel_settings")
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_settings")
 			.setScale(0.7);
 
-		/* Volume Sliders */
+		/* Dropdown Menus */
 
-		// TODO: Add "Settings" title
+		this.voicepack = this.add.existing(new Dropdown({
+			scene: this,
+			x: this.width * .6,
+			y: this.height * .35,
+			key: "voicepack",
+			title: "Announcer Pack",
+			choices: [{
+				name: "deyan"
+			}]
+		}));
+
+		/* Volume Sliders */
 
 		const DEFAULTS_SLIDER = {
 			scene: this,

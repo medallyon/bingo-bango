@@ -50,7 +50,6 @@ class Slider extends Setting
 				fill: "#ffffff"
 			});
 			this.title.setOrigin(0, .5);
-
 			this.add(this.title);
 		}
 

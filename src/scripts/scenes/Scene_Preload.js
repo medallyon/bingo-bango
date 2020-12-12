@@ -65,17 +65,26 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("bg_score", "UI/bg_score.png");
 
 		// Panels
-		this.load.image("bg_panel_customLobby", "UI/panels/bg_panel_customLobby.png");
-		this.load.image("bg_panel_customLobby_split", "UI/panels/bg_panel_customLobby_split.png");
-		this.load.image("bg_panel_leaderboard", "UI/panels/bg_panel_leaderboard.png");
-		this.load.image("bg_panel_lobbies", "UI/panels/bg_panel_lobbies.png");
-		this.load.image("bg_panel_lobbies_split", "UI/panels/bg_panel_lobbies_split.png");
-		this.load.image("bg_panel_lobby", "UI/panels/bg_panel_lobby.png");
-		this.load.image("bg_panel_lobby_split", "UI/panels/bg_panel_lobby_split.png");
-		this.load.image("bg_panel_lobby_alt", "UI/panels/bg_panel_lobby_alt.png");
-		this.load.image("bg_panel_scoreboard", "UI/panels/bg_panel_scoreboard.png");
-		this.load.image("bg_panel_scores", "UI/panels/bg_panel_scores.png");
-		this.load.image("bg_panel_settings", "UI/panels/bg_panel_settings01.png");
+		this.load.image("panel_customLobby", "UI/panels/bg_panel_customLobby.png");
+		this.load.image("panel_customLobby_split", "UI/panels/bg_panel_customLobby_split.png");
+		this.load.image("panel_leaderboard", "UI/panels/bg_panel_leaderboard.png");
+		this.load.image("panel_lobbies", "UI/panels/bg_panel_lobbies.png");
+		this.load.image("panel_lobbies_split", "UI/panels/bg_panel_lobbies_split.png");
+		this.load.image("panel_lobby", "UI/panels/bg_panel_lobby.png");
+		this.load.image("panel_lobby_split", "UI/panels/bg_panel_lobby_split.png");
+		this.load.image("panel_lobby_alt", "UI/panels/bg_panel_lobby_alt.png");
+		this.load.image("panel_scoreboard", "UI/panels/bg_panel_scoreboard.png");
+		this.load.image("panel_scores", "UI/panels/bg_panel_scores.png");
+		this.load.image("panel_settings", "UI/panels/bg_panel_settings01.png");
+
+		// Dropdowns
+		this.load.image("dropdown_arrow", "UI/dropdown/arrow.png");
+		this.load.image("dropdown_main", "UI/dropdown/main.png");
+		this.load.image("dropdown_main_hover", "UI/dropdown/main_hover.png");
+		this.load.image("dropdown_item", "UI/dropdown/item.png");
+		this.load.image("dropdown_item_hover", "UI/dropdown/item_hover.png");
+		this.load.image("dropdown_item_last", "UI/dropdown/item_last.png");
+		this.load.image("dropdown_item_last_hover", "UI/dropdown/item_last_hover.png");
 
 		// Menu Buttons
 		this.load.image("button_back", "buttons/button_back.png");
@@ -89,12 +98,12 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("button_settings", "buttons/button_settings.png");
 
 		// Progress Bars
-		this.load.image("bg_progress", "UI/progress/bg_progress.png");
-		this.load.image("bg_progress_blue", "UI/progress/bg_progress_blue.png");
-		this.load.image("bg_progress_green", "UI/progress/bg_progress_green.png");
-		this.load.image("bg_progress_orange", "UI/progress/bg_progress_orange.png");
-		this.load.image("bg_progress_purple", "UI/progress/bg_progress_purple.png");
-		this.load.image("bg_progress_red", "UI/progress/bg_progress_red.png");
+		this.load.image("progress", "UI/progress/bg_progress.png");
+		this.load.image("progress_blue", "UI/progress/bg_progress_blue.png");
+		this.load.image("progress_green", "UI/progress/bg_progress_green.png");
+		this.load.image("progress_orange", "UI/progress/bg_progress_orange.png");
+		this.load.image("progress_purple", "UI/progress/bg_progress_purple.png");
+		this.load.image("progress_red", "UI/progress/bg_progress_red.png");
 
 		// Slider
 		this.load.image("slider", "buttons/slider.png");
