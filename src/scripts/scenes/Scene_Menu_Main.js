@@ -32,6 +32,9 @@ class Scene_Menu_Main extends Scene
 			},
 			pointerup: function()
 			{
+				//this.scene.game.audio.play("audio_button01", this.scene.game.audio.effects);
+
+				this.scene.game.audio.master.play("audio_button01");
 				this.bg.clearTint();
 			}
 		};
@@ -65,7 +68,6 @@ class Scene_Menu_Main extends Scene
 			// left mouse button
 			if (pointer.button !== 0)
 				return;
-
 			this.scene.start("Scene_Game", {
 				previousScene: "Scene_Menu_Main"
 			});
@@ -76,7 +78,6 @@ class Scene_Menu_Main extends Scene
 			// left mouse button
 			if (pointer.button !== 0)
 				return;
-
 			this.scene.sleep();
 			this.scene.run("Scene_Menu_Settings");
 		});

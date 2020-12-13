@@ -20,6 +20,7 @@ class Scene_Menu_Settings extends Scene
 			},
 			pointerup: function()
 			{
+				this.scene.game.audio.master.play("audio_button01");
 				this.bg.clearTint();
 			}
 		};
@@ -54,7 +55,7 @@ class Scene_Menu_Settings extends Scene
 			key: "voicepack",
 			title: "Announcer Pack",
 			choices: [{
-				name: "deyan"
+				name: "Deyan"
 			}]
 		}));
 
@@ -65,9 +66,18 @@ class Scene_Menu_Settings extends Scene
 			targetScene: "Scene_Menu_Main",
 			x: this.width * .1,
 			y: this.height * .075,
-			// on: this._defaultButtonHandlers
+			on: this._defaultButtonHandlers
 		}).setScale(.5);
 		this.add.existing(this.buttons.back);
+
+		this.buttons.back.on("pointerup", (pointer) =>
+		{
+			// left mouse button
+			if (pointer.button !== 0)
+				return;
+			this.scene.sleep();
+			this.scene.run("Scene_Menu_Main");
+		});
 
 		/* Volume Sliders */
 

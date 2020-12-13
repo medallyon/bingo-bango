@@ -80,10 +80,13 @@ class Scene_Preload extends Phaser.Scene
 
 		// Wallpapers
 		this.load.setPath("/assets/img/wallpapers");
-		this._importImageSeries("bg_wallpaper_", 4, "jpg", 0, 2); // bg_wallpaper_00, ...
+		this._importImageSeries("bg_wallpaper_", 5, "jpg", 0, 2); // bg_wallpaper_00, ...
 
 		/* AUDIO */
 		this.load.setPath("/assets/audio");
+		this.load.audio("audio_button01", "buttons/button01.wav");
+		this.load.audio("audio_button01", "buttons/button01.wav");
+		this.load.audio("audio_music01", "music/audio_music01.wav");
 
 		// Voicepacks
 		this.load.setPath("/assets/audio/voice-packs/");

@@ -87,7 +87,6 @@ class Bingo extends Phaser.Game
 		this.xp = 0;
 
 		this.announcer = new Voicepack();
-
 		this.connection = new ConnectionHandler(this);
 	}
 }
