@@ -92,7 +92,7 @@ class Scene_Preload extends Phaser.Scene
 
 	create()
 	{
-		this.scene.start("Scene_Menu_Main");
+		this.scene.start("Scene_Loading");
 	}
 }
 
