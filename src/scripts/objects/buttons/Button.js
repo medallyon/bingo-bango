@@ -20,7 +20,7 @@ class Button extends Phaser.GameObjects.Container
 			pointerup: function()
 			{
 				this.bg.setTint(0XDDDDDD);
-				this.scene.game.audio.play("audio_button_01", "effects");
+				this.scene.game.audio.effects.play("audio_button_01");
 			}
 		};
 	}

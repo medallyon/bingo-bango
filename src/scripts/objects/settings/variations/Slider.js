@@ -25,7 +25,7 @@ class Slider extends Setting
 	{
 		super(data);
 
-		this.element = new RexSlider(this.scene, Object.assign({
+		const config = Object.assign({
 			x: data.x,
 			y: data.y,
 
@@ -36,8 +36,6 @@ class Slider extends Setting
 			valuechangeCallback: val => // on change
 			{
 				this.value = val;
-				if (data.onChanged && (typeof data.onChanged) === "function")
-					data.onChanged(val);
 			},
 
 			orientation: "x", // "x" or "y" - down or sideways
@@ -46,7 +44,19 @@ class Slider extends Setting
 			track: this.scene.rexUI.add.roundRectangle(0, 0, 0, 0, 10, 0xFDFEFE), // background bar
 			indicator: this.scene.rexUI.add.roundRectangle(0, 0, 0, 0, 10, 0x85C1E9), // background active bar
 			thumb: this.scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, 0x1A5276), // slider button
-		}, data.element));
+		}, data.element);
+
+		// override event when supplied in data to both execute default & custom handlers
+		if (data.valuechangeCallback)
+		{
+			config.valuechangeCallback = (val) =>
+			{
+				this.value = val;
+				data.valuechangeCallback(val);
+			};
+		}
+
+		this.element = new RexSlider(this.scene, config);
 		this.element.layout();
 
 		if (data.title)

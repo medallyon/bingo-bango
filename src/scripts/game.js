@@ -3,6 +3,7 @@ import * as Phaser from "phaser";
 import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 import SettingsManager from "./classes/SettingsManager.js";
+import AudioChannel from "./classes/AudioChannel.js";
 import AudioManager from "./classes/AudioManager.js";
 import ConnectionHandler from "./classes/ConnectionHandler.js";
 import Voicepack from "./classes/Voicepack.js";
@@ -43,6 +44,9 @@ class Bingo extends Phaser.Game
 		super({
 			type: Phaser.AUTO,
 			backgroundColor: "#ffffff",
+			audio: {
+				disableWebAudio: true
+			},
 			scale: {
 				parent: anchor.replace(/^#/, ""),
 				mode: Phaser.Scale.FIT,
@@ -62,15 +66,7 @@ class Bingo extends Phaser.Game
 				preBoot: (game) =>
 				{
 					game.settings = new SettingsManager();
-					game.audio = new AudioManager({
-						master: Phaser.Sound.SoundManagerCreator.create(game),
-						music: Phaser.Sound.SoundManagerCreator.create(game),
-						voice: Phaser.Sound.SoundManagerCreator.create(game),
-						effects: Phaser.Sound.SoundManagerCreator.create(game)
-					});
-
-					for (const [ key, man ] of Object.entries(game.audio.managers))
-						man.setVolume(game.settings.get("volumes")[key]);
+					game.audio = new AudioManager(game, [ "music", "voice", "effects" ]);
 				}
 			},
 			plugins: {

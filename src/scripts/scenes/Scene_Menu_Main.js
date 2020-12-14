@@ -1,5 +1,3 @@
-import * as Phaser from "phaser";
-
 import Scene from "../objects/Scene.js";
 import Button from "../objects/buttons/Button.js";
 
@@ -22,6 +20,9 @@ class Scene_Menu_Main extends Scene
 	create(data = {})
 	{
 		super.create(data);
+
+		// FIXME: Plays at full volume until the Settings Scene is loaded. Figure out why and/or how to fix it.
+		this.game.audio.music.play("audio_music_bg_01");
 
 		/* Logo */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.25, "logo").setScale(0.5);
