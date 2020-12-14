@@ -37,6 +37,12 @@ class SettingsManager extends Map
 
 		this._composeDefaults();
 		this._populateFromStore();
+
+		// this is a hack to fetch any user-stored values on game start. Otherwise it uses the default values for everything.
+		store.each((val, key) =>
+		{
+			store.get(key);
+		});
 	}
 
 	get(key)

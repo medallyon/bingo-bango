@@ -36,6 +36,8 @@ class Slider extends Setting
 			valuechangeCallback: val => // on change
 			{
 				this.value = val;
+				if (data.onChanged && (typeof data.onChanged) === "function")
+					data.onChanged(val);
 			},
 
 			orientation: "x", // "x" or "y" - down or sideways
