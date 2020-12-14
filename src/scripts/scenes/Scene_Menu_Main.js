@@ -19,27 +19,6 @@ class Scene_Menu_Main extends Scene
 		};
 	}
 
-	get _defaultButtonHandlers()
-	{
-		return {
-			pointerdown: function()
-			{
-				this.bg.setTint(0X000000);
-			},
-			pointerout: function()
-			{
-				this.bg.clearTint();
-			},
-			pointerup: function()
-			{
-				// this.scene.game.audio.play("audio_button_01", this.scene.game.audio.effects);
-
-				this.scene.game.audio.master.play("audio_button_01");
-				this.bg.clearTint();
-			}
-		};
-	}
-
 	create(data = {})
 	{
 		super.create(data);
@@ -55,8 +34,7 @@ class Scene_Menu_Main extends Scene
 					scene: this,
 					x: this.game.renderer.width * .5,
 					y: this.game.renderer.height * (.5 + (i * .175)),
-					texture: `button_${key}`,
-					on: this._defaultButtonHandlers
+					texture: `button_${key}`
 				});
 
 			btn.setScale(.69);
@@ -68,9 +46,9 @@ class Scene_Menu_Main extends Scene
 			// left mouse button
 			if (pointer.button !== 0)
 				return;
-			this.scene.start("Scene_Game", {
-				previousScene: "Scene_Menu_Main"
-			});
+
+			this.scene.sleep();
+			this.scene.run("Scene_Game");
 		});
 
 		this.buttons.settings.on("pointerup", (pointer) =>
@@ -78,6 +56,7 @@ class Scene_Menu_Main extends Scene
 			// left mouse button
 			if (pointer.button !== 0)
 				return;
+
 			this.scene.sleep();
 			this.scene.run("Scene_Menu_Settings");
 		});

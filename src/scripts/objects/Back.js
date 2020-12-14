@@ -4,22 +4,24 @@ import Button from "./buttons/Button.js";
 
 class Back extends Button
 {
-	constructor(data)
+	constructor(targetScene, data)
 	{
 		super(Object.assign({
 			texture: "button_back",
 			on: {
-				pointerdown: (pointer) =>
+				pointerup: (pointer) =>
 				{
 					// left mouse button
 					if (pointer.button !== 0)
 						return;
 
 					data.scene.scene.sleep();
-					data.scene.scene.run(data.targetScene);
+					data.scene.scene.run(targetScene);
 				}
 			}
 		}, data));
+
+		this.on("pointerup", this._defaultButtonHandlers["pointerup"]);
 	}
 }
 

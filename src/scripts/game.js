@@ -69,7 +69,7 @@ class Bingo extends Phaser.Game
 						effects: Phaser.Sound.SoundManagerCreator.create(game)
 					});
 
-					for (const [ key, man ] of Object.entries(game.audio))
+					for (const [ key, man ] of Object.entries(game.audio.managers))
 						man.setVolume(game.settings.get("volumes")[key]);
 				}
 			},

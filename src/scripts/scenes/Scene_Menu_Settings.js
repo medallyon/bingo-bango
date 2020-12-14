@@ -7,25 +7,6 @@ import Dropdown from "../objects/settings/variations/Dropdown.js";
 
 class Scene_Menu_Settings extends Scene
 {
-	get _defaultButtonHandlers()
-	{
-		return {
-			pointerdown: function()
-			{
-				this.bg.setTint(0XFFFFFF);
-			},
-			pointerout: function()
-			{
-				this.bg.clearTint();
-			},
-			pointerup: function()
-			{
-				this.scene.game.audio.master.play("audio_button_01");
-				this.bg.clearTint();
-			}
-		};
-	}
-
 	constructor()
 	{
 		super({
@@ -42,9 +23,18 @@ class Scene_Menu_Settings extends Scene
 	{
 		super.create(data);
 
-		/* Setting Panel Background */
+		/* Settings Panel Background */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_settings")
 			.setScale(0.7);
+
+		/* Back Button */
+
+		this.buttons.back = new Back("Scene_Menu_Main", {
+			scene: this,
+			x: this.width * .1,
+			y: this.height * .075
+		}).setScale(.5);
+		this.add.existing(this.buttons.back);
 
 		/* Dropdown Menus */
 
@@ -58,26 +48,6 @@ class Scene_Menu_Settings extends Scene
 				name: "Deyan"
 			}]
 		}));
-
-		/* Back Button */
-
-		this.buttons.back = new Back({
-			scene: this,
-			targetScene: "Scene_Menu_Main",
-			x: this.width * .1,
-			y: this.height * .075,
-			on: this._defaultButtonHandlers
-		}).setScale(.5);
-		this.add.existing(this.buttons.back);
-
-		this.buttons.back.on("pointerup", (pointer) =>
-		{
-			// left mouse button
-			if (pointer.button !== 0)
-				return;
-			this.scene.sleep();
-			this.scene.run("Scene_Menu_Main");
-		});
 
 		/* Volume Sliders */
 
@@ -95,6 +65,10 @@ class Scene_Menu_Settings extends Scene
 			y: this.height * .5,
 			key: "volumes.master",
 			title: "Master",
+			onChanged: (val) =>
+			{
+				this.game.audio.master.setVolume(val);
+			}
 		})));
 
 		// volume-music slider
@@ -103,6 +77,10 @@ class Scene_Menu_Settings extends Scene
 			y: this.height * .6,
 			key: "volumes.music",
 			title: "Music",
+			onChanged: (val) =>
+			{
+				this.game.audio.music.setVolume(val);
+			}
 		})));
 
 		// volume-voice slider
@@ -111,6 +89,10 @@ class Scene_Menu_Settings extends Scene
 			y: this.height * .7,
 			key: "volumes.voice",
 			title: "Announcers",
+			onChanged: (val) =>
+			{
+				this.game.audio.voice.setVolume(val);
+			}
 		})));
 
 		// volume-effects slider
@@ -119,6 +101,10 @@ class Scene_Menu_Settings extends Scene
 			y: this.height * .8,
 			key: "volumes.effects",
 			title: "Effects",
+			onChanged: (val) =>
+			{
+				this.game.audio.effects.setVolume(val);
+			}
 		})));
 	}
 }
