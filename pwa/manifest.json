@@ -1,22 +1,22 @@
 {
-  "short_name": "Phaser Game",
-  "name": "My Cool Phaser 3 Game",
+  "short_name": "Bingo Bango",
+  "name": "Bingo bango",
   "icons": [
     {
-      "src": "./icons/icons-192.png",
+      "src": "./icons/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "./icons/icons-512.png",
+      "src": "./icons/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
   "start_url": "./index.html",
-  "background_color": "#e6e6e6",
+  "background_color": "#d78daf",
   "display": "fullscreen",
   "orientation": "landscape",
   "scope": "./",
-  "theme_color": "#000000"
+  "theme_color": "#d78daf"
 }
