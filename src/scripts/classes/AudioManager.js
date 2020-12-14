@@ -5,6 +5,7 @@ class AudioManager
 {
 	constructor(managers = {})
 	{
+		this.managers = managers;
 		for (const [ key, man ] of Object.entries(managers))
 			this[key] = man;
 	}
@@ -15,17 +16,18 @@ class AudioManager
 	 * @param {number} [volume=1] - Volume to play at (0..1)
 	 * @returns {boolean} - Whether the sound successfully started playing
 	 */
-	play(key, manager, volume = 1)
+	play(key, channel = "master", volume = 1, config = {})
 	{
-		if (manager == null)
-			manager = this.master || null;
-
-		if (!manager)
+		let manager;
+		if (typeof channel === "string" && this.managers[channel])
+			manager = this.managers[channel];
+		else
 			return false;
 
-		// Multiply the volume value with the master volume
-		volume = (this.master) ? volume * this.master.volume : volume;
-		return manager.play(key, volume);
+		// Multiply the volume value with the master volume and the channel volume
+		volume = manager.volume * ((this.master) ? volume * this.master.volume : volume);
+
+		return manager.play(key, Object.assign(config, { volume }));
 	}
 }
 
