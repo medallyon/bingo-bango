@@ -32,9 +32,9 @@ class Scene_Menu_Main extends Scene
 			},
 			pointerup: function()
 			{
-				//this.scene.game.audio.play("audio_button01", this.scene.game.audio.effects);
+				// this.scene.game.audio.play("audio_button_01", this.scene.game.audio.effects);
 
-				this.scene.game.audio.master.play("audio_button01");
+				this.scene.game.audio.master.play("audio_button_01");
 				this.bg.clearTint();
 			}
 		};

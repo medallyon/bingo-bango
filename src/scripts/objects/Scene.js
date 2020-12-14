@@ -1,20 +1,21 @@
 import * as Phaser from "phaser";
 
+import Scene_Preload from "../scenes/Scene_Preload.js";
+
 class Scene extends Phaser.Scene
 {
 	static preload(load)
 	{
-		load.setPath("assets/img/buttons");
+		// Wallpapers
+		load.setPath("/assets/img/wallpapers/");
+		Scene_Preload.importImageSeries(load, "bg_wallpaper_", 5, "jpg", 0, 2); // bg_wallpaper_00, ...
 
-		load.image("button_back", "button_back.png");
-		load.image("button_createLobby", "button_createLobby.png");
-		load.image("button_exit", "button_exit.png");
-		load.image("button_icon_resume", "button_icon_resume.png");
-		load.image("button_leaderboard", "button_leaderboard.png");
-		load.image("button_pause", "button_pause.png");
-		load.image("button_play", "button_play.png");
-		load.image("button_resume", "button_resume.png");
-		load.image("button_settings", "button_settings.png");
+		// Buttons
+		load.setPath("assets/img/buttons/");
+
+		const buttons = [ "back", "createLobby", "exit", "icon_resume", "leaderboard", "pause", "play", "resume", "settings" ];
+		for (const asset of buttons)
+			load.image(`button_${asset}`, `button_${asset}.png`);
 	}
 
 	get width()
@@ -28,7 +29,6 @@ class Scene extends Phaser.Scene
 
 	constructor(config)
 	{
-		console.log(config);
 		super(config);
 		this.key = config.key;
 

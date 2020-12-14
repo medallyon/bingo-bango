@@ -11,7 +11,6 @@ import Scene_Preload from "./scenes/Scene_Preload.js";
 import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
 import Scene_Menu_Settings from "./scenes/Scene_Menu_Settings.js";
 import Scene_Game from "./scenes/Scene_Game.js";
-import Scene_Loading from "./scenes/Scene_Loading.js";
 
 Array.prototype.first = function()
 {
@@ -51,7 +50,7 @@ class Bingo extends Phaser.Game
 				width: 1280,
 				height: 720
 			},
-			scene: [ Scene_Preload, Scene_Menu_Main, Scene_Loading, Scene_Menu_Settings, Scene_Game ],
+			scene: [ Scene_Preload, Scene_Menu_Main, Scene_Menu_Settings, Scene_Game ],
 			physics: {
 				default: "arcade",
 				arcade: {
