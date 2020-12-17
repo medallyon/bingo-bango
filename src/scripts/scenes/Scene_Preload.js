@@ -1,9 +1,7 @@
 import * as Phaser from "phaser";
 
-import { BINGO } from "../globals.js";
-import Voicepack from "../classes/Voicepack.js";
-
 import * as objects from "../objects/objects.js";
+import Voicepack from "../classes/Voicepack.js";
 
 class Scene_Preload extends Phaser.Scene
 {
@@ -26,6 +24,9 @@ class Scene_Preload extends Phaser.Scene
 				width: width / 3,
 				height: 50
 			};
+
+		this.add.image(width / 2, height / 2, "wallpaper_loading")
+			.setScale(0.7111);
 
 		// actual loading progress bar
 		const progressBar = this.add.graphics();
@@ -70,7 +71,15 @@ class Scene_Preload extends Phaser.Scene
 
 	constructor()
 	{
-		super({ key: "Scene_Preload" });
+		super({
+			key: "Scene_Preload",
+			pack: {
+				// pre-packing assets needed before the preload event (loading screen)
+				files: [
+					{ type: "image", key: "wallpaper_loading", url: "/assets/img/wallpapers/bg_wallpaper_00.jpg" }
+				]
+			}
+		});
 	}
 
 	preload()

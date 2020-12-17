@@ -75,7 +75,7 @@ class Scene_Game extends Scene
 		this.score.tracker.setScale(.65);
 		this.add.existing(this.score.tracker);
 
-		this._createCards(data.cards || 4);
+		this._createCards(data.cards || 2);
 		this._createScoreBoard();
 		this._createBallQueue();
 
