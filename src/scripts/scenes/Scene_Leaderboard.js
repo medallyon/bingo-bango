@@ -3,12 +3,12 @@ import * as Phaser from "phaser";
 import Scene from "../objects/Scene.js";
 import Back from "../objects/Back.js";
 
-class Scene_Menu_Leaderboard extends Scene
+class Scene_Leaderboard extends Scene
 {
 	constructor()
 	{
 		super({
-			key: "Scene_Menu_Leaderboard",
+			key: "Scene_Leaderboard",
 			wallpaper: true
 		});
 
@@ -41,4 +41,4 @@ class Scene_Menu_Leaderboard extends Scene
 	}
 }
 
-export default Scene_Menu_Leaderboard;
+export default Scene_Leaderboard;

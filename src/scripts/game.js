@@ -3,18 +3,16 @@ import * as Phaser from "phaser";
 import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 import SettingsManager from "./classes/SettingsManager.js";
-import AudioChannel from "./classes/AudioChannel.js";
 import AudioManager from "./classes/AudioManager.js";
 import ConnectionHandler from "./classes/ConnectionHandler.js";
 import Voicepack from "./classes/Voicepack.js";
 
 import Scene_Preload from "./scenes/Scene_Preload.js";
 import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
-import Scene_Menu_Settings from "./scenes/Scene_Menu_Settings.js";
+import Scene_Settings from "./scenes/Scene_Settings.js";
+import Scene_Leaderboard from "./scenes/Scene_Leaderboard.js";
+import Scene_Credits from "./scenes/Scene_Credits.js";
 import Scene_Game from "./scenes/Scene_Game.js";
-import Scene_Menu_Leaderboard from "./scenes/Scene_Menu_Leaderboard.js";
-
-
 
 Array.prototype.first = function()
 {
@@ -57,7 +55,14 @@ class Bingo extends Phaser.Game
 				width: 1280,
 				height: 720
 			},
-			scene: [ Scene_Preload, Scene_Menu_Main, Scene_Menu_Leaderboard, Scene_Menu_Settings, Scene_Game ],
+			scene: [
+				Scene_Preload,
+				Scene_Menu_Main,
+				Scene_Settings,
+				Scene_Leaderboard,
+				Scene_Credits,
+				Scene_Game
+			],
 			physics: {
 				default: "arcade",
 				arcade: {

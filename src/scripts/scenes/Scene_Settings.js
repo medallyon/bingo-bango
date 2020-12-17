@@ -3,12 +3,12 @@ import Back from "../objects/Back.js";
 import VolumeSlider from "../objects/settings/variations/VolumeSlider.js";
 import Dropdown from "../objects/settings/variations/Dropdown.js";
 
-class Scene_Menu_Settings extends Scene
+class Scene_Settings extends Scene
 {
 	constructor()
 	{
 		super({
-			key: "Scene_Menu_Settings",
+			key: "Scene_Settings",
 			wallpaper: true
 		});
 
@@ -91,4 +91,4 @@ class Scene_Menu_Settings extends Scene
 	}
 }
 
-export default Scene_Menu_Settings;
+export default Scene_Settings;

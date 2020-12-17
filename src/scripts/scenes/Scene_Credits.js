@@ -2,12 +2,12 @@ import * as Phaser from "phaser";
 
 import Scene from "../objects/Scene.js";
 
-class Scene_Menu_Credits extends Scene
+class Scene_Credits extends Scene
 {
 	constructor()
 	{
 		super({
-			key: "Scene_Menu_Credits",
+			key: "Scene_Credits",
 			wallpaper: true
 		});
 	}
@@ -23,4 +23,4 @@ class Scene_Menu_Credits extends Scene
 	}
 }
 
-export default Scene_Menu_Credits;
+export default Scene_Credits;

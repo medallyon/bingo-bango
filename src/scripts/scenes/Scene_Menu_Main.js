@@ -59,7 +59,7 @@ class Scene_Menu_Main extends Scene
 				return;
 
 			this.scene.sleep();
-			this.scene.run("Scene_Menu_Settings");
+			this.scene.run("Scene_Settings");
 		});
 
 		this.buttons.leaderboard.on("pointerup", (pointer) =>
@@ -69,7 +69,7 @@ class Scene_Menu_Main extends Scene
 				return;
 
 			this.scene.sleep();
-			this.scene.run("Scene_Menu_Leaderboard");
+			this.scene.run("Scene_Leaderboard");
 		});
 	}
 
