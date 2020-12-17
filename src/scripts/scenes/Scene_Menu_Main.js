@@ -61,6 +61,16 @@ class Scene_Menu_Main extends Scene
 			this.scene.sleep();
 			this.scene.run("Scene_Menu_Settings");
 		});
+
+		this.buttons.leaderboard.on("pointerup", (pointer) =>
+		{
+			// left mouse button
+			if (pointer.button !== 0)
+				return;
+
+			this.scene.sleep();
+			this.scene.run("Scene_Menu_Leaderboard");
+		});
 	}
 
 	update()
