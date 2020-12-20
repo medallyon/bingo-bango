@@ -1,5 +1,3 @@
-import * as Phaser from "phaser";
-
 import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
 
 import Scene from "../objects/Scene.js";

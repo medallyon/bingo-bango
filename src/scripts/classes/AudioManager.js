@@ -39,6 +39,9 @@ class AudioManager
 
 		if (!this.master)
 			this.master = new MasterChannel(this);
+
+		for (const channel of [ this.master ].concat(Object.values(this.channels)))
+			channel.setVolume(channel.desiredVolume);
 	}
 }
 

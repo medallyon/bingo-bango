@@ -10,7 +10,7 @@ class AudioChannel extends Phaser.Sound.HTML5AudioSoundManager
 	// volume as desired by user settings
 	get desiredVolume()
 	{
-		return this.game.settings.get("volumes")[this.key];
+		return this._volumes[this.key];
 	}
 
 	// takes master vol into account
