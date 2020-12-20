@@ -146,6 +146,8 @@ class Scene_Preload extends Phaser.Scene
 		this.load.audio("audio_button_01", "buttons/button_01.wav");
 		this.load.audio("audio_button_02", "buttons/button_02.wav");
 		this.load.audio("audio_music_bg_01", "music/bg_01.mp3");
+		this.load.audio("audio_music_bg_02", "music/bg_02.mp3");
+
 
 		// Voicepacks
 		this.load.setPath("/assets/audio/voice-packs/");
