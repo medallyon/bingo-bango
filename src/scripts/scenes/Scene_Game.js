@@ -41,8 +41,8 @@ class Scene_Game extends Scene
 	{
 		this.score.board = new ScoreBoard({
 			scene: this,
-			x: this.width * .825,
-			y: this.height * .65
+			x: this.width * .88,
+			y: this.height * .5
 		});
 		this.score.board.setScale(.5);
 		this.add.existing(this.score.board);
@@ -64,6 +64,8 @@ class Scene_Game extends Scene
 		super.create(data);
 
 		this.connection = this.game.connection;
+
+		this.game.audio.music.play("audio_music_bg_01");
 
 		this.score.tracker = new ScoreTracker({
 			scene: this,
