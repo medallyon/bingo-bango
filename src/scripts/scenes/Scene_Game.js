@@ -65,8 +65,6 @@ class Scene_Game extends Scene
 
 		this.connection = this.game.connection;
 
-		this.game.audio.music.play("audio_music_bg_01");
-
 		this.score.tracker = new ScoreTracker({
 			scene: this,
 			x: this.width * .88,

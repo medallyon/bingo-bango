@@ -15,7 +15,7 @@ class ScoreTracker extends Phaser.GameObjects.Container
 
 		this.overlay = new TextOverlay(this.scene, this.score.toString());
 		this.overlay.y -= 8;
-		this.overlay.text.setOrigin(.05, .5);
+		this.overlay.text.setOrigin(.05, .35);
 		this.add(this.overlay);
 	}
 }

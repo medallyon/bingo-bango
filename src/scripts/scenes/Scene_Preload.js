@@ -115,6 +115,7 @@ class Scene_Preload extends Phaser.Scene
 
 		// Game Elements
 		this.load.image("coin", "UI/icons/coin.png");
+		this.load.image("coin2", "UI/icons/coin2.png");
 		this.load.image("heart", "UI/icons/heart.png");
 		this.load.image("star", "UI/icons/star.png");
 

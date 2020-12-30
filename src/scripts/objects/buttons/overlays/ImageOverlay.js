@@ -8,7 +8,7 @@ class ImageOverlay extends ButtonOverlay
 	{
 		super(Object.assign({ scene }, data));
 
-		this.image = new Phaser.GameObjects.Image(this.scene, 0, 0, texture);
+		this.image = new Phaser.GameObjects.Image(this.scene, 0, 0, texture).setDepth(0);
 		this.add(this.image);
 	}
 }

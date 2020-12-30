@@ -30,7 +30,7 @@ class Card extends Phaser.GameObjects.Container
 		{
 			const button = new Button({
 				scene: this.scene,
-				x: BINGO_ROW_START_X + (BUTTON_WIDTH * i),
+				x: BINGO_ROW_START_X + (BUTTON_WIDTH * i+1),
 				y: BINGO_ROW_START_Y,
 				texture: `tile_${BINGO[i]}`
 			});
@@ -61,7 +61,7 @@ class Card extends Phaser.GameObjects.Container
 						x: ROW_START_X + (i * BUTTON_WIDTH),
 						y: ROW_START_Y + (j * BUTTON_WIDTH),
 						texture: `bg_tile_${BINGO[i]}`,
-						overlay: new ImageOverlay(this.scene, "coin"),
+						overlay: new ImageOverlay(this.scene, "star"),
 						on: {
 							pointerup: function()
 							{
@@ -83,6 +83,7 @@ class Card extends Phaser.GameObjects.Container
 							pointerup: function()
 							{
 								console.log(`Clicked on ${this.overlay.text.text}`);
+
 								this.overlay.wobble(.65);
 							}
 						}

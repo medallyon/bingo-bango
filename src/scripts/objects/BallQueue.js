@@ -7,7 +7,7 @@ class BallQueue extends Phaser.GameObjects.Container
 	static preload(load)
 	{
 		load.setPath("assets/img/balls/");
-		load.image("bg_ballQueue", "bg_ballQueue.png");
+		load.image("bg_ballQueue1", "bg_ballQueue1.png");
 	}
 
 	constructor(data)
@@ -16,7 +16,7 @@ class BallQueue extends Phaser.GameObjects.Container
 
 		this.balls = [];
 
-		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_ballQueue");
+		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_ballQueue1");
 		this.add(this.bg);
 	}
 

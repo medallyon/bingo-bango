@@ -23,7 +23,7 @@ class ButtonOverlay extends Phaser.GameObjects.Container
 		duration = duration / 2 * 1000;
 		this.wobbling = this.scene.tweens.add({
 			targets: this,
-			scale: 2,
+			scale: 1.5,
 			ease: Phaser.Math.Easing.Sine.InOut,
 			yoyo: true,
 			loop, duration,
