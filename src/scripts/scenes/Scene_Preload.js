@@ -28,25 +28,15 @@ class Scene_Preload extends Phaser.Scene
 		this.add.image(width / 2, height / 2, "wallpaper_loading")
 			.setScale(0.7111);
 
+		this.add.image(width / 2, height / 2, "progressBg_loading")
+			.setScale(1.4);
+
 		// actual loading progress bar
 		const progressBar = this.add.graphics();
 		// bar background
 		this.add.graphics()
-			.fillStyle(0x000000, 0.8)
-			.fillRect(bar.x, bar.y, bar.width, bar.height);
-
-		// "Loading..."
-		this.add.text({
-			x: width / 2,
-			y: height / 2,
-			text: "Loading...",
-			style:
-			{
-				font: "20px monospace",
-				fill: "#000000",
-				align: "center"
-			}
-		}).setOrigin(.5);
+			.fillStyle(0x00F0FF, 0.8);
+		//.fillRect(bar.x, bar.y, bar.width, bar.height);
 
 		// "[x] %"
 		const percentText = this.make.text({
@@ -55,7 +45,7 @@ class Scene_Preload extends Phaser.Scene
 			text: "0%",
 			style: {
 				font: "18px monospace",
-				fill: "#00FF00",
+				fill: "#000000",
 				align: "center"
 			}
 		}).setOrigin(.5);
@@ -63,10 +53,27 @@ class Scene_Preload extends Phaser.Scene
 		{
 			percentText.setText((value * 100).toFixed() + "%");
 			progressBar
-				.fillStyle(0x000000, 1)
+				.fillStyle(0x00F0FF, 1)
 				// TODO: Figure out exact maths to center rect-bar
-				.fillRect(bar.x * 1.05, bar.y * 1.035, bar.width * .9 * value, bar.height * .6);
+				.fillRect(bar.x * 1.01, bar.y * 1, bar.width * 0.9 * value, bar.height * .9);
 		});
+
+		//overlay for progress bar
+		this.add.image(width / 2, height / 2, "progressBar_loading")
+			.setScale(1.4);
+
+		// "Loading..." Fix if possible: Text is not showing up
+		this.add.text({
+			x: width / 2,
+			y: height / 2,
+			text: "Loading...",
+			style:
+			{
+				font: "20px monospace",
+				fill: "#00F0FF",
+				align: "center"
+			}
+		}).setOrigin(.5);
 	}
 
 	constructor()
@@ -76,7 +83,9 @@ class Scene_Preload extends Phaser.Scene
 			pack: {
 				// pre-packing assets needed before the preload event (loading screen)
 				files: [
-					{ type: "image", key: "wallpaper_loading", url: "/assets/img/wallpapers/bg_wallpaper_00.jpg" }
+					{ type: "image", key: "wallpaper_loading", url: "/assets/img/wallpapers/bg_wallpaper_00.jpg" },
+					{ type: "image", key: "progressBar_loading", url: "/assets/img/UI/progress/bg_progress01.png" },
+					{ type: "image", key: "progressBg_loading", url: "/assets/img/UI/progress/bg_progress02.png" }
 				]
 			}
 		});

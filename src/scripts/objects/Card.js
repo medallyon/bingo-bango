@@ -30,7 +30,7 @@ class Card extends Phaser.GameObjects.Container
 		{
 			const button = new Button({
 				scene: this.scene,
-				x: BINGO_ROW_START_X + (BUTTON_WIDTH * i+1),
+				x: BINGO_ROW_START_X + (BUTTON_WIDTH * i),
 				y: BINGO_ROW_START_Y,
 				texture: `tile_${BINGO[i]}`
 			});
