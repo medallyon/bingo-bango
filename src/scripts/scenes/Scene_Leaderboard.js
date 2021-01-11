@@ -38,8 +38,8 @@ class Scene_Leaderboard extends Scene
 		super.create(data);
 
 		/* Settings Panel Background */
-		//this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
-		//	.setScale(1);
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
+			.setScale(1.3);
 		this._createLeaderboard();
 		/* Back Button */
 

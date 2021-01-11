@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 
 import Scene from "../objects/Scene.js";
 import Back from "../objects/Back.js";
+import Leaderboard from "../objects/Leaderboard.js";
 
 class Scene_Menu_Leaderboard extends Scene
 {
@@ -16,7 +17,16 @@ class Scene_Menu_Leaderboard extends Scene
 			back: null
 		};
 	}
-
+	_createLeaderboard()
+	{
+		this.leaderboard = new Leaderboard({
+			scene: this,
+			x: this.width * 2,
+			y: this.height * .50,
+		});
+		this.leaderboard.setScale(1);
+		this.add.existing(this.leaderboard);
+	}
 	create(data = {})
 	{
 		super.create(data);
@@ -24,6 +34,8 @@ class Scene_Menu_Leaderboard extends Scene
 		/* Settings Panel Background */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
 			.setScale(1);
+
+		this._createLeaderboard();
 
 		/* Back Button */
 
@@ -33,11 +45,6 @@ class Scene_Menu_Leaderboard extends Scene
 			y: this.height * .075
 		}).setScale(.5);
 		this.add.existing(this.buttons.back);
-	}
-
-	update()
-	{
-
 	}
 }
 

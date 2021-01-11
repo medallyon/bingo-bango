@@ -13,6 +13,7 @@ import CardHolder from "./CardHolder.js";
 import Scene from "./Scene.js";
 import ScoreBoard from "./ScoreBoard.js";
 import ScoreTracker from "./ScoreTracker.js";
+import Leaderboard from "./Leaderboard.js";
 
 export {
 	Button,
@@ -27,5 +28,6 @@ export {
 	CardHolder,
 	Scene,
 	ScoreBoard,
-	ScoreTracker
+	ScoreTracker,
+	Leaderboard
 };

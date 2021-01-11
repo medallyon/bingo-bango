@@ -6,7 +6,6 @@ class Leaderboard extends Phaser.GameObjects.Container
 	{
 		super(data.scene, data.x, data.y);
 
-		this.scores = {};
 
 		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "panel_leaderboard");
 		this.add(this.bg);
