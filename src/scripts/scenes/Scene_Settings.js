@@ -26,13 +26,12 @@ class Scene_Settings extends Scene
 			.setScale(0.7);
 
 		/* Back Button */
-
-		this.buttons.back = new Back("Scene_Menu_Main", {
+		this.add.existing(new Back("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .1,
-			y: this.height * .075
-		}).setScale(.5);
-		this.add.existing(this.buttons.back);
+			y: this.height * .075,
+			defaultButtonEvents: true
+		}).setScale(.5));
 
 		/* Dropdown Menus */
 

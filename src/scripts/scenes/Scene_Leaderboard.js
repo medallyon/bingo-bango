@@ -17,10 +17,6 @@ class Scene_Leaderboard extends Scene
 			tracker: null,
 			leaderboard: true
 		};
-
-		this.buttons = {
-			back: null
-		};
 	}
 
 	_createLeaderboard()
@@ -41,14 +37,14 @@ class Scene_Leaderboard extends Scene
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
 			.setScale(1.3);
 		this._createLeaderboard();
-		/* Back Button */
 
-		this.buttons.back = new Back("Scene_Menu_Main", {
+		/* Back Button */
+		this.add.existing(new Back("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .1,
-			y: this.height * .075
-		}).setScale(.5);
-		this.add.existing(this.buttons.back);
+			y: this.height * .075,
+			defaultButtonEvents: true
+		}).setScale(.5));
 	}
 
 	update()

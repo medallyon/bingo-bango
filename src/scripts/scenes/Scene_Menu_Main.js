@@ -21,7 +21,7 @@ class Scene_Menu_Main extends Scene
 	{
 		super.create(data);
 
-		// FIXME: Plays at full volume until the Settings Scene is loaded. Figure out why and/or how to fix it.
+		// FIXME: Plays at full volume until the Settings Scene is loaded. Figure out why and how to fix it.
 		this.game.audio.music.play("audio_music_bg_02");
 
 		/* Logo */
@@ -35,7 +35,8 @@ class Scene_Menu_Main extends Scene
 					scene: this,
 					x: this.game.renderer.width * .5,
 					y: this.game.renderer.height * (.5 + (i * .175)),
-					texture: `button_${key}`
+					texture: `button_${key}`,
+					defaultButtonEvents: true
 				});
 
 			btn.setScale(.69);
