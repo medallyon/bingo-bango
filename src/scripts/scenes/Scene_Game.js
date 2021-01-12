@@ -1,5 +1,3 @@
-import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
-
 import Scene from "../objects/Scene.js";
 import CardHolder from "../objects/CardHolder.js";
 import ScoreTracker from "../objects/ScoreTracker.js";
@@ -8,6 +6,22 @@ import BallQueue from "../objects/BallQueue.js";
 
 class Scene_Game extends Scene
 {
+	get _defaultInterval()
+	{
+		return () =>
+		{
+			const ball = this.queue.createRandomBall();
+			this.queue.push(ball);
+
+			const voicepack = this.game.announcer
+				, variation = voicepack[ball.column].get(ball.number).random();
+			this.game.audio.voice.play(variation);
+
+			if (++this.flow.counted === 45)
+				clearInterval(this.flow.interval);
+		};
+	}
+
 	constructor()
 	{
 		super({
@@ -17,24 +31,24 @@ class Scene_Game extends Scene
 
 		this.connection = null;
 		this.flow = {
-			bingo: new BingoNumberGenerator(),
 			counted: 0,
 			interval: null
 		};
 
 		this.score = {
+			player: 0,
 			tracker: null,
 			board: null
 		};
 
-		this.cards = null;
+		this.holder = null;
 		this.queue = null;
 	}
 
 	_createCards(layout = 2)
 	{
-		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
-		this.add.existing(this.cards);
+		this.holder = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
+		this.add.existing(this.holder);
 	}
 
 	_createScoreBoard()
@@ -77,22 +91,13 @@ class Scene_Game extends Scene
 		this._createScoreBoard();
 		this._createBallQueue();
 
-		this.flow.bingo = new BingoNumberGenerator();
 		this.flow.counted = 0;
-		this.flow.interval = setInterval(() =>
-		{
-			const { column, number } = this.flow.bingo.random();
+		this.flow.interval = setInterval(this._defaultInterval, data.timeBetweenCalls || 7500);
+	}
 
-			const ball = this.queue.createBall(column, number);
-			this.queue.push(ball);
-
-			const voicepack = this.game.announcer
-				, variation = voicepack[column].get(number).random();
-			this.game.audio.voice.play(variation);
-
-			if (++this.flow.counted === 45)
-				clearInterval(this.flow.interval);
-		}, data.timeBetweenCalls || 7500);
+	playNumber(card, tile)
+	{
+		card.play(tile);
 	}
 
 	update()

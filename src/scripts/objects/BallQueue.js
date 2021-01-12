@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 
-import Ball from "../objects/Ball.js";
+import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
+import Ball from "./Ball.js";
 
 class BallQueue extends Phaser.GameObjects.Container
 {
@@ -14,6 +15,7 @@ class BallQueue extends Phaser.GameObjects.Container
 	{
 		super(data.scene, data.x, data.y);
 
+		this.generator = new BingoNumberGenerator();
 		this.balls = [];
 
 		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_ballQueue1");
@@ -25,6 +27,12 @@ class BallQueue extends Phaser.GameObjects.Container
 		return new Ball(this.scene, letter, number, {
 			y: -this.bg.displayHeight * .6
 		});
+	}
+
+	createRandomBall()
+	{
+		const { column, number } = this.generator.random();
+		return this.createBall(column, number);
 	}
 
 	push(ball)
