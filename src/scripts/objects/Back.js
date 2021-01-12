@@ -20,8 +20,6 @@ class Back extends Button
 				}
 			}
 		}, data));
-
-		this.on("pointerup", this._defaultButtonHandlers["pointerup"]);
 	}
 }
 

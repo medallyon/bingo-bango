@@ -14,17 +14,18 @@ class Ball extends Button
 			load.image(`ball_${BINGO[i]}`, `ball_${BINGO[i]}.png`);
 	}
 
-	constructor(scene, letter, number, data = {})
+	constructor(scene, column, number, data = {})
 	{
 		const sampleBall = new Phaser.GameObjects.Image(scene, 0, 0, "ball_B");
 		super(Object.assign({
 			scene,
-			texture: `ball_${letter}`,
+			texture: `ball_${column}`,
 			overlay: new TextOverlay(scene, number.toString(), {
 				y: sampleBall.displayHeight * .12
 			})
 		}, data));
 
+		this.column = column;
 		this.number = number;
 	}
 }

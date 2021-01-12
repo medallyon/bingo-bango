@@ -9,6 +9,7 @@ class CardHolder extends Phaser.GameObjects.Container
 	{
 		super(scene, x, y);
 
+		this.cards = [];
 		const getCardPosition = (amount, padding = 0) =>
 		{
 			padding /= 2;
@@ -85,7 +86,9 @@ class CardHolder extends Phaser.GameObjects.Container
 		{
 			const card = new Card(this.scene, layouts[i].x, layouts[i].y);
 			card.setScale(layouts[i].scale);
+
 			this.add(card);
+			this.cards.push(card);
 		}
 
 		this.setScale(.6);

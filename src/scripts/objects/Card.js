@@ -3,6 +3,7 @@ import * as Phaser from "phaser";
 import { BINGO, BUTTON_WIDTH } from "../globals.js";
 import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
 import Button from "./buttons/Button.js";
+import CardTile from "./CardTile.js";
 import TextOverlay from "./buttons/overlays/TextOverlay.js";
 import ImageOverlay from "./buttons/overlays/ImageOverlay.js";
 
@@ -45,52 +46,39 @@ class Card extends Phaser.GameObjects.Container
 		const ROW_START_X = 0 - (Math.floor(BINGO.length / 2) * BUTTON_WIDTH)
 			, ROW_START_Y = BUTTON_WIDTH;
 
-		for (let i = 0; i < BINGO.length; i++)
+		for (let x = 0; x < BINGO.length; x++)
 		{
-			const column = BINGO[i];
-			for (let j = 0; j < this.colLength; j++)
+			const column = BINGO[x];
+			for (let y = 0; y < this.colLength; y++)
 			{
-				let { number } = this.bingoNumbers.random(column)
-					, button;
+				const { number } = this.generator.random(column);
+				let button;
 
-				// skip center center button
-				if (i === Math.floor(BINGO.length / 2) && j === Math.floor(this.colLength / 2))
+				// skip (center, center) button
+				if (x === Math.floor(BINGO.length / 2) && y === Math.floor(this.colLength / 2))
 				{
 					button = new Button({
 						scene: this.scene,
-						x: ROW_START_X + (i * BUTTON_WIDTH),
-						y: ROW_START_Y + (j * BUTTON_WIDTH),
-						texture: `bg_tile_${BINGO[i]}`,
-						overlay: new ImageOverlay(this.scene, "star"),
-						on: {
-							pointerup: function()
-							{
-								this.overlay.wobble(.65);
-							}
-						}
+						x: ROW_START_X + (x * BUTTON_WIDTH),
+						y: ROW_START_Y + (y * BUTTON_WIDTH),
+						texture: `bg_tile_${BINGO[x]}`,
+						overlay: new ImageOverlay(this.scene, "star").setScale(.8)
 					});
 				}
 
 				else
 				{
-					button = new Button({
+					button = new CardTile({
+						card: this,
 						scene: this.scene,
-						x: ROW_START_X + (i * BUTTON_WIDTH),
-						y: ROW_START_Y + (j * BUTTON_WIDTH),
-						texture: `bg_tile_${BINGO[i]}`,
-						overlay: new TextOverlay(this.scene, number.toString()),
-						on: {
-							pointerup: function()
-							{
-								console.log(`Clicked on ${this.overlay.text.text}`);
-
-								this.overlay.wobble(.65);
-							}
-						}
+						x: ROW_START_X + (x * BUTTON_WIDTH),
+						y: ROW_START_Y + (y * BUTTON_WIDTH),
+						texture: `bg_tile_${BINGO[x]}`,
+						number
 					});
 				}
 
-				this.buttons.numbers[column].push(button);
+				this.buttons.tiles[column].push(button);
 				this.add(button);
 			}
 		}
@@ -101,10 +89,10 @@ class Card extends Phaser.GameObjects.Container
 		super(scene, x, y);
 		this.colLength = colLength;
 
-		this.bingoNumbers = new BingoNumberGenerator();
+		this.generator = new BingoNumberGenerator();
 		this.buttons = {
 			bingo: [],
-			numbers: {
+			tiles: {
 				"B": [],
 				"I": [],
 				"N": [],
@@ -115,6 +103,37 @@ class Card extends Phaser.GameObjects.Container
 
 		this._generateBingoRow();
 		this._generateCardButtons();
+	}
+
+	_hasAnyBingo(x, y)
+	{
+		// TODO: Figure out algorithm to determine whether there's a horizontal, vertical, or diagonal bingo at (x, y);
+	}
+
+	_getCoordinate(number)
+	{
+		const column = BINGO[Math.floor((Math.max(0, number) - 1) / this.generator.maxPerColumn)]
+			, index = this.buttons.tiles[column].findIndex(tile => tile.number === number);
+
+		if (index === -1)
+			return null;
+
+		return {
+			x: BINGO.indexOf(column),
+			y: index
+		};
+	}
+
+	play(number)
+	{
+		if (!this._getCoordinate(number))
+			return console.warn("Attempted to play() a non-existing number on Card");
+
+		// TODO: Play 'completed' animation on tile
+
+		// TODO: Set tile to 'completed', i.e. non-clickable
+
+		return true;
 	}
 }
 
