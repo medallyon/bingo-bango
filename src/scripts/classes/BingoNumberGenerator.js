@@ -26,6 +26,7 @@ class BingoNumberGenerator
 		return new Array(this.maxPerColumn).fill(0).map((x, i) => this.maxPerColumn * 4 + i + 1);
 	}
 
+	// eslint-disable-next-line
 	getLetter(number) { return this.getColumn(number); }
 	/**
 	 * @param {number} number - A valid number in the current bingo generator configuration
@@ -53,6 +54,9 @@ class BingoNumberGenerator
 	 */
 	random(column = null)
 	{
+		if (this.usedNumbers.length >= this.max)
+			return console.warn("Attempted to retrieve a random() number from a depleted BingoNumberGenerator");
+
 		if (column != null && (typeof column) === "string")
 			column = column.toUpperCase();
 		else
