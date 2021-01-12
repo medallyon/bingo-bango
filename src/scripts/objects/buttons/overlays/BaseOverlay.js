@@ -1,11 +1,11 @@
 import * as Phaser from "phaser";
 
-class ButtonOverlay extends Phaser.GameObjects.Container
+class BaseOverlay extends Phaser.GameObjects.Container
 {
 	constructor(data)
 	{
-		if (new.target === ButtonOverlay)
-			throw new TypeError("Cannot construct ButtonOverlay instances directly");
+		if (new.target === BaseOverlay)
+			throw new TypeError("Cannot construct BaseOverlay instances directly");
 
 		super(data.scene, data.x, data.y);
 
@@ -35,4 +35,4 @@ class ButtonOverlay extends Phaser.GameObjects.Container
 	}
 }
 
-export default ButtonOverlay;
+export default BaseOverlay;

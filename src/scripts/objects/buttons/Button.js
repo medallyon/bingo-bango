@@ -4,6 +4,7 @@ class Button extends Phaser.GameObjects.Container
 {
 	get _defaultButtonHandlers()
 	{
+		// functions here are bound to the Button they originate from
 		return {
 			pointerover: function()
 			{
@@ -25,6 +26,21 @@ class Button extends Phaser.GameObjects.Container
 		};
 	}
 
+	/**
+	 * @class A default button for anything clickable
+	 * @param {object} data
+	 * @param {Phaser.Scene} data.scene
+	 * @param {number} [data.x] The x coordinate in the scene
+	 * @param {number} [data.y] The y coordinate in the scene
+	 * @param {string} data.texture The texture name of the button background
+	 * @param {object} [data.overlay]
+	 * @param {ImageOverlay} [data.overlay.image] An Image Overlay, displayed as a separate element on top of the button
+	 * @param {TextOverlay} [data.overlay.text] A Text Overlay, displayed as a separate element on top of the button
+	 * @param {object} [data.on]
+	 * @param {function} [data.on.[event]] Optional event handlers that the Phaser Container listens to
+	 * @param {bool} [data.defaultButtonHoverEvents] Creates default button event handlers for hovers
+	 * @param {bool} [data.defaultButtonClickEvents] Creates default button event handlers for clicks
+	 */
 	constructor(data)
 	{
 		super(data.scene, data.x, data.y);
@@ -44,20 +60,37 @@ class Button extends Phaser.GameObjects.Container
 		this.setSize(this.bg.width, this.bg.height)
 			.setInteractive();
 
-		// register defined event handlers, either with custom functions or based on bools
+		// register defined event handlers
 		for (const [name, handler] of Object.entries(data.on || {}))
 		{
 			if ((typeof handler) === "function")
 				this.on(name, handler);
-			else if (handler && this._defaultButtonHandlers[name])
-				this.on(name, this._defaultButtonHandlers[name]);
 		}
 
-		// add default event handlers if they haven't been overwritten
-		for (const [name, handler] of Object.entries(this._defaultButtonHandlers))
+		const enableHoverEvents = () =>
+			{
+				this.on("pointerover", this._defaultButtonHandlers.pointerover);
+				this.on("pointerout", this._defaultButtonHandlers.pointerout);
+			}
+			, enableClickEvents = () =>
+			{
+				this.on("pointerup", this._defaultButtonHandlers.pointerup);
+				this.on("pointerdown", this._defaultButtonHandlers.pointerdown);
+			};
+
+		if (!data.defaultButtonEvents)
 		{
-			if (!this.eventNames()[name])
-				this.on(name, handler);
+			if (data.defaultButtonHoverEvents)
+				enableHoverEvents();
+
+			if (data.defaultButtonClickEvents)
+				enableClickEvents();
+		}
+
+		else
+		{
+			enableHoverEvents();
+			enableClickEvents();
 		}
 	}
 }

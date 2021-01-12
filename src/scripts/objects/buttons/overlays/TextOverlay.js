@@ -1,8 +1,8 @@
 import * as Phaser from "phaser";
 
-import ButtonOverlay from "./ButtonOverlay.js";
+import BaseOverlay from "./BaseOverlay.js";
 
-class TextOverlay extends ButtonOverlay
+class TextOverlay extends BaseOverlay
 {
 	constructor(scene, text, data = { text: {} })
 	{
