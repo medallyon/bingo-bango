@@ -9,7 +9,7 @@ const webpack = require("webpack")
 	, express = require("express")
 	, app = express();
 
-const BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumberGenerator.js"));
+const BingoNumberGenerator = require(join(__dirname, "src", "scripts", "classes", "BingoNumberGenerator.js"));
 
 /*
  * [ WEBPACK ]
@@ -18,8 +18,7 @@ const BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumbe
 let compiling = true
 	, webpackError;
 
-// const compiler = webpack(require(join(__dirname, "webpack", "webpack.prod.js")));
-const compiler = webpack(require(join(__dirname, "webpack", "webpack.dev.js")));
+const compiler = webpack(require(join(__dirname, "webpack", "webpack.prod.js")));
 function build()
 {
 	return new Promise(function(resolve, reject)
@@ -124,6 +123,7 @@ schema.defineTypes(Player, {
 	score: "number"
 });
 schema.defineTypes(MatchState, {
+	generator: BingoNumberGenerator,
 	players: {
 		map: Player
 	}
@@ -153,14 +153,13 @@ class MatchRoom extends colyseus.Room
 			});
 		});
 
-		this.generator = new BingoNumberGenerator();
 		this.clock.start();
 
 		this.ballsCounted = 0;
 		this.matchInterval = this.clock.setInterval(() =>
 		{
 			this.broadcast("match-ball", {
-				ball: this.generator.random()
+				ball: this.state.generator.random()
 			});
 
 			if (++this.ballsCounted === 45)
@@ -222,14 +221,14 @@ class MatchRoom extends colyseus.Room
 }
 
 io.define("lobby", colyseus.LobbyRoom);
-io.define("match", MatchRoom)
+io.define("test", MatchRoom)
 	.sortBy({ clients: -1 });
 
 /*
  * [ SERVER LISTEN ]
  */
 
-console.log(`Starting a Server on :${process.env.PORT}`);
+console.log(`\nStarting a Server on :${process.env.PORT}`);
 io.listen(process.env.PORT);
 
 console.log("Building WebPack using Production Configuration");
