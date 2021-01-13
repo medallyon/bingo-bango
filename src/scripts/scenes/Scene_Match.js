@@ -4,7 +4,7 @@ import ScoreTracker from "../objects/ScoreTracker.js";
 import ScoreBoard from "../objects/ScoreBoard.js";
 import BallQueue from "../objects/BallQueue.js";
 
-class Scene_Game extends Scene
+class Scene_Match extends Scene
 {
 	get _defaultInterval()
 	{
@@ -25,7 +25,7 @@ class Scene_Game extends Scene
 	constructor()
 	{
 		super({
-			key: "Scene_Game",
+			key: "Scene_Match",
 			wallpaper: true
 		});
 
@@ -100,4 +100,4 @@ class Scene_Game extends Scene
 	}
 }
 
-export default Scene_Game;
+export default Scene_Match;

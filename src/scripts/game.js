@@ -12,7 +12,7 @@ import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
 import Scene_Settings from "./scenes/Scene_Settings.js";
 import Scene_Leaderboard from "./scenes/Scene_Leaderboard.js";
 import Scene_Credits from "./scenes/Scene_Credits.js";
-import Scene_Game from "./scenes/Scene_Game.js";
+import Scene_Match from "./scenes/Scene_Match.js";
 
 Array.prototype.contains = function(item)
 {
@@ -65,7 +65,7 @@ class Bingo extends Phaser.Game
 				Scene_Settings,
 				Scene_Leaderboard,
 				Scene_Credits,
-				Scene_Game
+				Scene_Match
 			],
 			physics: {
 				default: "arcade",
