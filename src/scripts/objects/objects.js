@@ -14,6 +14,7 @@ import Scene from "./Scene.js";
 import ScoreBoard from "./ScoreBoard.js";
 import ScoreTracker from "./ScoreTracker.js";
 import Leaderboard from "./Leaderboard.js";
+import Confetti from "./Confetti.js";
 
 export {
 	Button,
@@ -29,5 +30,6 @@ export {
 	Scene,
 	ScoreBoard,
 	ScoreTracker,
-	Leaderboard
+	Leaderboard,
+	Confetti
 };

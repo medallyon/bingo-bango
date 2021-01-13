@@ -4,7 +4,6 @@ import Scene from "../objects/Scene.js";
 import Back from "../objects/Back.js";
 import Leaderboard from "../objects/Leaderboard.js";
 
-
 class Scene_Leaderboard extends Scene
 {
 	constructor()
@@ -52,60 +51,9 @@ class Scene_Leaderboard extends Scene
 			y: this.height * .075,
 			defaultButtonEvents: true
 		}).setScale(.5));
-		//TESTING ANIMATION
-		this.confetti = this.add.sprite(200,200,"confetti");
-		var frameNames = this.textures.get("confetti").getFrameNames();
-		console.log(frameNames);
+
+		//ANIMATION
 		this.anims.create({
-			key:"Celebrate",
-			frames:
-			[
-				{key:"confetti", frame: "0"},
-				{key:"confetti", frame: "1"},
-				{key:"confetti", frame: "2"},
-				{key:"confetti", frame: "3"},
-				{key:"confetti", frame: "4"},
-				{key:"confetti", frame: "5"},
-				{key:"confetti",frame: "6"},
-				{key:"confetti",frame: "7"},
-				{key:"confetti",frame: "8"},
-				{key:"confetti",frame: "9"},
-				{key:"confetti",frame: "10"},
-				{key:"confetti",frame: "11"},
-				{key:"confetti",frame: "12"},
-				{key:"confetti",frame: "13"},
-				{key:"confetti",frame: "14"},
-				{key:"confetti",frame: "15"},
-				{key:"confetti",frame: "16"},
-				{key:"confetti",frame: "17"},
-				{key:"confetti",frame: "18"},
-				{key:"confetti",frame: "19"},
-				{key:"confetti",frame: "20"},
-				{key:"confetti",frame: "21"},
-				{key:"confetti",frame: "22"},
-				{key:"confetti",frame: "23"},
-				{key:"confetti",frame: "24"},
-				{key:"confetti",frame: "25"},
-				{key:"confetti",frame: "26"},
-				{key:"confetti",frame: "27"},
-				{key:"confetti",frame: "28"},
-				{key:"confetti",frame: "29"},
-				{key:"confetti",frame: "30"},
-				{key:"confetti",frame: "31"},
-				{key:"confetti",frame: "32"},
-				{key:"confetti",frame: "33"},
-				{key:"confetti",frame: "34"},
-				{key:"confetti",frame: "35"},
-				{key:"confetti",frame: "36"},
-				{key:"confetti",frame: "37"},
-				{key:"confetti",frame: "38"},
-				{key:"confetti",frame: "39"},
-			],
-			frameRate: 30,
-			repeat:-1
-		});
-		this.confetti.play("Celebrate");
-		/*this.anims.create({
 			key:"Celebrate",
 			frames:
 			this.anims.generateFrameNames("confetti",
@@ -113,14 +61,14 @@ class Scene_Leaderboard extends Scene
 					start: 0,
 					end: 59,
 					zeroPad:2,
-					prefix:"",
+					prefix:"confetti_",
 					suffix:".png"
 				}),
 			frameRate:30,
 			repeat:-1,
 		});
-		this.confetti=this.add.sprite(200,200,"confetti");
-		this.confetti.play("Celebrate");*/
+		this.confetti=this.add.sprite(this.width / 2,this.height / 2,"confetti");
+		this.confetti.play("Celebrate");
 	}
 
 	update()

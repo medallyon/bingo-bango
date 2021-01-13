@@ -100,15 +100,15 @@ class Scene_Preload extends Phaser.Scene
 				Class.preload(this.load);
 		}
 
-		/* ========================
-		 * ====== ANIMATIONS ======
-		 * ======================== */
-		this.load.atlas("confetti","assets/img/animations/anim_confetti.png","assets/img/animations/anim_confetti.json");
-
 		/* ====================
 		 * ====== IMAGES ======
 		 * ==================== */
 		this.load.setPath("assets/img/");
+
+		/* ========================
+		 * ====== ANIMATIONS ======
+		 * ======================== */
+		this.load.atlas("confetti","animations/anim_confetti.png","animations/anim_confetti.json");
 
 		// Logo
 		this.load.image("logo", "logo.png");
