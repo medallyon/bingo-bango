@@ -4,12 +4,12 @@ import Scene from "../objects/Scene.js";
 import Back from "../objects/Back.js";
 import Leaderboard from "../objects/Leaderboard.js";
 
-class Scene_Leaderboard extends Scene
+class Scene_Menu_Leaderboard extends Scene
 {
 	constructor()
 	{
 		super({
-			key: "Scene_Leaderboard",
+			key: "Scene_Menu_Leaderboard",
 			wallpaper: true
 		});
 	}
@@ -77,4 +77,4 @@ class Scene_Leaderboard extends Scene
 	}
 }
 
-export default Scene_Leaderboard;
+export default Scene_Menu_Leaderboard;
