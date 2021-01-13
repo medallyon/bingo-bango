@@ -63,14 +63,13 @@ class Scene_Preload extends Phaser.Scene
 			.setScale(1.4);
 
 		// "Loading..." Fix if possible: Text is not showing up
-		this.add.text({
-			x: width / 2,
-			y: height / 2,
-			text: "Loading...",
-			style:
-			{
-				font: "20px monospace",
-				fill: "#00F0FF",
+		this.make.text({
+			x: this.width /2,
+			y: this.height / 3,
+			text: "Loading",
+			style: {
+				font: "30px monospace",
+				fill: "#FFFFFF",
 				align: "center"
 			}
 		}).setOrigin(.5);
@@ -104,13 +103,7 @@ class Scene_Preload extends Phaser.Scene
 		/* ========================
 		 * ====== ANIMATIONS ======
 		 * ======================== */
-		this.load.setPath("assets/img/animations");
-
-		// Confetti
-		this.load.spritesheet("confetti", "spritesheet_confetti_01.png", {
-			frameWidth: 512,
-			endFrame: 59
-		});
+		this.load.atlas("confetti","assets/img/animations/anim_confetti.png","assets/img/animations/anim_confetti.json");
 
 		/* ====================
 		 * ====== IMAGES ======
