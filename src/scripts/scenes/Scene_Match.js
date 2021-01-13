@@ -6,22 +6,6 @@ import BallQueue from "../objects/BallQueue.js";
 
 class Scene_Match extends Scene
 {
-	get _defaultInterval()
-	{
-		return () =>
-		{
-			const ball = this.queue.createRandomBall();
-			this.queue.push(ball);
-
-			const voicepack = this.game.announcer
-				, variation = voicepack[ball.column].get(ball.number).random();
-			this.game.audio.voice.play(variation);
-
-			if (++this.flow.counted === 45)
-				clearInterval(this.flow.interval);
-		};
-	}
-
 	constructor()
 	{
 		super({
@@ -30,10 +14,6 @@ class Scene_Match extends Scene
 		});
 
 		this.connection = null;
-		this.flow = {
-			counted: 0,
-			interval: null
-		};
 
 		this.score = {
 			tracker: null,
@@ -50,12 +30,24 @@ class Scene_Match extends Scene
 		this.add.existing(this.cards);
 	}
 
-	_createScoreBoard()
+	_createScoreTracker()
+	{
+		this.score.tracker = new ScoreTracker({
+			scene: this,
+			x: this.width * .88,
+			y: this.height * .1
+		});
+		this.score.tracker.setScale(.65);
+		this.add.existing(this.score.tracker);
+	}
+
+	_createScoreBoard(players = {})
 	{
 		this.score.board = new ScoreBoard({
 			scene: this,
 			x: this.width * .88,
-			y: this.height * .5
+			y: this.height * .5,
+			players
 		});
 		this.score.board.setScale(.5);
 		this.add.existing(this.score.board);
@@ -76,27 +68,34 @@ class Scene_Match extends Scene
 	{
 		super.create(data);
 
+		this.game.match = this;
 		this.connection = this.game.connection;
 
-		this.score.tracker = new ScoreTracker({
-			scene: this,
-			x: this.width * .88,
-			y: this.height * .1
-		});
-		this.score.tracker.setScale(.65);
-		this.add.existing(this.score.tracker);
-
 		this._createCards(data.cards || 2);
-		this._createScoreBoard();
+		this._createScoreTracker();
+		this._createScoreBoard(data.players);
 		this._createBallQueue();
 
-		this.flow.counted = 0;
-		this.flow.interval = setInterval(this._defaultInterval, data.timeBetweenCalls || 7500);
+		this.connection.joinOrCreateMatch();
 	}
 
-	update()
+	playBall(ball)
+	{
+		this.queue.push(this.queue.createBall(ball.column, ball.number));
+
+		const voicepack = this.game.announcer
+			, variation = voicepack[ball.column].get(ball.number).random();
+		this.game.audio.voice.play(variation);
+	}
+
+	updateScores(scores)
 	{
 
+	}
+
+	end()
+	{
+		// return to main menu / lobbies screen
 	}
 }
 

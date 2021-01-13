@@ -23,10 +23,13 @@ class ScoreTracker extends Phaser.GameObjects.Container
 		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, "bg_score");
 		this.add(this.bg);
 
-		this.overlay = new TextOverlay(this.scene, this.score.toString());
-		this.overlay.y -= 8;
-		this.overlay.text.setOrigin(.05, .35);
-		this.add(this.overlay);
+		{
+			this.overlay = new TextOverlay(this.scene, this.score.toString());
+			this.overlay.y -= 8;
+			this.overlay.text.setOrigin(.05, .35);
+			this.overlay.text.setStroke("#000", 4);
+			this.add(this.overlay);
+		}
 	}
 
 	valueof()
