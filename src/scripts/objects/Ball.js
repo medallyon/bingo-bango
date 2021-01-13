@@ -21,9 +21,11 @@ class Ball extends Button
 			scene,
 			texture: `ball_${column}`,
 			overlay: new TextOverlay(scene, number.toString(), {
-				y: sampleBall.displayHeight * .12
+				y: sampleBall.displayHeight * .14
 			})
 		}, data));
+
+		this.overlay.text.setStroke("#000", 8);
 
 		this.column = column;
 		this.number = number;

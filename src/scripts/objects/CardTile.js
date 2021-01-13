@@ -1,10 +1,16 @@
 import * as Phaser from "phaser";
 
 import Button from "./buttons/Button.js";
+import ImageOverlay from "./buttons/overlays/ImageOverlay.js";
 import TextOverlay from "./buttons/overlays/TextOverlay.js";
 
 class CardTile extends Button
 {
+	static get BASE_SCORE()
+	{
+		return 50;
+	}
+
 	constructor(data)
 	{
 		super(Object.assign(data, {
@@ -17,6 +23,8 @@ class CardTile extends Button
 			defaultButtonHoverEvents: true,
 			defaultButtonClickEvents: true
 		}));
+
+		this.overlay.text.setStroke("#000", 6);
 
 		this.card = data.card;
 		this.number = data.number;
@@ -31,9 +39,16 @@ class CardTile extends Button
 		});
 	}
 
-	play()
+	complete()
 	{
+		this.completed = true;
+		this.removeAllListeners();
+		this.overlay = new ImageOverlay(this.scene, "star").setScale(.8);
 
+		this.scene.score.tracker.score += CardTile.BASE_SCORE;
+
+		// TODO: Play 'completed' animation on tile
+		// TODO: Play 'completed' sound in "effects" channel
 	}
 }
 

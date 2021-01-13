@@ -41,7 +41,7 @@ class Card extends Phaser.GameObjects.Container
 		}
 	}
 
-	_generateCardButtons()
+	_generateCardTiles()
 	{
 		const ROW_START_X = 0 - (Math.floor(BINGO.length / 2) * BUTTON_WIDTH)
 			, ROW_START_Y = BUTTON_WIDTH;
@@ -102,12 +102,28 @@ class Card extends Phaser.GameObjects.Container
 		};
 
 		this._generateBingoRow();
-		this._generateCardButtons();
+		this._generateCardTiles();
 	}
 
-	_hasAnyBingo(x, y)
+	_getTile(number)
+	{
+		for (const column of Object.values(this.buttons.tiles))
+		{
+			const tile = column.find(x => x.number === number);
+			if (!tile)
+				continue;
+
+			return tile;
+		}
+
+		return null;
+	}
+
+	_hasAnyBingo(number)
 	{
 		// TODO: Figure out algorithm to determine whether there's a horizontal, vertical, or diagonal bingo at (x, y);
+
+		const { x, y } = this._getCoordinate(number);
 	}
 
 	_getCoordinate(number)
@@ -126,12 +142,19 @@ class Card extends Phaser.GameObjects.Container
 
 	play(number)
 	{
-		if (!this._getCoordinate(number))
+		const tile = this._getTile(number);
+
+		// number exists as tile on this card
+		if (!tile)
 			return console.warn("Attempted to play() a non-existing number on Card");
 
-		// TODO: Play 'completed' animation on tile
+		// number exists as an active ball in the BallQueue
+		if (!this.scene.queue.balls.some(b => b.number === number))
+			return console.warn("Clicked on a number not present in the BallQueue");
 
-		// TODO: Set tile to 'completed', i.e. non-clickable
+		tile.complete();
+
+		// TODO: Check if a bingo has been achieved & update the score accordingly
 
 		return true;
 	}

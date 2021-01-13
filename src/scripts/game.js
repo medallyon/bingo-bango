@@ -14,6 +14,10 @@ import Scene_Leaderboard from "./scenes/Scene_Leaderboard.js";
 import Scene_Credits from "./scenes/Scene_Credits.js";
 import Scene_Game from "./scenes/Scene_Game.js";
 
+Array.prototype.contains = function(item)
+{
+	return this.includes(item);
+};
 Array.prototype.first = function()
 {
 	return this[0];
@@ -21,6 +25,10 @@ Array.prototype.first = function()
 Array.prototype.last = function()
 {
 	return this[this.length - 1];
+};
+Array.prototype.random = function()
+{
+	return this[Math.floor(Math.random() * this.length)];
 };
 Array.prototype.shuffle = function()
 {
@@ -32,10 +40,6 @@ Array.prototype.shuffle = function()
 	}
 
 	return this;
-};
-Array.prototype.random = function()
-{
-	return this[Math.floor(Math.random() * this.length)];
 };
 
 class Bingo extends Phaser.Game

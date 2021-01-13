@@ -1,8 +1,10 @@
 import * as Phaser from "phaser";
 
+import BaseOverlay from "./overlays/BaseOverlay.js";
+
 class Button extends Phaser.GameObjects.Container
 {
-	get _defaultButtonHandlers()
+	static get DEFAULT_HANDLERS()
 	{
 		// functions here are bound to the Button they originate from
 		return {
@@ -24,6 +26,25 @@ class Button extends Phaser.GameObjects.Container
 				this.scene.game.audio.effects.play("audio_button_01");
 			}
 		};
+	}
+
+	get overlay()
+	{
+		return this._overlay;
+	}
+	set overlay(value)
+	{
+		if (!(value instanceof BaseOverlay))
+			return console.error(new TypeError("Overlay must be a child of BaseOverlay")); // eslint-disable-line
+
+		if (this._overlay != null)
+			this.remove(this._overlay, true);
+
+		this._overlay = value;
+		this.add(this._overlay);
+
+		if (this._overlay.image)
+			this._overlay.image.setDisplaySize(this.bg.width * .9, this.bg.height * .9);
 	}
 
 	/**
@@ -49,16 +70,14 @@ class Button extends Phaser.GameObjects.Container
 		this.add(this.bg);
 
 		if (data.overlay)
-		{
 			this.overlay = data.overlay;
-			this.add(this.overlay);
 
-			if (this.overlay.image)
-				this.overlay.image.setDisplaySize(this.bg.width * .9, this.bg.height * .9);
-		}
-
-		this.setSize(this.bg.width, this.bg.height)
-			.setInteractive();
+		if (data.on
+			|| data.defaultButtonEvents
+			|| data.defaultButtonHoverEvents
+			|| data.defaultButtonClickEvents)
+			this.setSize(this.bg.width, this.bg.height)
+				.setInteractive();
 
 		// register defined event handlers
 		for (const [name, handler] of Object.entries(data.on || {}))
@@ -69,13 +88,18 @@ class Button extends Phaser.GameObjects.Container
 
 		const enableHoverEvents = () =>
 			{
-				this.on("pointerover", this._defaultButtonHandlers.pointerover);
-				this.on("pointerout", this._defaultButtonHandlers.pointerout);
+				this.on("pointerover", Button.DEFAULT_HANDLERS.pointerover);
+				this.on("pointerout", Button.DEFAULT_HANDLERS.pointerout);
 			}
 			, enableClickEvents = () =>
 			{
-				this.on("pointerup", this._defaultButtonHandlers.pointerup);
-				this.on("pointerdown", this._defaultButtonHandlers.pointerdown);
+				this.on("pointerup", Button.DEFAULT_HANDLERS.pointerup);
+				this.on("pointerdown", Button.DEFAULT_HANDLERS.pointerdown);
+			}
+			, enableEvents = () =>
+			{
+				enableHoverEvents();
+				enableClickEvents();
 			};
 
 		if (!data.defaultButtonEvents)
@@ -88,10 +112,7 @@ class Button extends Phaser.GameObjects.Container
 		}
 
 		else
-		{
-			enableHoverEvents();
-			enableClickEvents();
-		}
+			enableEvents();
 	}
 }
 

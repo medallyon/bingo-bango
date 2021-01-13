@@ -36,19 +36,18 @@ class Scene_Game extends Scene
 		};
 
 		this.score = {
-			player: 0,
 			tracker: null,
 			board: null
 		};
 
-		this.holder = null;
+		this.cards = null;
 		this.queue = null;
 	}
 
 	_createCards(layout = 2)
 	{
-		this.holder = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
-		this.add.existing(this.holder);
+		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
+		this.add.existing(this.cards);
 	}
 
 	_createScoreBoard()
@@ -93,11 +92,6 @@ class Scene_Game extends Scene
 
 		this.flow.counted = 0;
 		this.flow.interval = setInterval(this._defaultInterval, data.timeBetweenCalls || 7500);
-	}
-
-	playNumber(card, tile)
-	{
-		card.play(tile);
 	}
 
 	update()
