@@ -136,14 +136,63 @@ class MatchRoom extends colyseus.Room
 	{
 		console.log("MatchRoom created");
 
+		this.generator = new BingoNumberGenerator();
+		this.host = null;
+		this.started = false;
+		this.ready = [];
+
 		this.setState(new MatchState());
+
+		this.onMessage("match-host-begin", client =>
+		{
+			console.log(`[${client.sessionId}] match-host-begin`);
+
+			if (client.sessionId !== this.host.sessionId)
+				return;
+
+			this.started = true;
+			this.lock();
+			this.broadcast("match-load");
+		});
+
+		this.onMessage("match-ready", client =>
+		{
+			console.log(`[${client.sessionId}] match-ready`);
+
+			if (!this.ready.includes(client.sessionId))
+				this.ready.push(client.sessionId);
+
+			if (this.ready.length !== this.clients.length)
+				return;
+
+			this.broadcast("match-start");
+
+			this.clock.start();
+			this.ballsCounted = 0;
+			this.matchInterval = this.clock.setInterval(() =>
+			{
+				this.broadcast("match-ball", {
+					ball: this.generator.random()
+				});
+
+				if (++this.ballsCounted === 45)
+				{
+					this.clock.clear();
+					this.broadcast("match-end", {
+						players: this.state.players
+					});
+				}
+			}, 7500);
+		});
 
 		this.onMessage("match-score-scored", (client, data) =>
 		{
+			console.log(`[${client.sessionId}] match-score-scored, ${data}`);
+
 			const player = this.state.players.get(client.sessionId);
 			player.score += data.score;
 
-			// call here to REST api to increase this player's global XP
+			// database call here to REST api to increase this player's global XP
 
 			console.log(`Player { ${player.username} } received ${data.score} XP.`);
 
@@ -152,42 +201,26 @@ class MatchRoom extends colyseus.Room
 				score: player.score
 			});
 		});
-
-		this.generator = new BingoNumberGenerator();
-		this.clock.start();
-
-		this.ballsCounted = 0;
-		this.matchInterval = this.clock.setInterval(() =>
-		{
-			this.broadcast("match-ball", {
-				ball: this.generator.random()
-			});
-
-			if (++this.ballsCounted === 45)
-			{
-				this.matchInterval.clear();
-				this.broadcast("match-end", {
-					players: this.state.players
-				});
-			}
-		}, 7500);
 	}
 
 	// Authorize client based on provided options before WebSocket handshake is complete
-	onAuth(client, options, request)
+	/*onAuth(client, options, request)
 	{
 		return true;
-	}
+	}*/
 
 	// When client successfully joins the room
 	onJoin(client, options, auth)
 	{
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
-		const player = new Player();
+		const player = new Player(/* id, username */);
 		player.sessionId = client.sessionId;
 
 		this.state.players.set(player.sessionId, player);
+
+		if (this.clients.length === 1)
+			this.host = client;
 	}
 
 	// When a client leaves the room
@@ -215,6 +248,9 @@ class MatchRoom extends colyseus.Room
 			// 20 seconds expired. let's remove the client.
 			delete this.state.players[client.sessionId];
 		}
+
+		if (this.clients.length && client.sessionId === this.host.sessionId)
+			this.host = this.clients[0];
 	}
 
 	// Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)

@@ -50,7 +50,7 @@ class Scene_Menu_Main extends Scene
 				return;
 
 			this.scene.sleep();
-			this.scene.run("Scene_Match");
+			this.scene.run("Scene_Menu_Lobby");
 		});
 
 		this.buttons.settings.on("pointerup", (pointer) =>
@@ -72,11 +72,6 @@ class Scene_Menu_Main extends Scene
 			this.scene.sleep();
 			this.scene.run("Scene_Menu_Leaderboard");
 		});
-	}
-
-	update()
-	{
-
 	}
 }
 

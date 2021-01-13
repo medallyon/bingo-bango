@@ -3,6 +3,7 @@ import CardHolder from "../objects/CardHolder.js";
 import ScoreTracker from "../objects/ScoreTracker.js";
 import ScoreBoard from "../objects/ScoreBoard.js";
 import BallQueue from "../objects/BallQueue.js";
+import Back from "../objects/Back.js";
 
 class Scene_Match extends Scene
 {
@@ -26,12 +27,18 @@ class Scene_Match extends Scene
 
 	_createCards(layout = 2)
 	{
+		if (this.cards)
+			this.cards.destroy();
+
 		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
 		this.add.existing(this.cards);
 	}
 
 	_createScoreTracker()
 	{
+		if (this.score.tracker)
+			return this.score.tracker.score = 0;
+
 		this.score.tracker = new ScoreTracker({
 			scene: this,
 			x: this.width * .88,
@@ -43,6 +50,12 @@ class Scene_Match extends Scene
 
 	_createScoreBoard(players = {})
 	{
+		if (this.score.board)
+		{
+			// clean text and re-populate
+			return;
+		}
+
 		this.score.board = new ScoreBoard({
 			scene: this,
 			x: this.width * .88,
@@ -55,6 +68,9 @@ class Scene_Match extends Scene
 
 	_createBallQueue()
 	{
+		if (this.queue)
+			return this.queue.reset();
+
 		this.queue = new BallQueue({
 			scene: this,
 			x: this.width * .15,
@@ -64,11 +80,11 @@ class Scene_Match extends Scene
 		this.add.existing(this.queue);
 	}
 
-	create(data = {})
+	wake(data)
 	{
 		super.create(data);
 
-		this.game.match = this;
+		this.game.matchScene = this;
 		this.connection = this.game.connection;
 
 		this._createCards(data.cards || 2);
@@ -76,7 +92,33 @@ class Scene_Match extends Scene
 		this._createScoreBoard(data.players);
 		this._createBallQueue();
 
-		this.connection.joinOrCreateMatch();
+		this.connection.match.send("match-ready");
+	}
+
+	create(data = {})
+	{
+		super.create(data);
+
+		this.game.matchScene = this;
+		this.connection = this.game.connection;
+
+		this.add.existing(new Back("Scene_Menu_Main", {
+			scene: this,
+			x: this.width * .1,
+			y: this.height * .075,
+			userDecision: true,
+			defaultButtonEvents: true,
+			on: {
+				pointerup: this.connection.leaveMatch
+			}
+		}).setScale(.5));
+
+		this._createCards(data.cards || 2);
+		this._createScoreTracker();
+		this._createScoreBoard(data.players);
+		this._createBallQueue();
+
+		this.connection.match.send("match-ready");
 	}
 
 	playBall(ball)

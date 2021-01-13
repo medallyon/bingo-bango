@@ -11,38 +11,7 @@ class ConnectionHandler
 
 		this.client = new Colyseus.Client(this.host);
 		this.lobby = null;
-		this.rooms = [];
-
-		this.client.joinOrCreate("lobby")
-			.then(lobby =>
-			{
-				console.log(lobby.sessionId, "joined", lobby.name);
-
-				this.lobby = lobby;
-				/*this.lobby.onMessage("score_change", scores =>
-				{
-					// scores[client_id] = { player: <Player>, score: <Number> }
-				});*/
-
-				this.lobby.onMessage("rooms", rooms =>
-				{
-					this.rooms = rooms;
-				});
-
-				this.lobby.onMessage("+", ([ id, room ]) =>
-				{
-					const index = this.rooms.findIndex(x => x.id === id);
-					if (index === -1)
-						this.rooms.splice(index, 1, room);
-					else
-						this.rooms.push(room);
-				});
-
-				this.lobby.onMessage("-", (id) =>
-				{
-					this.rooms.splice(this.rooms.findIndex(x => x.id === id), 1);
-				});
-			}).catch(console.error);
+		this.match = null;
 	}
 
 	joinOrCreateMatch()
@@ -52,33 +21,59 @@ class ConnectionHandler
 			this.client.joinOrCreate("match")
 				.then(match =>
 				{
+					resolve(match);
+
 					console.log(match);
+					this.match = match;
+
+					match.onMessage("match-load", msg =>
+					{
+						// load 'Scene_Match' here
+						this.game.scene.sleep();
+						this.game.scene.run("Scene_Match");
+					});
 
 					match.onMessage("match-score-update", msg =>
 					{
-						// this.game.match.updateScores(msg.scores);
+						// this.game.matchScene.updateScores(msg.scores);
 					});
 
 					match.onMessage("match-ball", msg =>
 					{
-						this.game.match.playBall(msg.ball);
+						this.game.matchScene.playBall(msg.ball);
 					});
 
 					match.onMessage("match-end", () =>
 					{
 						// go back to the main menu / lobbies screen
-						// this.game.match.end();
+						// this.game.matchScene.end();
 					});
 
 					match.onLeave(code =>
 					{
 						window.alert("This match was abruptly ended due to a server failure. Sorry.");
 
-						// go back to the main menu / lobbies screen
-						// this.game.match.end("abrupt");
+						this.leaveMatch();
 					});
-				}).catch(console.error);
+				}).catch(reject);
 		});
+	}
+
+	leaveMatch()
+	{
+		console.log(this.match);
+		if (!this.match)
+			return;
+
+		console.log("Destroying match");
+
+		this.match.removeAllListeners();
+		this.match.leave();
+		this.match = null;
+
+		this.game.matchScene.scene.sleep();
+		this.game.matchScene.scene.run("Scene_Menu_Main");
+		this.game.matchScene = null;
 	}
 }
 

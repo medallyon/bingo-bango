@@ -39,10 +39,13 @@ class Scene extends Phaser.Scene
 	{
 		if (this.wallpaper)
 		{
-			this.wallpaper = new Phaser.GameObjects.Image(this, this.width / 2, this.height / 2, (typeof this.wallpaper === "boolean") ? `bg_wallpaper_0${Math.floor(Math.random() * 4)}` : this.wallpaper);
+			if (this.bg)
+				this.bg.destroy();
+
+			this.bg = new Phaser.GameObjects.Image(this, this.width / 2, this.height / 2, (typeof this.wallpaper === "boolean") ? `bg_wallpaper_0${Math.floor(Math.random() * 4)}` : this.wallpaper);
 			// assuming wallpaper size : 1800 x 1200
-			this.wallpaper.setScale(0.7111);
-			this.add.existing(this.wallpaper);
+			this.bg.setScale(0.7111);
+			this.add.existing(this.bg);
 		}
 	}
 

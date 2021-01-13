@@ -11,10 +11,6 @@ class Scene_Menu_Settings extends Scene
 			key: "Scene_Menu_Settings",
 			wallpaper: true
 		});
-
-		this.buttons = {
-			back: null
-		};
 	}
 
 	create(data = {})
@@ -35,6 +31,7 @@ class Scene_Menu_Settings extends Scene
 
 		/* Dropdown Menus */
 
+		// voicepack dropdown
 		this.add.existing(new Dropdown({
 			scene: this,
 			x: this.width * .6,

@@ -45,6 +45,13 @@ class BallQueue extends Phaser.GameObjects.Container
 			duration: 3000
 		});
 	}
+
+	reset()
+	{
+		for (const ball of this.balls)
+			ball.destroy();
+		this.balls = [];
+	}
 }
 
 export default BallQueue;
