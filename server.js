@@ -1,19 +1,13 @@
 require("dotenv").config();
 
-const webpack = require("webpack")
-	, colyseus = require("colyseus")
-	, schema = require("@colyseus/schema")
-	, join = require("path").join
-	, http = require("http")
-	, cookieParser = require("cookie-parser")
-	, express = require("express")
-	, app = express();
-
-const BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumberGenerator.js"));
+const join = require("path").join
+	, BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumberGenerator.js"));
 
 /*
  * [ WEBPACK ]
  */
+
+const webpack = require("webpack");
 
 let compiling = true
 	, webpackError;
@@ -37,6 +31,10 @@ function build()
 /*
  * [ APP SETTINGS ]
  */
+
+const express = require("express")
+	, cookieParser = require("cookie-parser")
+	, app = express();
 
 app.set("trust proxy", true);
 app.set("view engine", "ejs");
@@ -127,36 +125,57 @@ if (process.env.NODE_ENV !== "production")
 	}
 }
 
-app.get("/login", function(req, res)
+if (process.env.NODE_ENV === "production")
 {
-	if (req.isAuthenticated() && req.user)
-		return res.redirect("/");
-	res.redirect("/login_actual");
-});
+	app.get("/login", function(req, res)
+	{
+		if (req.isAuthenticated() && req.user)
+			return res.redirect("/");
+		res.redirect("/login_actual");
+	});
 
-app.use("/", function(req, res, next)
+	app.use("/", function(req, res, next)
+	{
+		if (compiling)
+			return res.status(202).send("Please wait while the game is being compiled...");
+
+		if (webpackError)
+			return res.status(500).send(webpackError);
+
+		next();
+	}, function(req, res, next)
+	{
+		if (!(req.isAuthenticated() && req.user))
+			return res.redirect("/login");
+
+		// save discord user info in cookies
+		res.cookie("user", JSON.stringify(req.user));
+
+		next();
+	}, express.static(join(__dirname, "dist")));
+}
+
+else
 {
-	if (compiling)
-		return res.status(202).send("Please wait while the game is being compiled...");
+	app.use("/", function(req, res, next)
+	{
+		if (compiling)
+			return res.status(202).send("Please wait while the game is being compiled...");
 
-	if (webpackError)
-		return res.status(500).send(webpackError);
+		if (webpackError)
+			return res.status(500).send(webpackError);
 
-	next();
-}, function(req, res, next)
-{
-	if (!(req.isAuthenticated() && req.user))
-		return res.redirect("/login");
-
-	// save discord user info in cookies
-	res.cookie("user", JSON.stringify(req.user));
-
-	next();
-}, express.static(join(__dirname, "dist")));
+		next();
+	}, express.static(join(__dirname, "dist")));
+}
 
 /*
  * [ IO Setup ]
  */
+
+const colyseus = require("colyseus")
+	, schema = require("@colyseus/schema")
+	, http = require("http");
 
 const io = new colyseus.Server({
 	server: http.createServer(app)
