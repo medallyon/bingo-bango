@@ -98,13 +98,13 @@ class Bingo extends Phaser.Game
 		this.announcer = new Voicepack();
 		this.connection = new ConnectionHandler(this);
 
-		this.user = JSON.parse((name => // https://stackoverflow.com/a/15724300/4672263
+		this.user = JSON.parse(decodeURI((name => // https://stackoverflow.com/a/15724300/4672263
 		{
 			const value = `; ${document.cookie}`;
 			const parts = value.split(`; ${name}=`);
 			if (parts.length === 2)
 				return parts.pop().split(";").shift();
-		})("user"));
+		})("user")));
 
 		console.log(`Hello there, ${this.user.username}#${this.user.tag}`);
 	}
