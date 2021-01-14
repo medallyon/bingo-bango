@@ -39,6 +39,7 @@ function build()
  */
 
 app.set("trust proxy", true);
+app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -149,6 +150,13 @@ app.use("/", function(req, res, next)
 		return next();
 
 	res.redirect("/login");
+}, function(req, res, next)
+{
+	res.render(join(__dirname, "dist", "index.ejs"), {
+		discordUserJsonString: JSON.stringify(req.user)
+	});
+
+	next();
 }, express.static(join(__dirname, "dist")));
 
 /*
@@ -311,7 +319,7 @@ class MatchRoom extends colyseus.Room
 
 		catch (e)
 		{
-			// 20 seconds expired. let"s remove the client.
+			// 20 seconds expired. let's remove the client.
 			delete this.state.players[client.sessionId];
 		}
 
