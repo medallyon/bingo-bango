@@ -29,7 +29,7 @@ module.exports = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin({ gameName: 'Bingo Bango', template: 'src/index.html' }),
+    new HtmlWebpackPlugin({ gameName: 'Bingo Bango', template: 'src/index.ejs' }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets', to: 'assets' },
