@@ -10,8 +10,8 @@ class ConnectionHandler
 			.replace("http", "ws");
 
 		this.client = new Colyseus.Client(this.host);
-		this.lobby = null;
 		this.match = null;
+		this.matchScene = null;
 	}
 
 	joinOrCreateMatch()
@@ -21,32 +21,32 @@ class ConnectionHandler
 			this.client.joinOrCreate("match")
 				.then(match =>
 				{
-					resolve(match);
-
 					console.log(match);
 					this.match = match;
 
-					match.onMessage("match-load", msg =>
+					match.onMessage("match-load", () =>
 					{
 						// load 'Scene_Match' here
-						this.game.scene.sleep();
-						this.game.scene.run("Scene_Match");
+						console.log("Start Scene_Match");
+						this.game.scene.stop("Scene_Menu_Lobby");
+						this.game.scene.start("Scene_Match");
 					});
 
 					match.onMessage("match-score-update", msg =>
 					{
-						// this.game.matchScene.updateScores(msg.scores);
+						// this.matchScene.updateScores(msg.scores);
 					});
 
 					match.onMessage("match-ball", msg =>
 					{
-						this.game.matchScene.playBall(msg.ball);
+						if (this.matchScene)
+							this.matchScene.playBall(msg.ball);
 					});
 
 					match.onMessage("match-end", () =>
 					{
-						// go back to the main menu / lobbies screen
-						// this.game.matchScene.end();
+						// stop gameloop & display scores + back button
+						// this.matchScene.end();
 					});
 
 					match.onLeave(code =>
@@ -55,25 +55,26 @@ class ConnectionHandler
 
 						this.leaveMatch();
 					});
+
+					resolve(match);
 				}).catch(reject);
 		});
 	}
 
 	leaveMatch()
 	{
-		console.log(this.match);
 		if (!this.match)
 			return;
-
-		console.log("Destroying match");
 
 		this.match.removeAllListeners();
 		this.match.leave();
 		this.match = null;
 
-		this.game.matchScene.scene.sleep();
-		this.game.matchScene.scene.run("Scene_Menu_Main");
-		this.game.matchScene = null;
+		if (this.matchScene)
+		{
+			this.matchScene.scene.start("Scene_Menu_Main");
+			this.matchScene = null;
+		}
 	}
 }
 

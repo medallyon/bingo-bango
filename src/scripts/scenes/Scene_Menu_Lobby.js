@@ -13,26 +13,25 @@ class Scene_Menu_Lobby extends Scene
 		this.connection = null;
 	}
 
-	wake(data)
-	{
-		this.create(data);
-	}
-
 	create(data = {})
 	{
-		console.log("Entered Scene_Menu_Lobby");
+		console.log("Scene_Menu_Lobby.create()");
 
 		super.create(data);
 
 		this.connection = this.game.connection;
 
-		if (!Array.from(this.children).some(c => c instanceof Back))
-			this.add.existing(new Back("Scene_Menu_Main", {
-				scene: this,
-				x: this.width * .1,
-				y: this.height * .075,
-				defaultButtonEvents: true
-			}).setScale(.5));
+		this.add.existing(new Back("Scene_Menu_Main", {
+			scene: this,
+			x: this.width * .1,
+			y: this.height * .075,
+			userDecision: "Are you sure you want to leave the lobby and return to the menu?",
+			defaultButtonEvents: true,
+			clickCallback: () =>
+			{
+				this.connection.leaveMatch();
+			}
+		}).setScale(.5));
 
 		// TODO: Add "BEGIN GAME" Button, only accessible by match host
 
@@ -41,11 +40,11 @@ class Scene_Menu_Lobby extends Scene
 			{
 				console.log(`Joined match { ${match.id} }`);
 
-				console.log("Beginning game in 30 seconds...");
-				setTimeout(() =>
+				console.log("Beginning game in 5 seconds...");
+				this.time.delayedCall(1000 * 5, () =>
 				{
 					match.send("match-host-begin");
-				}, 1000 * 30);
+				});
 			}).catch(console.error);
 	}
 }

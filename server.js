@@ -18,8 +18,8 @@ const BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumbe
 let compiling = true
 	, webpackError;
 
-const compiler = webpack(require(join(__dirname, "webpack", "webpack.prod.js")));
-// const compiler = webpack(require(join(__dirname, "webpack", "webpack.dev.js")));
+// const compiler = webpack(require(join(__dirname, "webpack", "webpack.prod.js")));
+const compiler = webpack(require(join(__dirname, "webpack", "webpack.dev.js")));
 function build()
 {
 	return new Promise(function(resolve, reject)
@@ -254,7 +254,10 @@ class MatchRoom extends colyseus.Room
 	}
 
 	// Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)
-	// onDispose() { }
+	onDispose()
+	{
+		console.log(`Disposing of MatchRoom { ${this.roomId} }`);
+	}
 }
 
 io.define("lobby", colyseus.LobbyRoom);

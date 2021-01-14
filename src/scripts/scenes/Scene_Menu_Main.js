@@ -49,8 +49,8 @@ class Scene_Menu_Main extends Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.sleep();
-			this.scene.run("Scene_Menu_Lobby");
+			// this.scene.sleep();
+			this.scene.start("Scene_Menu_Lobby");
 		});
 
 		this.buttons.settings.on("pointerup", (pointer) =>
@@ -59,8 +59,8 @@ class Scene_Menu_Main extends Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.sleep();
-			this.scene.run("Scene_Menu_Settings");
+			// this.scene.sleep();
+			this.scene.start("Scene_Menu_Settings");
 		});
 
 		this.buttons.leaderboard.on("pointerup", (pointer) =>
@@ -69,8 +69,8 @@ class Scene_Menu_Main extends Scene
 			if (pointer.button !== 0)
 				return;
 
-			this.scene.sleep();
-			this.scene.run("Scene_Menu_Leaderboard");
+			// this.scene.sleep();
+			this.scene.start("Scene_Menu_Leaderboard");
 		});
 	}
 }

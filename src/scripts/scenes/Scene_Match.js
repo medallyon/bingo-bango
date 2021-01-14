@@ -27,18 +27,12 @@ class Scene_Match extends Scene
 
 	_createCards(layout = 2)
 	{
-		if (this.cards)
-			this.cards.destroy();
-
 		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
 		this.add.existing(this.cards);
 	}
 
 	_createScoreTracker()
 	{
-		if (this.score.tracker)
-			return this.score.tracker.score = 0;
-
 		this.score.tracker = new ScoreTracker({
 			scene: this,
 			x: this.width * .88,
@@ -50,12 +44,6 @@ class Scene_Match extends Scene
 
 	_createScoreBoard(players = {})
 	{
-		if (this.score.board)
-		{
-			// clean text and re-populate
-			return;
-		}
-
 		this.score.board = new ScoreBoard({
 			scene: this,
 			x: this.width * .88,
@@ -68,9 +56,6 @@ class Scene_Match extends Scene
 
 	_createBallQueue()
 	{
-		if (this.queue)
-			return this.queue.reset();
-
 		this.queue = new BallQueue({
 			scene: this,
 			x: this.width * .15,
@@ -80,36 +65,22 @@ class Scene_Match extends Scene
 		this.add.existing(this.queue);
 	}
 
-	wake(data)
-	{
-		super.create(data);
-
-		this.game.matchScene = this;
-		this.connection = this.game.connection;
-
-		this._createCards(data.cards || 2);
-		this._createScoreTracker();
-		this._createScoreBoard(data.players);
-		this._createBallQueue();
-
-		this.connection.match.send("match-ready");
-	}
-
 	create(data = {})
 	{
 		super.create(data);
 
-		this.game.matchScene = this;
 		this.connection = this.game.connection;
+		this.connection.matchScene = this;
 
-		this.add.existing(new Back("Scene_Menu_Main", {
+		this.add.existing(new Back(null, {
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,
-			userDecision: true,
+			userDecision: "Are you sure you want to leave the match and return to the menu?",
 			defaultButtonEvents: true,
-			on: {
-				pointerup: this.connection.leaveMatch
+			clickCallback: () =>
+			{
+				this.connection.leaveMatch();
 			}
 		}).setScale(.5));
 
