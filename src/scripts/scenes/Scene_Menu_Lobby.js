@@ -1,5 +1,5 @@
 import Scene from "../objects/Scene.js";
-import Back from "../objects/Back.js";
+import SceneButton from "../objects/SceneButton.js";
 
 class Scene_Menu_Lobby extends Scene
 {
@@ -21,7 +21,7 @@ class Scene_Menu_Lobby extends Scene
 
 		this.connection = this.game.connection;
 
-		this.add.existing(new Back("Scene_Menu_Main", {
+		this.add.existing(new SceneButton("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,

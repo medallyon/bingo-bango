@@ -3,7 +3,7 @@ import CardHolder from "../objects/CardHolder.js";
 import ScoreTracker from "../objects/ScoreTracker.js";
 import ScoreBoard from "../objects/ScoreBoard.js";
 import BallQueue from "../objects/BallQueue.js";
-import Back from "../objects/Back.js";
+import SceneButton from "../objects/SceneButton.js";
 
 class Scene_Match extends Scene
 {
@@ -72,7 +72,7 @@ class Scene_Match extends Scene
 		this.connection = this.game.connection;
 		this.connection.matchScene = this;
 
-		this.add.existing(new Back(null, {
+		this.add.existing(SceneButton(null, {
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,

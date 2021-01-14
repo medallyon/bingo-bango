@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 
 import Scene from "../objects/Scene.js";
-import Back from "../objects/Back.js";
+import SceneButton from "../objects/SceneButton.js";
 import Leaderboard from "../objects/Leaderboard.js";
 
 class Scene_Menu_Leaderboard extends Scene
@@ -18,7 +18,7 @@ class Scene_Menu_Leaderboard extends Scene
 	{
 		super.create(data);
 
-		/* Settings Panel Background */
+		/* Settings Panel SceneButtonground */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
 			.setScale(1.3);
 
@@ -45,7 +45,7 @@ class Scene_Menu_Leaderboard extends Scene
 		}).setOrigin(.5);
 
 		/* Back Button */
-		this.add.existing(new Back("Scene_Menu_Main", {
+		this.add.existing(new SceneButton("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,
@@ -67,7 +67,7 @@ class Scene_Menu_Leaderboard extends Scene
 			frameRate:30,
 			repeat:-1,
 		});
-		this.confetti=this.add.sprite(this.width / 2,this.height / 2,"confetti");
+		this.confetti= this.add.sprite(this.width / 2,this.height / 2,"confetti");
 		this.confetti.play("Celebrate");
 	}
 

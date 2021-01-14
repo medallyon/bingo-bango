@@ -4,7 +4,6 @@ import { BINGO, BUTTON_WIDTH } from "../globals.js";
 import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
 import Button from "./buttons/Button.js";
 import CardTile from "./CardTile.js";
-import TextOverlay from "./buttons/overlays/TextOverlay.js";
 import ImageOverlay from "./buttons/overlays/ImageOverlay.js";
 
 class Card extends Phaser.GameObjects.Container

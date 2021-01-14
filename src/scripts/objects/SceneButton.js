@@ -1,6 +1,6 @@
 import Button from "./buttons/Button.js";
 
-class Back extends Button
+class SceneButton extends Button
 {
 	constructor(targetScene, data)
 	{
@@ -38,4 +38,4 @@ class Back extends Button
 	}
 }
 
-export default Back;
+export default SceneButton;
