@@ -136,7 +136,6 @@ app.get("/login", function(req, res)
 
 app.use("/", function(req, res, next)
 {
-	console.log("/ 1");
 	if (compiling)
 		return res.status(202).send("Please wait while the game is being compiled...");
 
