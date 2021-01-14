@@ -146,15 +146,11 @@ app.use("/", function(req, res, next)
 	next();
 }, function(req, res, next)
 {
-	if (req.isAuthenticated() && req.user)
-		return next();
+	if (!(req.isAuthenticated() && req.user))
+		return res.redirect("/login");
 
-	res.redirect("/login");
-}, function(req, res, next)
-{
-	res.render(join(__dirname, "dist", "index.ejs"), {
-		discordUserJsonString: JSON.stringify(req.user)
-	});
+	// save discord user info in cookies
+	res.cookie("user", JSON.stringify(req.user));
 
 	next();
 }, express.static(join(__dirname, "dist")));
