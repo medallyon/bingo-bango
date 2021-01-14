@@ -72,7 +72,7 @@ class Scene_Match extends Scene
 		this.connection = this.game.connection;
 		this.connection.matchScene = this;
 
-		this.add.existing(SceneButton(null, {
+		this.add.existing(new SceneButton(null, {
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,
