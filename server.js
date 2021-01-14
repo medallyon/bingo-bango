@@ -18,8 +18,7 @@ const BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumbe
 let compiling = true
 	, webpackError;
 
-// const compiler = webpack(require(join(__dirname, "webpack", "webpack.prod.js")));
-const compiler = webpack(require(join(__dirname, "webpack", "webpack.dev.js")));
+const compiler = webpack(require(join(__dirname, "webpack", `webpack.${process.env.NODE_ENV === "production" ? "prod" : "dev"}.js`)));
 function build()
 {
 	return new Promise(function(resolve, reject)
@@ -54,22 +53,64 @@ app.use(function(req, res, next)
 });
 
 /*
- * [ ROUTES ]
+ * [ SESSION ]
  */
 
-// serve app in 'dist' from the get-go
-app.use(express.static(join(__dirname, "dist")));
+const session = require("express-session")
+	, FileStore = require("session-file-store")(session);
 
-app.get("/", function(req, res)
+app.use(session({
+	resave: true,
+	saveUninitialized: false,
+	secret: process.env.DOMAIN_ROOT,
+	store: new FileStore({
+		path: join(__dirname, "sessions"),
+		secret: process.env.PASSPORT_SECRET_DISCORD
+	})
+}));
+
+/*
+ * [ OAuth2 ]
+ */
+
+const passport = require("passport")
+	, DiscordStrategy = require("passport-discord").Strategy;
+
+passport.serializeUser(function(user, done)
 {
-	if (compiling)
-		return res.status(202).send("Please wait while the game is being compiled...");
-
-	if (webpackError)
-		return res.status(500).send(webpackError);
-
-	res.sendFile(join(__dirname, "dist", "index.html"));
+	done(null, user);
 });
+passport.deserializeUser(function(obj, done)
+{
+	done(null, obj);
+});
+
+passport.use(new DiscordStrategy({
+	clientID: process.env.PASSPORT_DISCORD_ID,
+	clientSecret: process.env.PASSPORT_DISCORD_SECRET,
+	callbackURL: `https://${process.env.DOMAIN_ROOT}/auth`,
+	scope: [ "identify" ]
+},
+function(accessToken, refreshToken, profile, cb)
+{
+	cb(null, profile);
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/login_actual", passport.authenticate("discord"));
+app.get("/auth", passport.authenticate("discord", {
+	successRedirect: "/",
+	failureRedirect: "/"
+}), function(req, res)
+{
+	res.redirect("/");
+});
+
+/*
+ * [ ROUTES ]
+ */
 
 if (process.env.NODE_ENV !== "production")
 {
@@ -84,6 +125,31 @@ if (process.env.NODE_ENV !== "production")
 		console.warn(err);
 	}
 }
+
+app.get("/login", function(req, res)
+{
+	if (req.isAuthenticated() && req.user)
+		return res.redirect("/");
+	res.redirect("/login_actual");
+});
+
+app.use("/", function(req, res, next)
+{
+	console.log("/ 1");
+	if (compiling)
+		return res.status(202).send("Please wait while the game is being compiled...");
+
+	if (webpackError)
+		return res.status(500).send(webpackError);
+
+	next();
+}, function(req, res, next)
+{
+	if (req.isAuthenticated() && req.user)
+		return next();
+
+	res.redirect("/login");
+}, express.static(join(__dirname, "dist")));
 
 /*
  * [ IO Setup ]
@@ -192,7 +258,7 @@ class MatchRoom extends colyseus.Room
 			const player = this.state.players.get(client.sessionId);
 			player.score += data.score;
 
-			// database call here to REST api to increase this player's global XP
+			// database call here to REST api to increase this player"s global XP
 
 			console.log(`Player { ${player.username} } received ${data.score} XP.`);
 
@@ -239,13 +305,13 @@ class MatchRoom extends colyseus.Room
 			// allow disconnected client to reconnect into this room until 20 seconds
 			await this.allowReconnection(client, 20);
 
-			// client returned! let's re-activate it.
+			// client returned! let"s re-activate it.
 			this.state.players.get(client.sessionId).connected = true;
 		}
 
 		catch (e)
 		{
-			// 20 seconds expired. let's remove the client.
+			// 20 seconds expired. let"s remove the client.
 			delete this.state.players[client.sessionId];
 		}
 
@@ -279,7 +345,7 @@ build()
 			chunks: false,
 			colors: true
 		}));
-		console.log(`\nGame packed and running at http://localhost:${process.env.PORT}`);
+		console.log(`\nGame packed and running on port ${process.env.PORT}`);
 	})
 	.catch(function(err)
 	{
