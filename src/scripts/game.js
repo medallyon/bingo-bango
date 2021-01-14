@@ -106,7 +106,7 @@ class Bingo extends Phaser.Game
 				return parts.pop().split(";").shift();
 		})("user")));
 
-		console.log(`Hello there, ${this.user.username}#${this.user.tag}`);
+		console.log(`Hello there, ${this.user.username}#${this.user.discriminator}`);
 	}
 }
 
