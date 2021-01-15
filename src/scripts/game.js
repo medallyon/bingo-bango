@@ -12,6 +12,7 @@ import Scene_Menu_Main from "./scenes/Scene_Menu_Main.js";
 import Scene_Menu_Settings from "./scenes/Scene_Menu_Settings.js";
 import Scene_Menu_Leaderboard from "./scenes/Scene_Menu_Leaderboard.js";
 import Scene_Menu_Credits from "./scenes/Scene_Menu_Credits.js";
+import Scene_Menu_Lobby from "./scenes/Scene_Menu_Lobby.js";
 import Scene_Match from "./scenes/Scene_Match.js";
 
 Array.prototype.contains = function(item)
@@ -65,6 +66,7 @@ class Bingo extends Phaser.Game
 				Scene_Menu_Settings,
 				Scene_Menu_Leaderboard,
 				Scene_Menu_Credits,
+				Scene_Menu_Lobby,
 				Scene_Match
 			],
 			physics: {
@@ -95,7 +97,16 @@ class Bingo extends Phaser.Game
 
 		this.announcer = new Voicepack();
 		this.connection = new ConnectionHandler(this);
-		this.matchScene = null;
+
+		this.user = JSON.parse(decodeURIComponent((name => // https://stackoverflow.com/a/15724300/4672263
+		{
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2)
+				return parts.pop().split(";").shift();
+		})("user")));
+
+		console.log(`Hello there, ${this.user.username}#${this.user.discriminator}`);
 	}
 }
 

@@ -1,25 +1,18 @@
 require("dotenv").config();
 
-const webpack = require("webpack")
-	, colyseus = require("colyseus")
-	, schema = require("@colyseus/schema")
-	, join = require("path").join
-	, http = require("http")
-	, cookieParser = require("cookie-parser")
-	, express = require("express")
-	, app = express();
-
-const BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumberGenerator.js"));
+const join = require("path").join
+	, BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumberGenerator.js"));
 
 /*
  * [ WEBPACK ]
  */
 
+const webpack = require("webpack");
+
 let compiling = true
 	, webpackError;
 
-// const compiler = webpack(require(join(__dirname, "webpack", "webpack.prod.js")));
-const compiler = webpack(require(join(__dirname, "webpack", "webpack.dev.js")));
+const compiler = webpack(require(join(__dirname, "webpack", `webpack.${process.env.NODE_ENV === "production" ? "prod" : "dev"}.js`)));
 function build()
 {
 	return new Promise(function(resolve, reject)
@@ -39,7 +32,12 @@ function build()
  * [ APP SETTINGS ]
  */
 
+const express = require("express")
+	, cookieParser = require("cookie-parser")
+	, app = express();
+
 app.set("trust proxy", true);
+app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -54,22 +52,64 @@ app.use(function(req, res, next)
 });
 
 /*
- * [ ROUTES ]
+ * [ SESSION ]
  */
 
-// serve app in 'dist' from the get-go
-app.use(express.static(join(__dirname, "dist")));
+const session = require("express-session")
+	, FileStore = require("session-file-store")(session);
 
-app.get("/", function(req, res)
+app.use(session({
+	resave: true,
+	saveUninitialized: false,
+	secret: process.env.DOMAIN_ROOT,
+	store: new FileStore({
+		path: join(__dirname, "sessions"),
+		secret: process.env.PASSPORT_SECRET_DISCORD
+	})
+}));
+
+/*
+ * [ OAuth2 ]
+ */
+
+const passport = require("passport")
+	, DiscordStrategy = require("passport-discord").Strategy;
+
+passport.serializeUser(function(user, done)
 {
-	if (compiling)
-		return res.status(202).send("Please wait while the game is being compiled...");
-
-	if (webpackError)
-		return res.status(500).send(webpackError);
-
-	res.sendFile(join(__dirname, "dist", "index.html"));
+	done(null, user);
 });
+passport.deserializeUser(function(obj, done)
+{
+	done(null, obj);
+});
+
+passport.use(new DiscordStrategy({
+	clientID: process.env.PASSPORT_DISCORD_ID,
+	clientSecret: process.env.PASSPORT_DISCORD_SECRET,
+	callbackURL: `https://${process.env.DOMAIN_ROOT}/auth`,
+	scope: [ "identify" ]
+},
+function(accessToken, refreshToken, profile, cb)
+{
+	cb(null, profile);
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/login_actual", passport.authenticate("discord"));
+app.get("/auth", passport.authenticate("discord", {
+	successRedirect: "/",
+	failureRedirect: "/"
+}), function(req, res)
+{
+	res.redirect("/");
+});
+
+/*
+ * [ ROUTES ]
+ */
 
 if (process.env.NODE_ENV !== "production")
 {
@@ -85,9 +125,57 @@ if (process.env.NODE_ENV !== "production")
 	}
 }
 
+if (process.env.NODE_ENV === "production")
+{
+	app.get("/login", function(req, res)
+	{
+		if (req.isAuthenticated() && req.user)
+			return res.redirect("/");
+		res.redirect("/login_actual");
+	});
+
+	app.use("/", function(req, res, next)
+	{
+		if (compiling)
+			return res.status(202).send("Please wait while the game is being compiled...");
+
+		if (webpackError)
+			return res.status(500).send(webpackError);
+
+		next();
+	}, function(req, res, next)
+	{
+		if (!(req.isAuthenticated() && req.user))
+			return res.redirect("/login");
+
+		// save discord user info in cookies
+		res.cookie("user", JSON.stringify(req.user));
+
+		next();
+	}, express.static(join(__dirname, "dist")));
+}
+
+else
+{
+	app.use("/", function(req, res, next)
+	{
+		if (compiling)
+			return res.status(202).send("Please wait while the game is being compiled...");
+
+		if (webpackError)
+			return res.status(500).send(webpackError);
+
+		next();
+	}, express.static(join(__dirname, "dist")));
+}
+
 /*
  * [ IO Setup ]
  */
+
+const colyseus = require("colyseus")
+	, schema = require("@colyseus/schema")
+	, http = require("http");
 
 const io = new colyseus.Server({
 	server: http.createServer(app)
@@ -136,14 +224,63 @@ class MatchRoom extends colyseus.Room
 	{
 		console.log("MatchRoom created");
 
+		this.generator = new BingoNumberGenerator();
+		this.host = null;
+		this.started = false;
+		this.ready = [];
+
 		this.setState(new MatchState());
+
+		this.onMessage("match-host-begin", client =>
+		{
+			console.log(`[${client.sessionId}] match-host-begin`);
+
+			if (client.sessionId !== this.host.sessionId)
+				return;
+
+			this.started = true;
+			this.lock();
+			this.broadcast("match-load");
+		});
+
+		this.onMessage("match-ready", client =>
+		{
+			console.log(`[${client.sessionId}] match-ready`);
+
+			if (!this.ready.includes(client.sessionId))
+				this.ready.push(client.sessionId);
+
+			if (this.ready.length !== this.clients.length)
+				return;
+
+			this.broadcast("match-start");
+
+			this.clock.start();
+			this.ballsCounted = 0;
+			this.matchInterval = this.clock.setInterval(() =>
+			{
+				this.broadcast("match-ball", {
+					ball: this.generator.random()
+				});
+
+				if (++this.ballsCounted === 45)
+				{
+					this.clock.clear();
+					this.broadcast("match-end", {
+						players: this.state.players
+					});
+				}
+			}, 7500);
+		});
 
 		this.onMessage("match-score-scored", (client, data) =>
 		{
+			console.log(`[${client.sessionId}] match-score-scored, ${data}`);
+
 			const player = this.state.players.get(client.sessionId);
 			player.score += data.score;
 
-			// call here to REST api to increase this player's global XP
+			// database call here to REST api to increase this player"s global XP
 
 			console.log(`Player { ${player.username} } received ${data.score} XP.`);
 
@@ -152,42 +289,26 @@ class MatchRoom extends colyseus.Room
 				score: player.score
 			});
 		});
-
-		this.generator = new BingoNumberGenerator();
-		this.clock.start();
-
-		this.ballsCounted = 0;
-		this.matchInterval = this.clock.setInterval(() =>
-		{
-			this.broadcast("match-ball", {
-				ball: this.generator.random()
-			});
-
-			if (++this.ballsCounted === 45)
-			{
-				this.matchInterval.clear();
-				this.broadcast("match-end", {
-					players: this.state.players
-				});
-			}
-		}, 7500);
 	}
 
 	// Authorize client based on provided options before WebSocket handshake is complete
-	onAuth(client, options, request)
+	/*onAuth(client, options, request)
 	{
 		return true;
-	}
+	}*/
 
 	// When client successfully joins the room
 	onJoin(client, options, auth)
 	{
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
-		const player = new Player();
+		const player = new Player(/* id, username */);
 		player.sessionId = client.sessionId;
 
 		this.state.players.set(player.sessionId, player);
+
+		if (this.clients.length === 1)
+			this.host = client;
 	}
 
 	// When a client leaves the room
@@ -206,7 +327,7 @@ class MatchRoom extends colyseus.Room
 			// allow disconnected client to reconnect into this room until 20 seconds
 			await this.allowReconnection(client, 20);
 
-			// client returned! let's re-activate it.
+			// client returned! let"s re-activate it.
 			this.state.players.get(client.sessionId).connected = true;
 		}
 
@@ -215,10 +336,16 @@ class MatchRoom extends colyseus.Room
 			// 20 seconds expired. let's remove the client.
 			delete this.state.players[client.sessionId];
 		}
+
+		if (this.clients.length && client.sessionId === this.host.sessionId)
+			this.host = this.clients[0];
 	}
 
 	// Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)
-	// onDispose() { }
+	onDispose()
+	{
+		console.log(`Disposing of MatchRoom { ${this.roomId} }`);
+	}
 }
 
 io.define("lobby", colyseus.LobbyRoom);
@@ -240,7 +367,7 @@ build()
 			chunks: false,
 			colors: true
 		}));
-		console.log(`\nGame packed and running at http://localhost:${process.env.PORT}`);
+		console.log(`\nGame packed and running on port ${process.env.PORT}`);
 	})
 	.catch(function(err)
 	{

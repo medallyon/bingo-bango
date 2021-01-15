@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -29,7 +31,11 @@ module.exports = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin({ gameName: 'Bingo Bango', template: 'src/index.html' }),
+    new HtmlWebpackPlugin({
+      gameName: 'Bingo Bango',
+      filename: 'index.html',
+      template: 'src/index.ejs'
+    }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets', to: 'assets' },

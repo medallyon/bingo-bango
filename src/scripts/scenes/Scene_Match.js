@@ -3,6 +3,7 @@ import CardHolder from "../objects/CardHolder.js";
 import ScoreTracker from "../objects/ScoreTracker.js";
 import ScoreBoard from "../objects/ScoreBoard.js";
 import BallQueue from "../objects/BallQueue.js";
+import SceneButton from "../objects/SceneButton.js";
 
 class Scene_Match extends Scene
 {
@@ -68,15 +69,27 @@ class Scene_Match extends Scene
 	{
 		super.create(data);
 
-		this.game.match = this;
 		this.connection = this.game.connection;
+		this.connection.matchScene = this;
+
+		this.add.existing(new SceneButton(null, {
+			scene: this,
+			x: this.width * .1,
+			y: this.height * .075,
+			userDecision: "Are you sure you want to leave the match and return to the menu?",
+			defaultButtonEvents: true,
+			clickCallback: () =>
+			{
+				this.connection.leaveMatch();
+			}
+		}).setScale(.5));
 
 		this._createCards(data.cards || 2);
 		this._createScoreTracker();
 		this._createScoreBoard(data.players);
 		this._createBallQueue();
 
-		this.connection.joinOrCreateMatch();
+		this.connection.match.send("match-ready");
 	}
 
 	playBall(ball)
