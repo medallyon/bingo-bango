@@ -205,7 +205,7 @@ schema.defineTypes(Player, {
 
 class GuestPlayer extends Player
 {
-	constructor(user)
+	constructor(user = {})
 	{
 		super();
 
@@ -226,9 +226,10 @@ class DiscordPlayer extends GuestPlayer
 {
 	constructor(user)
 	{
-		super();
+		super(user);
 
 		this.id = user.id;
+		this.avatar = user.avatar;
 
 		// TODO: retrieve player's global XP from database and update it here
 	}
@@ -239,7 +240,8 @@ schema.defineTypes(DiscordPlayer, {
 	username: "string",
 	discriminator: "string",
 	tag: "string",
-	id: "string"
+	id: "string",
+	avatar: "string"
 });
 
 class MatchState extends schema.Schema
@@ -355,6 +357,10 @@ class MatchRoom extends colyseus.Room
 
 		if (this.clients.length === 1)
 			this.state.host = client.sessionId;
+
+		// if (player instanceof DiscordPlayer)
+		// await fetch Player's global XP
+		// client.send("client-xp", { xp });
 	}
 
 	// When a client leaves the room
