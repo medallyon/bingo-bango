@@ -3,7 +3,6 @@ import * as Phaser from "phaser";
 import Scene from "../objects/Scene.js";
 import Back from "../objects/Back.js";
 import Leaderboard from "../objects/Leaderboard.js";
-
 class Scene_Menu_Leaderboard extends Scene
 {
 	constructor()
@@ -12,8 +11,32 @@ class Scene_Menu_Leaderboard extends Scene
 			key: "Scene_Menu_Leaderboard",
 			wallpaper: true
 		});
+		this.anims = null;
 	}
-
+	_createConfetti()
+	{
+		this.anims.create({
+			key: "Confetti",
+			frames: this.anims.generateFrameNames("confetti", {start:0, end:59, zeroPad:2, prefix:"confetti_", suffix:".png"}),
+			frameRate:30,
+			repeat:0,
+			hideOnComplete: true,
+		});
+		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
+		this.confetti.play("Confetti");
+	}
+	_createBalloons()
+	{
+		this.anims.create({
+			key: "Balloons",
+			frames: this.anims.generateFrameNames("balloons", {start:0, end:59, zeroPad:2, prefix:"confetti_", suffix:"."}),
+			frameRate:30,
+			repeat:0,
+			hideOnComplete: true,
+		});
+		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
+		this.confetti.play("Confetti");
+	}
 	create(data = {})
 	{
 		super.create(data);
@@ -51,24 +74,8 @@ class Scene_Menu_Leaderboard extends Scene
 			y: this.height * .075,
 			defaultButtonEvents: true
 		}).setScale(.5));
-
 		//ANIMATION
-		this.anims.create({
-			key:"Celebrate",
-			frames:
-			this.anims.generateFrameNames("confetti",
-				{
-					start: 0,
-					end: 59,
-					zeroPad:2,
-					prefix:"confetti_",
-					suffix:".png"
-				}),
-			frameRate:30,
-			repeat:-1,
-		});
-		this.confetti=this.add.sprite(this.width / 2,this.height / 2,"confetti");
-		this.confetti.play("Celebrate");
+		this._createConfetti();
 	}
 
 	update()

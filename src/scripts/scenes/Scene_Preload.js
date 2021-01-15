@@ -109,6 +109,7 @@ class Scene_Preload extends Phaser.Scene
 		 * ====== ANIMATIONS ======
 		 * ======================== */
 		this.load.atlas("confetti","animations/anim_confetti.png","animations/anim_confetti.json");
+		this.load.atlas("balloons","animations/anim_balloons.json");
 
 		// Logo
 		this.load.image("logo", "logo.png");
