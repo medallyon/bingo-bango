@@ -173,7 +173,8 @@ else
  * [ IO Setup ]
  */
 
-const colyseus = require("colyseus")
+const hash = new (require("hashids/cjs"))(process.env.DOMAIN_ROOT, 6)
+	, colyseus = require("colyseus")
 	, schema = require("@colyseus/schema")
 	, http = require("http");
 
@@ -187,9 +188,12 @@ class Player extends schema.Schema
 	{
 		super();
 
-		this.sessionId = null;
+		this.provider = "bingo-bango";
+		this.id = hash.encode(Math.floor(Math.random() * 1000000));
 		this.xp = 0;
 		this.score = 0;
+
+		this.sessionId = null;
 	}
 
 	setScore(value)
@@ -197,8 +201,25 @@ class Player extends schema.Schema
 		this.xp += value - this._score;
 		this.score = value;
 	}
+
+	toJson() { return this.toJSON(); } // eslint-disable-line
+	toJSON()
+	{
+		return {
+			provider: this.provider,
+			id: this.id,
+			xp: this.xp,
+			score: this.score,
+			username: this.username,
+			discriminator: this.discriminator,
+			tag: this.tag,
+			avatar: this.avatar
+		};
+	}
 }
 schema.defineTypes(Player, {
+	provider: "string",
+	id: "string",
 	xp: "number",
 	score: "number",
 });
@@ -210,11 +231,13 @@ class GuestPlayer extends Player
 		super();
 
 		this.username = user.username || "Guest";
-		this.discriminator = user.discriminator || Math.floor(Math.random() * 10000).toString();
+		this.discriminator = user.discriminator || (new Array(4)).fill(0).reduce((acc) => acc += Math.floor(Math.random() * 10).toString(), "");
 		this.tag = `${this.username}#${this.discriminator}`;
 	}
 }
 schema.defineTypes(GuestPlayer, {
+	provider: "string",
+	id: "string",
 	xp: "number",
 	score: "number",
 	username: "string",
@@ -228,6 +251,7 @@ class DiscordPlayer extends GuestPlayer
 	{
 		super(user);
 
+		this.provider = user.provider;
 		this.id = user.id;
 		this.avatar = user.avatar;
 
@@ -235,12 +259,13 @@ class DiscordPlayer extends GuestPlayer
 	}
 }
 schema.defineTypes(DiscordPlayer, {
+	provider: "string",
+	id: "string",
 	xp: "number",
 	score: "number",
 	username: "string",
 	discriminator: "string",
 	tag: "string",
-	id: "string",
 	avatar: "string"
 });
 
@@ -347,13 +372,22 @@ class MatchRoom extends colyseus.Room
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
 		let player;
-		if (!options.userData)
-			player = new GuestPlayer();
+		if (!options.userData.id)
+			player = new GuestPlayer(options.userData);
 		else
 			player = new DiscordPlayer(options.userData);
 
+		this.broadcast("match-player-join", {
+			userData: player.toJSON()
+		});
+
 		player.sessionId = client.sessionId;
 		this.state.players.set(player.sessionId, player);
+
+		const players = [];
+		for (const client of this.clients)
+			players.push(this.state.players.get(client.sessionId));
+		client.send("match-clients", { players });
 
 		if (this.clients.length === 1)
 			this.state.host = client.sessionId;
@@ -377,7 +411,7 @@ class MatchRoom extends colyseus.Room
 				throw new Error("consented leave");
 
 			// allow disconnected client to reconnect into this room until 20 seconds
-			await this.allowReconnection(client, 20);
+			await this.allowReconnection(client, 10);
 
 			// client returned! let"s re-activate it.
 			this.state.players.get(client.sessionId).connected = true;
@@ -385,6 +419,10 @@ class MatchRoom extends colyseus.Room
 
 		catch (e)
 		{
+			this.broadcast("match-player-leave", {
+				userData: this.state.players[client.sessionId].toJSON()
+			});
+
 			// 20 seconds expired. let's remove the client.
 			delete this.state.players[client.sessionId];
 		}

@@ -1,33 +1,5 @@
 import * as Colyseus from "colyseus.js";
-
-class Player
-{
-	get tag()
-	{
-		return `${this.username}#${this.discriminator}`;
-	}
-
-	constructor(discordUser = {})
-	{
-		this.id = discordUser.id;
-		this.username = discordUser.username || "Guest";
-		this.discriminator = discordUser.discriminator || Math.floor(Math.random() * 10000).toString();
-
-		console.log(`Hello there, ${this.tag}`);
-	}
-
-	// eslint-disable-next-line
-	toJson() { return this.toJSON(); }
-	toJSON()
-	{
-		return {
-			id: this.id,
-			username: this.username,
-			discriminator: this.discriminator,
-			tag: this.tag
-		};
-	}
-}
+import Player from "./Player.js";
 
 class ConnectionHandler
 {

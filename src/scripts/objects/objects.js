@@ -15,6 +15,7 @@ import ScoreBoard from "./ScoreBoard.js";
 import ScoreTracker from "./ScoreTracker.js";
 import Leaderboard from "./Leaderboard.js";
 import Confetti from "./Confetti.js";
+import Playerlist from "./Playerlist.js";
 
 export {
 	Button,
@@ -31,5 +32,6 @@ export {
 	ScoreBoard,
 	ScoreTracker,
 	Leaderboard,
-	Confetti
+	Confetti,
+	Playerlist
 };
