@@ -368,6 +368,11 @@ build()
 			colors: true
 		}));
 		console.log(`\nGame packed and running on port ${process.env.PORT}`);
+
+		try
+		{
+			require("open")(`http://localhost:${process.env.PORT}`);
+		} catch (e) {} // eslint-disable-line
 	})
 	.catch(function(err)
 	{
@@ -376,8 +381,6 @@ build()
 
 		if (err.details)
 			console.error(err.details);
-
-		process.exit(1);
 	});
 
 module.exports = io;
