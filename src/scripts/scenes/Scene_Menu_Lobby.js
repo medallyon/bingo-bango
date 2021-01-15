@@ -1,5 +1,7 @@
 import Scene from "../objects/Scene.js";
 import SceneButton from "../objects/SceneButton.js";
+import Button from "../objects/buttons/Button.js";
+import TextOverlay from "../objects/buttons/overlays/TextOverlay.js";
 
 class Scene_Menu_Lobby extends Scene
 {
@@ -15,12 +17,11 @@ class Scene_Menu_Lobby extends Scene
 
 	create(data = {})
 	{
-		console.log("Scene_Menu_Lobby.create()");
-
 		super.create(data);
 
 		this.connection = this.game.connection;
 
+		// [Button] Back
 		this.add.existing(new SceneButton("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .1,
@@ -33,17 +34,42 @@ class Scene_Menu_Lobby extends Scene
 			}
 		}).setScale(.5));
 
-		// TODO: Add "BEGIN GAME" Button, only accessible by match host
+		// [Button] Begin Game
+		let btnBegin = new Button({
+			scene: this,
+			x: this.width * .5,
+			y: this.height * .65,
+			texture: "button_play"
+		});
+		btnBegin.bg.setTint(0X777777);
+		this.add.existing(btnBegin);
 
 		this.connection.joinOrCreateMatch()
 			.then(match =>
 			{
 				console.log(`Joined match { ${match.id} }`);
 
-				console.log("Beginning game in 5 seconds...");
-				this.time.delayedCall(1000 * 5, () =>
+				match.state.listen("host", (hostID, oldHostID) =>
 				{
-					match.send("match-host-begin");
+					console.log("match.state.listen.host", hostID);
+					if (hostID === oldHostID)
+						return;
+
+					btnBegin.destroy();
+					btnBegin = new Button({
+						scene: this,
+						x: this.width * .5,
+						y: this.height * .65,
+						texture: "button_play",
+						defaultButtonEvents: true,
+						on: {
+							pointerup: () =>
+							{
+								this.connection.beginMatch();
+							}
+						}
+					});
+					this.add.existing(btnBegin);
 				});
 			}).catch(console.error);
 	}

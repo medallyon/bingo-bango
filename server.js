@@ -212,6 +212,7 @@ schema.defineTypes(Player, {
 	score: "number"
 });
 schema.defineTypes(MatchState, {
+	host: "string",
 	players: {
 		map: Player
 	}
@@ -225,7 +226,6 @@ class MatchRoom extends colyseus.Room
 		console.log("MatchRoom created");
 
 		this.generator = new BingoNumberGenerator();
-		this.host = null;
 		this.started = false;
 		this.ready = [];
 
@@ -235,7 +235,7 @@ class MatchRoom extends colyseus.Room
 		{
 			console.log(`[${client.sessionId}] match-host-begin`);
 
-			if (client.sessionId !== this.host.sessionId)
+			if (client.sessionId !== this.state.host)
 				return;
 
 			this.started = true;
@@ -308,7 +308,7 @@ class MatchRoom extends colyseus.Room
 		this.state.players.set(player.sessionId, player);
 
 		if (this.clients.length === 1)
-			this.host = client;
+			this.state.host = client.sessionId;
 	}
 
 	// When a client leaves the room
@@ -337,8 +337,8 @@ class MatchRoom extends colyseus.Room
 			delete this.state.players[client.sessionId];
 		}
 
-		if (this.clients.length && client.sessionId === this.host.sessionId)
-			this.host = this.clients[0];
+		if (this.clients.length && client.sessionId === this.state.host.sessionId)
+			this.state.host = this.clients[0].sessionId;
 	}
 
 	// Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)

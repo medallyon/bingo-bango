@@ -10,6 +10,7 @@ class ConnectionHandler
 			.replace("http", "ws");
 
 		this.client = new Colyseus.Client(this.host);
+
 		this.match = null;
 		this.matchScene = null;
 	}
@@ -21,7 +22,6 @@ class ConnectionHandler
 			this.client.joinOrCreate("match")
 				.then(match =>
 				{
-					console.log(match);
 					this.match = match;
 
 					match.onMessage("match-load", () =>
@@ -59,6 +59,14 @@ class ConnectionHandler
 					resolve(match);
 				}).catch(reject);
 		});
+	}
+
+	beginMatch()
+	{
+		if (!this.match)
+			return;
+
+		this.match.send("match-host-begin");
 	}
 
 	leaveMatch()
