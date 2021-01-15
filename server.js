@@ -125,16 +125,27 @@ if (process.env.NODE_ENV !== "production")
 	}
 }
 
+const MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED = (req, res, next) =>
+{
+	if (req.isAuthenticated() && req.user)
+		return res.redirect("/game");
+	next();
+};
+
 if (process.env.NODE_ENV === "production")
 {
-	app.get("/login", function(req, res)
+	app.get("/", MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED, function(req, res)
 	{
-		if (req.isAuthenticated() && req.user)
-			return res.redirect("/");
+		res.sendFile(join(__dirname, "dist", "login.html"));
+	});
+	app.use("/", express.static(join(__dirname, "dist")));
+
+	app.get("/login", MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED, function(req, res)
+	{
 		res.redirect("/login_actual");
 	});
 
-	app.use("/", function(req, res, next)
+	app.use("/game", function(req, res, next)
 	{
 		if (compiling)
 			return res.status(202).send("Please wait while the game is being compiled...");
@@ -145,9 +156,6 @@ if (process.env.NODE_ENV === "production")
 		next();
 	}, function(req, res, next)
 	{
-		if (!(req.isAuthenticated() && req.user))
-			return res.redirect("/login");
-
 		// save discord user info in cookies
 		res.cookie("user", JSON.stringify(req.user));
 
