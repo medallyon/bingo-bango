@@ -25,6 +25,19 @@ class Scene_Match extends Scene
 		this.queue = null;
 	}
 
+	_createConfetti()
+	{
+		this.anims.create({
+			key: "Confetti",
+			frames: this.anims.generateFrameNames("confetti", {start:0, end:59, zeroPad:2, prefix:"confetti_", suffix:".png"}),
+			frameRate:30,
+			repeat:0,
+			hideOnComplete: true,
+		});
+		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
+		this.confetti.play("Confetti");
+	}
+
 	_createCards(layout = 2)
 	{
 		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
@@ -108,7 +121,18 @@ class Scene_Match extends Scene
 
 	end()
 	{
-		// display final scores panel + back button
+		/* End Panel */
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 2, "panel_end")
+			.setScale(1);
+		/* Back Button */
+		this.add.existing(new SceneButton("Scene_Menu_Main", {
+			scene: this,
+			x: this.width * .5,
+			y: this.height * .8,
+			defaultButtonEvents: true
+		}).setScale(.5));
+		//ANIMATION
+		this._createConfetti();
 	}
 }
 

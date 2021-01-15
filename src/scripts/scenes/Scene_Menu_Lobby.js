@@ -47,16 +47,42 @@ class Scene_Menu_Lobby extends Scene
 				height: this.height * .75,
 			}
 		});*/
+		/* Lobbies Panel SceneButtonground */
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_lobby")
+			.setScale(1);
+
+		//Text
+		this.make.text({
+			x: this.width / 2.5,
+			y: this.height / 5,
+			text: "Lobby Name",
+			style: {
+				font: "25px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
+
+		this.make.text({
+			x: this.width / 1.6,
+			y: this.height / 5,
+			text: "Players",
+			style: {
+				font: "25px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
 
 		const scrollablePanel = this.rexUI.add.scrollablePanel({
 			x: this.width / 2,
-			y: this.height / 2.5,
-			width: this.width * .25,
-			height: this.height * .5,
+			y: this.height / 2.1,
+			width: this.width * .33,
+			height: this.height * .49,
 
 			scrollMode: 0,
 
-			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x355387),
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
 
 			panel: {
 				child: this.rexUI.add.fixWidthSizer({
@@ -114,9 +140,9 @@ class Scene_Menu_Lobby extends Scene
 		let btnBegin = new Button({
 			scene: this,
 			x: this.width * .5,
-			y: this.height * .8,
+			y: this.height * 1,
 			texture: "button_play"
-		});
+		}).setScale(.5);
 		btnBegin.bg.setTint(0X777777);
 		this.add.existing(btnBegin);
 
@@ -136,7 +162,7 @@ class Scene_Menu_Lobby extends Scene
 					btnBegin = new Button({
 						scene: this,
 						x: this.width * .5,
-						y: this.height * .8,
+						y: this.height * .9,
 						texture: "button_play",
 						defaultButtonEvents: true,
 						on: {
@@ -145,7 +171,7 @@ class Scene_Menu_Lobby extends Scene
 								this.connection.beginMatch();
 							}
 						}
-					});
+					}).setScale(1);
 					this.add.existing(btnBegin);
 				});
 

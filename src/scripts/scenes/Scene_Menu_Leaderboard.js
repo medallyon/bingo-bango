@@ -3,6 +3,8 @@ import * as Phaser from "phaser";
 import Scene from "../objects/Scene.js";
 import SceneButton from "../objects/SceneButton.js";
 import Leaderboard from "../objects/Leaderboard.js";
+import Playerlist from "../objects/Playerlist.js";
+import Player from "../classes/Player.js";
 class Scene_Menu_Leaderboard extends Scene
 {
 	constructor()
@@ -12,36 +14,13 @@ class Scene_Menu_Leaderboard extends Scene
 			wallpaper: true
 		});
 		this.anims = null;
-	}
-	_createConfetti()
-	{
-		this.anims.create({
-			key: "Confetti",
-			frames: this.anims.generateFrameNames("confetti", {start:0, end:59, zeroPad:2, prefix:"confetti_", suffix:".png"}),
-			frameRate:30,
-			repeat:0,
-			hideOnComplete: true,
-		});
-		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
-		this.confetti.play("Confetti");
-	}
-	_createBalloons()
-	{
-		this.anims.create({
-			key: "Balloons",
-			frames: this.anims.generateFrameNames("balloons", {start:0, end:59, zeroPad:2, prefix:"confetti_", suffix:"."}),
-			frameRate:30,
-			repeat:0,
-			hideOnComplete: true,
-		});
-		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
-		this.confetti.play("Confetti");
+
 	}
 	create(data = {})
 	{
 		super.create(data);
 
-		/* Settings Panel SceneButtonground */
+		/* Settings Panel */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
 			.setScale(1.3);
 
@@ -75,8 +54,68 @@ class Scene_Menu_Leaderboard extends Scene
 			defaultButtonEvents: true
 		}).setScale(.5));
 
-		//ANIMATION
-		this._createConfetti();
+		//Panel
+		const scrollablePanel = this.rexUI.add.scrollablePanel({
+			x: this.width / 2,
+			y: this.height / 1.65,
+			width: this.width * .45,
+			height: this.height * .6,
+
+			scrollMode: 0,
+
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
+
+			panel: {
+				child: this.rexUI.add.fixWidthSizer({
+					align: "center",
+					anchor: "center",
+					space: {
+						left: 3,
+						right: 3,
+						top: 3,
+						bottom: 4,
+						item: 8,
+						line: 8,
+					}
+				}),
+
+				mask: {
+					padding: 1
+				},
+			},
+
+			space: {
+				left: 10,
+				right: 10,
+				top: 10,
+				bottom: 10,
+
+				panel: 10,
+			}
+		}).layout();
+		//FIX: Needs to show the names and scores
+		/*var updatePanel = () =>
+		{
+			const sizer = scrollablePanel.getElement("panel");
+
+			sizer.clear(true);
+			for (var i = 0; i < this.players.length; i++)
+			{
+				const item = this.add.text(0, 0, this.players[i], {
+					align: "center",
+					fontSize: 32,
+					fontStyle: "bold"
+				});
+				item.setOrigin(.5)
+					.setStroke("#000", 5);
+
+				sizer.add(item);
+			}
+
+			scrollablePanel.layout();
+			return scrollablePanel;
+		};
+		updatePanel();*/
 	}
 
 	update()

@@ -1,6 +1,10 @@
 import * as Phaser from "phaser";
 
 import Scene from "../objects/Scene.js";
+import SceneButton from "../objects/SceneButton.js";
+import Button from "../objects/buttons/Button.js";
+import Playerlist from "../objects/Playerlist.js";
+import Player from "../classes/Player.js";
 
 class Scene_Menu_Lobbies extends Scene
 {
@@ -10,11 +14,133 @@ class Scene_Menu_Lobbies extends Scene
 			key: "Scene_Menu_Lobbies",
 			wallpaper: true
 		});
+		this.connection = null;
+		this.players = [];
+
+		this.buttons = {
+			join_lobby: null
+		};
 	}
 
 	create(data = {})
 	{
 		super.create(data);
+
+		this.connection = this.game.connection;
+
+		// [Button] Back
+		this.add.existing(new SceneButton("Scene_Menu_Main", {
+			scene: this,
+			x: this.width * .1,
+			y: this.height * .075,
+			userDecision: "Are you sure you want to leave the lobby and return to the menu?",
+			defaultButtonEvents: true,
+			clickCallback: () =>
+			{
+				this.connection.leaveMatch();
+			}
+		}).setScale(.5));
+
+		/* Lobbies Panel */
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_lobbies")
+			.setScale(1);
+
+		//Text
+		this.make.text({
+			x: this.width / 2.7,
+			y: this.height / 5,
+			text: "Lobby",
+			style: {
+				font: "25px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
+
+		this.make.text({
+			x: this.width / 2,
+			y: this.height / 5,
+			text: "Players",
+			style: {
+				font: "25px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
+
+		this.make.text({
+			x: this.width / 1.6,
+			y: this.height / 5,
+			text: "Status",
+			style: {
+				font: "25px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
+
+		//Scrollable Panel
+		const scrollablePanel = this.rexUI.add.scrollablePanel({
+			x: this.width / 2,
+			y: this.height / 2.1,
+			width: this.width * .33,
+			height: this.height * .48,
+
+			scrollMode: 0,
+
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
+
+			panel: {
+				child: this.rexUI.add.fixWidthSizer({
+					align: "center",
+					anchor: "center",
+					space: {
+						left: 3,
+						right: 3,
+						top: 3,
+						bottom: 3,
+						item: 8,
+						line: 8,
+					}
+				}),
+
+				mask: {
+					padding: 1
+				},
+			},
+
+			space: {
+				left: 10,
+				right: 10,
+				top: 10,
+				bottom: 10,
+
+				panel: 10,
+			}
+		}).layout();
+
+		var updatePanel = () =>
+		{
+			const sizer = scrollablePanel.getElement("panel");
+
+			sizer.clear(true);
+			for (var i = 0; i < this.players.length; i++)
+			{
+				const item = this.add.text(0, 0, this.players[i], {
+					align: "center",
+					fontSize: 32,
+					fontStyle: "bold"
+				});
+				item.setOrigin(.5)
+					.setStroke("#000", 5);
+
+				sizer.add(item);
+			}
+
+			scrollablePanel.layout();
+			return scrollablePanel;
+		};
+		updatePanel();
 	}
 }
 

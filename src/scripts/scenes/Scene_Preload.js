@@ -136,6 +136,12 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("panel_scoreboard", "UI/panels/bg_panel_scoreboard.png");
 		this.load.image("panel_scores", "UI/panels/bg_panel_scores.png");
 		this.load.image("panel_settings", "UI/panels/bg_panel_settings01.png");
+		this.load.image("panel_end", "UI/panels/bg_game_end.png");
+
+		// Buttons
+		this.load.image("button_join_lobby", "buttons/button_join_lobby.png");
+		this.load.image("button_create_lobby", "buttons/button_create_lobby.png");
+		this.load.image("button_main_menu", "buttons/button_main_menu.png");
 
 		// Progress Bars
 		this.load.image("progress", "UI/progress/bg_progress.png");
