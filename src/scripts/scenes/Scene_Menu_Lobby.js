@@ -1,7 +1,6 @@
 import Scene from "../objects/Scene.js";
 import SceneButton from "../objects/SceneButton.js";
 import Button from "../objects/buttons/Button.js";
-import TextOverlay from "../objects/buttons/overlays/TextOverlay.js";
 
 class Scene_Menu_Lobby extends Scene
 {
@@ -51,10 +50,10 @@ class Scene_Menu_Lobby extends Scene
 
 				match.state.listen("host", (hostID, oldHostID) =>
 				{
-					console.log("match.state.listen.host", hostID);
 					if (hostID === oldHostID)
 						return;
 
+					// replace old button with a new, interactive button
 					btnBegin.destroy();
 					btnBegin = new Button({
 						scene: this,

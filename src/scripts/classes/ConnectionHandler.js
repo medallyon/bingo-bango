@@ -1,25 +1,76 @@
 import * as Colyseus from "colyseus.js";
 
+class Player
+{
+	get tag()
+	{
+		return `${this.username}#${this.discriminator}`;
+	}
+
+	constructor(discordUser = {})
+	{
+		this.id = discordUser.id;
+		this.username = discordUser.username || "Guest";
+		this.discriminator = discordUser.discriminator || Math.floor(Math.random() * 10000).toString();
+
+		console.log(`Hello there, ${this.tag}`);
+	}
+
+	// eslint-disable-next-line
+	toJson() { return this.toJSON(); }
+	toJSON()
+	{
+		return {
+			id: this.id,
+			username: this.username,
+			discriminator: this.discriminator,
+			tag: this.tag
+		};
+	}
+}
+
 class ConnectionHandler
 {
 	constructor(game)
 	{
 		this.game = game;
 
-		this.host = window.location.origin
-			.replace("http", "ws");
-
+		this.host = window.location.origin.replace("http", "ws");
 		this.client = new Colyseus.Client(this.host);
 
 		this.match = null;
 		this.matchScene = null;
+
+		try
+		{
+			console.log(JSON.parse(decodeURIComponent((name => // https://stackoverflow.com/a/15724300/4672263
+			{
+				const value = `; ${document.cookie}`;
+				const parts = value.split(`; ${name}=`);
+				if (parts.length === 2)
+					return parts.pop().split(";").shift();
+			})("user"))));
+
+			this.player = new Player(JSON.parse(decodeURIComponent((name => // https://stackoverflow.com/a/15724300/4672263
+			{
+				const value = `; ${document.cookie}`;
+				const parts = value.split(`; ${name}=`);
+				if (parts.length === 2)
+					return parts.pop().split(";").shift();
+			})("user"))));
+		}
+
+		catch (err)
+		{
+			this.player = new Player();
+		}
 	}
 
 	joinOrCreateMatch()
 	{
 		return new Promise((resolve, reject) =>
 		{
-			this.client.joinOrCreate("match")
+			this.client.joinOrCreate("match", { userData: this.player.toJSON() })
 				.then(match =>
 				{
 					this.match = match;
@@ -45,8 +96,7 @@ class ConnectionHandler
 
 					match.onMessage("match-end", () =>
 					{
-						// stop gameloop & display scores + back button
-						// this.matchScene.end();
+						this.matchScene.end();
 					});
 
 					match.onLeave(code =>

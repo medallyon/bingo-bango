@@ -108,7 +108,7 @@ class Scene_Match extends Scene
 
 	end()
 	{
-		// return to main menu / lobbies screen
+		// display final scores panel + back button
 	}
 }
 

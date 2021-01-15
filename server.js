@@ -183,17 +183,64 @@ const io = new colyseus.Server({
 
 class Player extends schema.Schema
 {
-	constructor(id, username)
+	constructor()
 	{
 		super();
 
 		this.sessionId = null;
-
-		this.id = id;
-		this.username = username || "Player";
+		this.xp = 0;
 		this.score = 0;
 	}
+
+	setScore(value)
+	{
+		this.xp += value - this._score;
+		this.score = value;
+	}
 }
+schema.defineTypes(Player, {
+	xp: "number",
+	score: "number",
+});
+
+class GuestPlayer extends Player
+{
+	constructor(user)
+	{
+		super();
+
+		this.username = user.username || "Guest";
+		this.discriminator = user.discriminator || Math.floor(Math.random() * 10000).toString();
+		this.tag = `${this.username}#${this.discriminator}`;
+	}
+}
+schema.defineTypes(GuestPlayer, {
+	xp: "number",
+	score: "number",
+	username: "string",
+	discriminator: "string",
+	tag: "string"
+});
+
+class DiscordPlayer extends GuestPlayer
+{
+	constructor(user)
+	{
+		super();
+
+		this.id = user.id;
+
+		// TODO: retrieve player's global XP from database and update it here
+	}
+}
+schema.defineTypes(DiscordPlayer, {
+	xp: "number",
+	score: "number",
+	username: "string",
+	discriminator: "string",
+	tag: "string",
+	id: "string"
+});
 
 class MatchState extends schema.Schema
 {
@@ -205,14 +252,9 @@ class MatchState extends schema.Schema
 		this.players = new schema.MapSchema();
 	}
 }
-
-schema.defineTypes(Player, {
-	id: "string",
-	username: "string",
-	score: "number"
-});
 schema.defineTypes(MatchState, {
 	host: "string",
+	cards: "number",
 	players: {
 		map: Player
 	}
@@ -269,6 +311,8 @@ class MatchRoom extends colyseus.Room
 					this.broadcast("match-end", {
 						players: this.state.players
 					});
+
+					// database call here to REST api to increase every 'this.clients' global XP += client.score
 				}
 			}, 7500);
 		});
@@ -278,11 +322,9 @@ class MatchRoom extends colyseus.Room
 			console.log(`[${client.sessionId}] match-score-scored, ${data}`);
 
 			const player = this.state.players.get(client.sessionId);
-			player.score += data.score;
+			player.setScore(player.score + data.score);
 
-			// database call here to REST api to increase this player"s global XP
-
-			console.log(`Player { ${player.username} } received ${data.score} XP.`);
+			console.log(`Player { ${player.username} } received ${data.score} match points.`);
 
 			this.broadcast("match-score-update", {
 				id: player.sessionId,
@@ -298,13 +340,17 @@ class MatchRoom extends colyseus.Room
 	}*/
 
 	// When client successfully joins the room
-	onJoin(client, options, auth)
+	onJoin(client, options/*, auth*/)
 	{
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
-		const player = new Player(/* id, username */);
-		player.sessionId = client.sessionId;
+		let player;
+		if (!options.userData)
+			player = new GuestPlayer();
+		else
+			player = new DiscordPlayer(options.userData);
 
+		player.sessionId = client.sessionId;
 		this.state.players.set(player.sessionId, player);
 
 		if (this.clients.length === 1)
