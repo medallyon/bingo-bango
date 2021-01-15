@@ -50,7 +50,7 @@ class Scene_Menu_Main extends Scene
 				return;
 
 			// this.scene.sleep();
-			this.scene.start("Scene_Menu_Lobby");
+			this.scene.start("Scene_Menu_Lobbies");
 		});
 
 		this.buttons.settings.on("pointerup", (pointer) =>

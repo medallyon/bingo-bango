@@ -14,6 +14,7 @@ class Scene_Menu_Leaderboard extends Scene
 			wallpaper: true
 		});
 		this.anims = null;
+		this.players = [];
 
 	}
 	create(data = {})
@@ -94,7 +95,7 @@ class Scene_Menu_Leaderboard extends Scene
 			}
 		}).layout();
 		//FIX: Needs to show the names and scores
-		/*var updatePanel = () =>
+		var updatePanel = () =>
 		{
 			const sizer = scrollablePanel.getElement("panel");
 
@@ -115,7 +116,7 @@ class Scene_Menu_Leaderboard extends Scene
 			scrollablePanel.layout();
 			return scrollablePanel;
 		};
-		updatePanel();*/
+		updatePanel();
 	}
 
 	update()

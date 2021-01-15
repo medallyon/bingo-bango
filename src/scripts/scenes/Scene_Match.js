@@ -36,6 +36,8 @@ class Scene_Match extends Scene
 		});
 		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
 		this.confetti.play("Confetti");
+		//Audio
+		this.scene.game.audio.effects.play("audio_effects_cheering");
 	}
 
 	_createCards(layout = 2)
@@ -87,10 +89,11 @@ class Scene_Match extends Scene
 
 		this.add.existing(new SceneButton(null, {
 			scene: this,
-			x: this.width * .1,
-			y: this.height * .075,
+			x: this.width / 1.12,
+			y: this.height / 1.1,
 			userDecision: "Are you sure you want to leave the match and return to the menu?",
 			defaultButtonEvents: true,
+			texture: "button_exit",
 			clickCallback: () =>
 			{
 				this.connection.leaveMatch();
@@ -103,6 +106,8 @@ class Scene_Match extends Scene
 		this._createBallQueue();
 
 		this.connection.match.send("match-ready");
+		//Delete this
+		//this.end();
 	}
 
 	playBall(ball)
@@ -122,17 +127,16 @@ class Scene_Match extends Scene
 	end()
 	{
 		/* End Panel */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 2, "panel_end")
-			.setScale(1);
-		/* Back Button */
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 2, "panel_end");
 		this.add.existing(new SceneButton("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .5,
 			y: this.height * .8,
-			defaultButtonEvents: true
+			defaultButtonEvents: true,
+			texture: "button_main_menu"
 		}).setScale(.5));
 		//ANIMATION
-		this._createConfetti();
+		this._createConfetti().setScale(1.5);
 	}
 }
 

@@ -109,7 +109,6 @@ class Scene_Preload extends Phaser.Scene
 		 * ====== ANIMATIONS ======
 		 * ======================== */
 		this.load.atlas("confetti","animations/anim_confetti.png","animations/anim_confetti.json");
-		this.load.atlas("balloons","animations/anim_balloons.json");
 
 		// Logo
 		this.load.image("logo", "logo.png");
@@ -138,11 +137,6 @@ class Scene_Preload extends Phaser.Scene
 		this.load.image("panel_settings", "UI/panels/bg_panel_settings01.png");
 		this.load.image("panel_end", "UI/panels/bg_game_end.png");
 
-		// Buttons
-		this.load.image("button_join_lobby", "buttons/button_join_lobby.png");
-		this.load.image("button_create_lobby", "buttons/button_create_lobby.png");
-		this.load.image("button_main_menu", "buttons/button_main_menu.png");
-
 		// Progress Bars
 		this.load.image("progress", "UI/progress/bg_progress.png");
 		this.load.image("progress_blue", "UI/progress/bg_progress_blue.png");
@@ -155,9 +149,10 @@ class Scene_Preload extends Phaser.Scene
 		this.load.setPath("/assets/audio/");
 		this.load.audio("audio_button_01", "buttons/button_01.wav");
 		this.load.audio("audio_button_02", "buttons/button_02.wav");
+		this.load.audio("audio_button_03", "buttons/button_03.wav");
 		this.load.audio("audio_music_bg_01", "music/bg_01.mp3");
 		this.load.audio("audio_music_bg_02", "music/bg_02.mp3");
-
+		this.load.audio("audio_effects_cheering", "effects/cheering.mp3");
 
 		// Voicepacks
 		this.load.setPath("/assets/audio/voice-packs/");

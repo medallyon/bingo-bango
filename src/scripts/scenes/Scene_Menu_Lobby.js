@@ -82,15 +82,15 @@ class Scene_Menu_Lobby extends Scene
 
 			scrollMode: 0,
 
-			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d22),//0x222d2e
 
 			panel: {
 				child: this.rexUI.add.fixWidthSizer({
 					align: "center",
 					anchor: "center",
 					space: {
-						left: 3,
-						right: 3,
+						left: 5,
+						right: 5,
 						top: 3,
 						bottom: 3,
 						item: 8,
@@ -121,8 +121,10 @@ class Scene_Menu_Lobby extends Scene
 			for (var i = 0; i < this.players.length; i++)
 			{
 				const item = this.add.text(0, 0, this.players[i], {
+					x: this.width / 1.6,
+					y: this.height / 5,
 					align: "center",
-					fontSize: 32,
+					fontSize: 28,
 					fontStyle: "bold"
 				});
 				item.setOrigin(.5)
@@ -140,8 +142,8 @@ class Scene_Menu_Lobby extends Scene
 		let btnBegin = new Button({
 			scene: this,
 			x: this.width * .5,
-			y: this.height * 1,
-			texture: "button_play"
+			y: this.height * .85,
+			texture: "button_start_game"
 		}).setScale(.5);
 		btnBegin.bg.setTint(0X777777);
 		this.add.existing(btnBegin);
@@ -162,8 +164,8 @@ class Scene_Menu_Lobby extends Scene
 					btnBegin = new Button({
 						scene: this,
 						x: this.width * .5,
-						y: this.height * .9,
-						texture: "button_play",
+						y: this.height * .85,
+						texture: "button_start_game",
 						defaultButtonEvents: true,
 						on: {
 							pointerup: () =>
@@ -171,7 +173,7 @@ class Scene_Menu_Lobby extends Scene
 								this.connection.beginMatch();
 							}
 						}
-					}).setScale(1);
+					}).setScale(.5);
 					this.add.existing(btnBegin);
 				});
 

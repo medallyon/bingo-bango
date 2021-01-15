@@ -18,7 +18,8 @@ class Scene_Menu_Lobbies extends Scene
 		this.players = [];
 
 		this.buttons = {
-			join_lobby: null
+			join_lobby: null,
+			create_lobby:null
 		};
 	}
 
@@ -141,6 +142,24 @@ class Scene_Menu_Lobbies extends Scene
 			return scrollablePanel;
 		};
 		updatePanel();
+
+		//Buttons
+		this.add.existing(new SceneButton("Scene_Menu_Lobby", {
+			scene: this,
+			x: this.width * .4,
+			y: this.height * .8,
+			defaultButtonEvents: true,
+			texture: "button_join_lobby"
+		}).setScale(.5));
+
+		//Buttons
+		this.add.existing(new SceneButton("Scene_Menu_Lobby", {
+			scene: this,
+			x: this.width * .6,
+			y: this.height * .8,
+			defaultButtonEvents: true,
+			texture: "button_create_lobby"
+		}).setScale(.5));
 	}
 }
 

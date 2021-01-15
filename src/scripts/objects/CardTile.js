@@ -44,9 +44,7 @@ class CardTile extends Button
 		this.completed = true;
 		this.removeAllListeners();
 		this.overlay = new ImageOverlay(this.scene, "star").setScale(.8);
-
 		this.scene.score.tracker.score += CardTile.BASE_SCORE;
-
 		// TODO: Play 'completed' animation on tile
 		// TODO: Play 'completed' sound in "effects" channel
 	}

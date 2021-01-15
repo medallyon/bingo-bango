@@ -13,7 +13,7 @@ class Scene extends Phaser.Scene
 		// Buttons
 		load.setPath("assets/img/buttons/");
 
-		const buttons = [ "back", "createLobby", "exit", "icon_resume", "leaderboard", "pause", "play", "resume", "settings" ];
+		const buttons = [ "back", "createLobby", "exit", "icon_resume", "leaderboard", "pause", "play", "resume", "settings", "main_menu", "create_lobby", "join_lobby", "start_game" ];
 		for (const asset of buttons)
 			load.image(`button_${asset}`, `button_${asset}.png`);
 	}
