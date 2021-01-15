@@ -74,27 +74,9 @@ class Scene_Menu_Leaderboard extends Scene
 			y: this.height * .075,
 			defaultButtonEvents: true
 		}).setScale(.5));
+
 		//ANIMATION
-<<<<<<< HEAD
 		this._createConfetti();
-=======
-		this.anims.create({
-			key:"Celebrate",
-			frames:
-			this.anims.generateFrameNames("confetti",
-				{
-					start: 0,
-					end: 59,
-					zeroPad:2,
-					prefix:"confetti_",
-					suffix:".png"
-				}),
-			frameRate:30,
-			repeat:-1,
-		});
-		this.confetti= this.add.sprite(this.width / 2,this.height / 2,"confetti");
-		this.confetti.play("Celebrate");
->>>>>>> 387274c8f2e0c8928cb7fab03e9656c76cbc109b
 	}
 
 	update()
