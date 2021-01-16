@@ -63,6 +63,9 @@ class Scene_Match extends Scene
 
 	_createScoreBoard()
 	{
+		/* Scoreboard Panel */
+		this.add.image(this.game.renderer.width / 1.14, this.game.renderer.height / 2.1, "panel_scores")
+			.setScale(.8);
 		this.score.board = this.rexUI.add.scrollablePanel({
 			x: this.width * .85,
 			y: this.height * .5,
@@ -101,7 +104,7 @@ class Scene_Match extends Scene
 		}).layout();
 		this.updateScores();
 	}
-
+	/*
 	_createBallCounter()
 	{
 		// Ball Counter Panel
@@ -119,6 +122,7 @@ class Scene_Match extends Scene
 			}
 		}).setOrigin(.5);
 	}
+	*/
 	_createBallQueue()
 	{
 		this.queue = new BallQueue({
@@ -159,7 +163,7 @@ class Scene_Match extends Scene
 			}
 		}).setScale(.5));
 
-		this._createBallCounter();
+		//this._createBallCounter();
 		this._createCards(this.cards);
 		this._createScoreTracker();
 		this._createScoreBoard(this.connection.players);
@@ -221,7 +225,7 @@ class Scene_Match extends Scene
 				x: this.width / 1.6,
 				y: this.height / 5,
 				align: "right",
-				fontSize: 28,
+				fontSize: 18,
 				fontStyle: "bold"
 			});
 			item.setOrigin(.5)
