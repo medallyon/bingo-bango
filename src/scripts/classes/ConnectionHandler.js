@@ -48,6 +48,11 @@ class ConnectionHandler
 				{
 					this.match = match;
 
+					match.onMessage("client-xp", msg =>
+					{
+						this.player.xp = msg.xp;
+					});
+
 					match.onMessage("match-clients", msg =>
 					{
 						this.players = new Map();

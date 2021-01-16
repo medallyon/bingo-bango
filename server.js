@@ -184,7 +184,8 @@ else
 const hash = new (require("hashids/cjs"))(process.env.DOMAIN_ROOT, 6)
 	, colyseus = require("colyseus")
 	, schema = require("@colyseus/schema")
-	, http = require("http");
+	, http = require("http")
+	, request = require("request");
 
 const io = new colyseus.Server({
 	server: http.createServer(app)
@@ -192,9 +193,11 @@ const io = new colyseus.Server({
 
 class Player extends schema.Schema
 {
-	constructor()
+	constructor(client)
 	{
 		super();
+
+		this.client = client;
 
 		this.provider = "bingo-bango";
 		this.id = hash.encode(Math.floor(Math.random() * 1000000));
@@ -234,9 +237,11 @@ schema.defineTypes(Player, {
 
 class GuestPlayer extends Player
 {
-	constructor(user = {})
+	constructor(client, user = {})
 	{
-		super();
+		super(client);
+
+		this.client = client;
 
 		this.username = user.username || "Guest";
 		this.discriminator = user.discriminator || (new Array(4)).fill(0).reduce((acc) => acc += Math.floor(Math.random() * 10).toString(), "");
@@ -255,15 +260,74 @@ schema.defineTypes(GuestPlayer, {
 
 class DiscordPlayer extends GuestPlayer
 {
-	constructor(user)
+	constructor(client, user)
 	{
-		super(user);
+		super(client);
 
 		this.provider = user.provider;
 		this.id = user.id;
 		this.avatar = user.avatar;
 
-		// TODO: retrieve player's global XP from database and update it here
+		this.fetchXP()
+			.then(xp =>
+			{
+				this.xp = xp;
+				this.client.send("client-xp", { xp });
+			}).catch(() => {});
+	}
+
+	fetchXP()
+	{
+		return new Promise((resolve, reject) =>
+		{
+			request({
+				uri: "https://api.medallyon.me/uni/2020/wgd/scores",
+				json: true,
+				headers: {
+					"Authorization": process.env.DATABASE_SCORES_SECRET
+				}
+			}, (err, res, body) =>
+			{
+				if (err)
+					return reject(err);
+
+				if (body[this.id])
+					resolve(body[this.id]);
+				else
+					reject(new Error(`Global Scores doesn't contain ${this.id} (yet)`));
+			});
+		});
+	}
+
+	updateXP()
+	{
+		return new Promise((resolve, reject) =>
+		{
+			request({
+				uri: "https://api.medallyon.me/uni/2020/wgd/scores",
+				json: true,
+				method: "POST",
+				headers: {
+					"Authorization": process.env.DATABASE_SCORES_SECRET
+				},
+				data: {
+					id: this.id,
+					user: {
+						tag: this.tag,
+						xp: this.xp
+					}
+				}
+			}, (err, res, body) =>
+			{
+				if (err)
+					return reject(err);
+
+				if (res.statusCode.toString().startsWith("2"))
+					resolve();
+				else
+					reject(new Error(`Response returned code ${res.statusCode}`));
+			});
+		});
 	}
 }
 schema.defineTypes(DiscordPlayer, {
@@ -301,6 +365,26 @@ schema.defineTypes(MatchState, {
 
 class MatchRoom extends colyseus.Room
 {
+	_fetchScores()
+	{
+		return new Promise((resolve, reject) =>
+		{
+			request({
+				uri: "https://api.medallyon.me/uni/2020/wgd/scores",
+				json: true,
+				headers: {
+					"Authorization": process.env.DATABASE_SCORES_SECRET
+				}
+			}, (err, res, body) =>
+			{
+				if (err)
+					return reject(err);
+
+				resolve(body);
+			});
+		});
+	}
+
 	// When room is initialized
 	onCreate(options)
 	{
@@ -362,9 +446,39 @@ class MatchRoom extends colyseus.Room
 						players: this.state.players
 					});
 
-					// database call here to REST api to increase every 'this.clients' global XP += client.score
+					// database call to REST api to increase every 'this.clients' global XP += client.score
+					for (const player of this.state.players.values())
+					{
+						if (!(player instanceof DiscordPlayer))
+							continue;
+
+						player.updateXP()
+							.catch(console.error);
+					}
 				}
 			}, 1000 * this.state.interval);
+
+			this.onMessage("leaderboard-fetch-100", client =>
+			{
+				this._fetchScores()
+					.then(scores =>
+					{
+						console.log(scores);
+
+						let sorted = [];
+						for (const score of Object.values(scores))
+							sorted.push(score);
+
+						sorted = sorted.sort((a, b) =>
+						{
+							a.xp - b.xp;
+						}).slice(0, 100);
+
+						console.log(sorted);
+
+						client.send("leaderboard-100", { scores: sorted });
+					}).catch(console.error);
+			});
 		});
 
 		this.onMessage("match-score-scored", (client, data) =>
@@ -396,9 +510,9 @@ class MatchRoom extends colyseus.Room
 
 		let player;
 		if (!options.userData.id)
-			player = new GuestPlayer(options.userData);
+			player = new GuestPlayer(client, options.userData);
 		else
-			player = new DiscordPlayer(options.userData);
+			player = new DiscordPlayer(client, options.userData);
 
 		this.broadcast("match-player-join", {
 			userData: player.toJSON()
@@ -414,10 +528,6 @@ class MatchRoom extends colyseus.Room
 
 		if (this.clients.length === 1)
 			this.state.host = client.sessionId;
-
-		// if (player instanceof DiscordPlayer)
-		// await fetch Player's global XP
-		// client.send("client-xp", { xp });
 	}
 
 	// When a client leaves the room

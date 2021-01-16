@@ -1,10 +1,6 @@
-import * as Phaser from "phaser";
-
 import Scene from "../objects/Scene.js";
 import SceneButton from "../objects/SceneButton.js";
-import Leaderboard from "../objects/Leaderboard.js";
-import Playerlist from "../objects/Playerlist.js";
-import Player from "../classes/Player.js";
+
 class Scene_Menu_Leaderboard extends Scene
 {
 	constructor()
@@ -13,13 +9,18 @@ class Scene_Menu_Leaderboard extends Scene
 			key: "Scene_Menu_Leaderboard",
 			wallpaper: true
 		});
-		this.anims = null;
-		this.players = [];
 
+		this.connection = null;
+
+		this.anims = null;
+		this.scores = [];
 	}
+
 	create(data = {})
 	{
 		super.create(data);
+
+		this.connection = this.game.connection;
 
 		/* Settings Panel */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.50, "panel_leaderboard")
@@ -94,15 +95,15 @@ class Scene_Menu_Leaderboard extends Scene
 				panel: 10,
 			}
 		}).layout();
-		//FIX: Needs to show the names and scores
+
 		var updatePanel = () =>
 		{
 			const sizer = scrollablePanel.getElement("panel");
 
 			sizer.clear(true);
-			for (var i = 0; i < this.players.length; i++)
+			for (const score of this.scores)
 			{
-				const item = this.add.text(0, 0, this.players[i], {
+				const item = this.add.text(0, 0, `${score.tag}: ${score.xp}`, {
 					align: "center",
 					fontSize: 32,
 					fontStyle: "bold"
@@ -116,12 +117,16 @@ class Scene_Menu_Leaderboard extends Scene
 			scrollablePanel.layout();
 			return scrollablePanel;
 		};
-		updatePanel();
-	}
 
-	update()
-	{
+		if (!this.connection || (this.connection && !this.connection.match))
+			return;
 
+		this.connection.match.send("leaderboard-fetch-100");
+		this.connection.match.onMessage("leaderboard-100", msg =>
+		{
+			this.scores = msg.scores;
+			updatePanel();
+		});
 	}
 }
 

@@ -72,8 +72,6 @@ class Scene_Match extends Scene
 
 			scrollMode: 0,
 
-			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
-
 			panel: {
 				child: this.rexUI.add.fixWidthSizer({
 					align: "right",
@@ -229,7 +227,8 @@ class Scene_Match extends Scene
 				fontStyle: "bold"
 			});
 			item.setOrigin(.5)
-				.setStroke("#000", 5);
+				.setStroke("#000", 5)
+				.setDepth(100);
 
 			sizer.add(item);
 		}
@@ -250,7 +249,7 @@ class Scene_Match extends Scene
 
 	end()
 	{
-		this.time.delayedCall(this.interval, () =>
+		this.time.delayedCall(5000, () =>
 		{
 			/* End Panel */
 			this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, "panel_end");
@@ -283,6 +282,14 @@ class Scene_Match extends Scene
 					align: "center"
 				}
 			}).setOrigin(.5);
+
+			this.cardHolder.destroy();
+			this.score.tracker.destroy();
+			this.queue.destroy();
+
+			this.score.board.x = this.width * .5;
+			this.score.board.y = this.height * .6;
+			this.updateScores();
 
 			// ANIMATION
 			this._createConfetti();

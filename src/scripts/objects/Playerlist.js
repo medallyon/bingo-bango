@@ -103,7 +103,7 @@ class Playerlist extends Phaser.GameObjects.Container
 	static preload(load)
 	{
 		load.setPath("assets/img/UI/");
-		load.image("avatar_guest", "avatar_guest.png");
+		// load.image("avatar_guest", "avatar_guest.png");
 	}
 
 	update()
