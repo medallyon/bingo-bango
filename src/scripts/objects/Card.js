@@ -89,6 +89,10 @@ class Card extends Phaser.GameObjects.Container
 		this.colLength = colLength;
 
 		this.generator = new BingoNumberGenerator();
+		this.bingos = {
+			columns: [],
+			rows: []
+		};
 		this.buttons = {
 			bingo: [],
 			tiles: {
@@ -118,11 +122,10 @@ class Card extends Phaser.GameObjects.Container
 		return null;
 	}
 
-	_hasAnyBingo(number)
+	_getTileAt(x, y)
 	{
-		// TODO: Figure out algorithm to determine whether there's a horizontal, vertical, or diagonal bingo at (x, y);
-
-		const { x, y } = this._getCoordinate(number);
+		console.log(BINGO[x], y);
+		return this.buttons.tiles[BINGO[x]][y];
 	}
 
 	_getCoordinate(number)
@@ -139,6 +142,42 @@ class Card extends Phaser.GameObjects.Container
 		};
 	}
 
+	_determineBingo(tile)
+	{
+		const { x, y } = this._getCoordinate(tile.number);
+		console.log(x, y);
+
+		// horizontal
+		let horizontal = [];
+		for (let i = 0; i < this.colLength; i++)
+		{
+			const tile = this._getTileAt(i, y);
+			if (tile.completed)
+				horizontal.push(tile);
+		}
+
+		// vertical
+		let vertical = [];
+		for (let i = 0; i < this.buttons.bingo.length; i++)
+		{
+			const tile = this._getTileAt(x, i);
+			if (tile.completed)
+				vertical.push(tile);
+		}
+
+		if (horizontal.length === this.buttons.bingo.length)
+			this.bingos.rows.push(y);
+
+		if (vertical.length === this.buttons.bingo.length)
+			this.bingos.columns.push(x);
+
+		return {
+			horizontal: horizontal.length === this.colLength ? horizontal : null,
+			vertical: vertical.length === this.buttons.bingo.length ? vertical : null
+		};
+	}
+
+	// returns the amount of bingos achieved
 	play(number)
 	{
 		const tile = this._getTile(number);
@@ -152,10 +191,7 @@ class Card extends Phaser.GameObjects.Container
 			return console.warn("Clicked on a number not present in the BallQueue");
 
 		tile.complete();
-
-		// TODO: Check if a bingo has been achieved & update the score accordingly
-
-		return true;
+		return Object.values(this._determineBingo(tile)).filter(x => x != null).length;
 	}
 }
 

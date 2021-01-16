@@ -65,6 +65,7 @@ class Button extends Phaser.GameObjects.Container
 	constructor(data)
 	{
 		super(data.scene, data.x, data.y);
+		this.scene.add.existing(this);
 
 		this.bg = new Phaser.GameObjects.Image(this.scene, 0, 0, data.texture);
 		this.add(this.bg);

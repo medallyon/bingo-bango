@@ -1,5 +1,3 @@
-import * as Phaser from "phaser";
-
 import Button from "./buttons/Button.js";
 import ImageOverlay from "./buttons/overlays/ImageOverlay.js";
 import TextOverlay from "./buttons/overlays/TextOverlay.js";
@@ -35,7 +33,9 @@ class CardTile extends Button
 			console.log(`Clicked on ${this.overlay.text.text}`);
 			this.overlay.wobble(.65);
 
-			this.card.play(this.number);
+			const bingos = this.card.play(this.number);
+			if (bingos > 0)
+				this.scene.bingo();
 		});
 	}
 

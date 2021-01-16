@@ -11,6 +11,7 @@ class Dropdown extends Setting
 		load.setPath("assets/img/UI/dropdown/");
 
 		load.image("dropdown_arrow", "arrow.png");
+		load.image("dropdown_arrow_white", "arrow_white.png");
 		load.image("dropdown_main", "main.png");
 		load.image("dropdown_main_hover", "main_hover.png");
 		load.image("dropdown_item", "item.png");

@@ -16,15 +16,14 @@ class Scene_Match extends Scene
 
 		this.connection = null;
 
-		this.score = {
-			tracker: null,
-			board: null
-		};
-
 		this.waitingText = null;
 
 		this.cards = null;
 		this.queue = null;
+		this.score = {
+			tracker: null,
+			board: null
+		};
 	}
 
 	_createConfetti()
@@ -38,7 +37,9 @@ class Scene_Match extends Scene
 		});
 		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
 		this.confetti.play("Confetti");
-		this.game.audio.effects.play("audio_effects_cheering");
+		this.game.audio.effects.play("audio_effects_cheering", {
+			volume: .25
+		});
 	}
 
 	_createCards(layout = 2)
@@ -134,6 +135,16 @@ class Scene_Match extends Scene
 		this.game.audio.voice.play(variation);
 	}
 
+	bingo()
+	{
+		this.score.tracker.score += 500;
+
+		const voicepack = this.game.announcer;
+		this.game.audio.voice.play(voicepack.BINGO.random());
+
+		this._createConfetti();
+	}
+
 	updateScores(scores)
 	{
 
@@ -151,40 +162,43 @@ class Scene_Match extends Scene
 
 	end()
 	{
-		/* End Panel */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, "panel_end");
-		this.add.existing(new SceneButton("Scene_Menu_Main", {
-			scene: this,
-			x: this.width * .5,
-			y: this.height * .9,
-			defaultButtonEvents: true,
-			texture: "button_main_menu"
-		}).setScale(.5));
+		this.time.delayedCall(this.interval, () =>
+		{
+			/* End Panel */
+			this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, "panel_end");
+			this.add.existing(new SceneButton("Scene_Menu_Main", {
+				scene: this,
+				x: this.width * .5,
+				y: this.height * .9,
+				defaultButtonEvents: true,
+				texture: "button_main_menu"
+			}).setScale(.5));
 
-		this.make.text({
-			x: this.width / 2.4,
-			y: this.height / 3.2,
-			text: "Name",
-			style: {
-				font: "30px monospace",
-				fill: "#FFFFFF",
-				align: "center"
-			}
-		}).setOrigin(.5);
+			this.make.text({
+				x: this.width / 2.4,
+				y: this.height / 3.2,
+				text: "Name",
+				style: {
+					font: "30px monospace",
+					fill: "#FFFFFF",
+					align: "center"
+				}
+			}).setOrigin(.5);
 
-		this.make.text({
-			x: this.width / 1.7,
-			y: this.height / 3.2,
-			text: "Score",
-			style: {
-				font: "30px monospace",
-				fill: "#FFFFFF",
-				align: "center"
-			}
-		}).setOrigin(.5);
+			this.make.text({
+				x: this.width / 1.7,
+				y: this.height / 3.2,
+				text: "Score",
+				style: {
+					font: "30px monospace",
+					fill: "#FFFFFF",
+					align: "center"
+				}
+			}).setOrigin(.5);
 
-		//ANIMATION
-		this._createConfetti();
+			// ANIMATION
+			this._createConfetti();
+		});
 	}
 }
 

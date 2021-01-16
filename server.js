@@ -284,12 +284,16 @@ class MatchState extends schema.Schema
 		super();
 
 		this.generator = new BingoNumberGenerator();
+
+		this.cards = 2;
+		this.interval = 7.5;
 		this.players = new schema.MapSchema();
 	}
 }
 schema.defineTypes(MatchState, {
 	host: "string",
 	cards: "number",
+	interval: "number",
 	players: {
 		map: Player
 	}
@@ -318,6 +322,17 @@ class MatchRoom extends colyseus.Room
 			this.started = true;
 			this.lock();
 			this.broadcast("match-load");
+		});
+
+		this.onMessage("match-settings-cards", (client, msg) =>
+		{
+			if (this.state.host === client.sessionId)
+				this.state.cards = msg.cards;
+		});
+		this.onMessage("match-settings-interval", (client, msg) =>
+		{
+			if (this.state.host === client.sessionId)
+				this.state.interval = msg.interval;
 		});
 
 		this.onMessage("match-ready", client =>

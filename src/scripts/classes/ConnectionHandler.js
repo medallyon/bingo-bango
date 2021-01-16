@@ -77,7 +77,7 @@ class ConnectionHandler
 
 					match.onLeave(code =>
 					{
-						window.alert("This match was abruptly ended due to a server failure. Sorry.");
+						window.alert("This match was abruptly ended due to a server failure. Sorry!");
 
 						this.leaveMatch();
 					});

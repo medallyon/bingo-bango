@@ -1,5 +1,3 @@
-import * as Phaser from "phaser";
-
 import Scene from "../objects/Scene.js";
 import SceneButton from "../objects/SceneButton.js";
 import Button from "../objects/buttons/Button.js";
@@ -17,6 +15,40 @@ class Scene_Menu_Lobby extends Scene
 
 		this.connection = null;
 		this.players = [];
+
+		this.settings = {
+			cards: null,
+			interval: null
+		};
+	}
+
+	_createSettings()
+	{
+		const X_CARDS = this.width * .4, Y_CARDS = this.height * .4;
+		this.add.text(X_CARDS, Y_CARDS - (this.height * .05), "Cards", {
+			fontSize: 28,
+			fontStyle: "bold",
+			align: "center"
+		}).setOrigin(.5);
+		this.settings.cards = this.add.text(X_CARDS, Y_CARDS, "2", {
+			fontSize: 32,
+			align: "center"
+		});
+		this.settings.cards.setStroke("#000", 4)
+			.setOrigin(.5);
+
+		const X_INTERVAL = this.width * .4, Y_INTERVAL = this.height * .6;
+		this.add.text(X_INTERVAL, Y_INTERVAL - (this.height * .05), "Ball Interval", {
+			fontSize: 28,
+			fontStyle: "bold",
+			align: "center"
+		}).setOrigin(.5);
+		this.settings.interval = this.add.text(X_INTERVAL, Y_INTERVAL, "7.5", {
+			fontSize: 32,
+			align: "center"
+		});
+		this.settings.interval.setStroke("#000", 4)
+			.setOrigin(.5);
 	}
 
 	create(data = {})
@@ -24,6 +56,10 @@ class Scene_Menu_Lobby extends Scene
 		super.create(data);
 
 		this.connection = this.game.connection;
+
+		/* Lobbies Panel Background */
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_customLobby_split")
+			.setScale(1);
 
 		// [Button] Back
 		this.add.existing(new SceneButton("Scene_Menu_Lobbies", {
@@ -38,6 +74,8 @@ class Scene_Menu_Lobby extends Scene
 			}
 		}).setScale(.5));
 
+		this._createSettings();
+
 		// [Playerlist]
 		/*const playerlist = new Playerlist({
 			scene: this,
@@ -47,38 +85,12 @@ class Scene_Menu_Lobby extends Scene
 				height: this.height * .75,
 			}
 		});*/
-		/* Lobbies Panel SceneButtonground */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_lobby")
-			.setScale(1);
-
-		//Text
-		this.make.text({
-			x: this.width / 2.5,
-			y: this.height / 5,
-			text: "Lobby Name",
-			style: {
-				font: "25px monospace",
-				fill: "#FFFFFF",
-				align: "center"
-			}
-		}).setOrigin(.5);
-
-		this.make.text({
-			x: this.width / 1.6,
-			y: this.height / 5,
-			text: "Players",
-			style: {
-				font: "25px monospace",
-				fill: "#FFFFFF",
-				align: "center"
-			}
-		}).setOrigin(.5);
 
 		const scrollablePanel = this.rexUI.add.scrollablePanel({
-			x: this.width / 2,
-			y: this.height / 2.1,
-			width: this.width * .33,
-			height: this.height * .49,
+			x: this.width * .6,
+			y: this.height * .4,
+			width: this.width * .2,
+			height: this.height * .5,
 
 			scrollMode: 0,
 
@@ -153,9 +165,9 @@ class Scene_Menu_Lobby extends Scene
 				console.log(`Joined match { ${match.id} }`);
 
 				// activate the 'begin game' button if this player becomes host
-				match.state.listen("host", (hostID, oldHostID) =>
+				match.state.listen("host", hostID =>
 				{
-					if (hostID === oldHostID)
+					if (hostID !== match.sessionId)
 						return;
 
 					// replace old button with a new, interactive button
@@ -174,6 +186,88 @@ class Scene_Menu_Lobby extends Scene
 						}
 					}).setScale(.5);
 					this.add.existing(btnBegin);
+
+					{ // Only show buttons if client is host
+						const X_CARDS = this.width * .4, Y_CARDS = this.height * .4
+							, X_INTERVAL = this.width * .4, Y_INTERVAL = this.height * .6;
+
+						// Decrease Card value
+						new Button({
+							scene: this,
+							x: X_CARDS - (this.width * .02), y: Y_CARDS,
+							texture: "dropdown_arrow_white",
+							defaultButtonEvents: true,
+							on: {
+								pointerup: () =>
+								{
+									this.connection.match.send("match-settings-cards", {
+										cards: Math.max(1, Math.min(4, parseInt(this.settings.cards.text) - 1))
+									});
+								}
+							}
+						}).setRotation(Math.PI * .5)
+							.setScale(.5);
+
+						// Increase Card value
+						new Button({
+							scene: this,
+							x: X_CARDS + (this.width * .02), y: Y_CARDS,
+							texture: "dropdown_arrow_white",
+							defaultButtonEvents: true,
+							on: {
+								pointerup: () =>
+								{
+									this.connection.match.send("match-settings-cards", {
+										cards: Math.max(1, Math.min(4, parseInt(this.settings.cards.text) + 1))
+									});
+								}
+							}
+						}).setRotation(Math.PI * 1.5)
+							.setScale(.5);
+
+						// Decrease Interval value
+						new Button({
+							scene: this,
+							x: X_INTERVAL - (this.width * .03), y: Y_INTERVAL,
+							texture: "dropdown_arrow_white",
+							defaultButtonEvents: true,
+							on: {
+								pointerup: () =>
+								{
+									this.connection.match.send("match-settings-interval", {
+										interval: Math.max(1, Math.min(15, parseFloat(this.settings.interval.text) - .5))
+									});
+								}
+							}
+						}).setRotation(Math.PI * .5)
+							.setScale(.5);
+
+						// Increase Interval value
+						new Button({
+							scene: this,
+							x: X_INTERVAL + (this.width * .03), y: Y_INTERVAL,
+							texture: "dropdown_arrow_white",
+							defaultButtonEvents: true,
+							on: {
+								pointerup: () =>
+								{
+									this.connection.match.send("match-settings-interval", {
+										interval: Math.max(1, Math.min(15, parseFloat(this.settings.interval.text) + .5))
+									});
+								}
+							}
+						}).setRotation(Math.PI * 1.5)
+							.setScale(.5);
+					}
+				});
+
+				match.state.listen("cards", cards =>
+				{
+					this.settings.cards.setText(cards.toString());
+				});
+				match.state.listen("interval", interval =>
+				{
+					this.settings.interval.setText(interval.toString());
 				});
 
 				// event just for this client, triggers on first join
