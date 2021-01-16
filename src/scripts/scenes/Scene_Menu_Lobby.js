@@ -12,7 +12,6 @@ class Scene_Menu_Lobby extends Scene
 		});
 
 		this.connection = null;
-		this.players = [];
 
 		this.settings = {
 			cards: null,
@@ -128,9 +127,9 @@ class Scene_Menu_Lobby extends Scene
 			const sizer = scrollablePanel.getElement("panel");
 
 			sizer.clear(true);
-			for (var i = 0; i < this.players.length; i++)
+			for (const player of this.connection.players.values())
 			{
-				const item = this.add.text(0, 0, this.players[i], {
+				const item = this.add.text(0, 0, player.tag, {
 					x: this.width / 1.6,
 					y: this.height / 5,
 					align: "center",
@@ -270,29 +269,20 @@ class Scene_Menu_Lobby extends Scene
 
 				// event just for this client, triggers on first join
 				// to fetch all pre-connected players
-				match.onMessage("match-clients", msg =>
+				match.onMessage("match-clients", () =>
 				{
-					this.players = msg.players.map(x => x.tag);
 					updatePanel();
 				});
 
 				// triggered whenever a player joins
-				match.onMessage("match-player-join", msg =>
+				match.onMessage("match-player-join", () =>
 				{
-					if (msg.userData.id === this.connection.player.id)
-						return;
-
-					this.players.push(msg.userData.tag);
 					updatePanel();
 				});
 
 				// triggered whenever a player leaves
-				match.onMessage("match-player-leave", msg =>
+				match.onMessage("match-player-leave", () =>
 				{
-					if (this.players.indexOf(msg.userData.tag) === -1)
-						return;
-
-					this.players.splice(this.players.indexOf(msg.userData.tag), 1);
 					updatePanel();
 				});
 			}).catch(console.error);

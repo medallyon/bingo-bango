@@ -264,7 +264,7 @@ class DiscordPlayer extends GuestPlayer
 	{
 		super(client);
 
-		this.provider = user.provider;
+		this.provider = "discord";
 		this.id = user.id;
 		this.avatar = user.avatar;
 
@@ -508,7 +508,6 @@ class MatchRoom extends colyseus.Room
 	{
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
-		console.log(options);
 		let player;
 		if (options.userData.provider === "discord")
 			player = new DiscordPlayer(client, options.userData);
@@ -516,7 +515,7 @@ class MatchRoom extends colyseus.Room
 			player = new GuestPlayer(client, options.userData);
 
 		this.broadcast("match-player-join", {
-			userData: player.toJSON()
+			userData: player
 		});
 
 		player.sessionId = client.sessionId;
@@ -524,7 +523,7 @@ class MatchRoom extends colyseus.Room
 
 		const players = [];
 		for (const client of this.clients)
-			players.push(this.state.players.get(client.sessionId).toJSON());
+			players.push(this.state.players.get(client.sessionId));
 		client.send("match-clients", { players });
 
 		if (this.clients.length === 1)
