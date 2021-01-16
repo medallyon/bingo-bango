@@ -49,6 +49,7 @@ class ConnectionHandler
 
 					match.onMessage("match-clients", msg =>
 					{
+						console.log(msg.players);
 						this.players = new Map();
 						for (const player of msg.players)
 							this.players.set(player.id, new Player(player));
@@ -58,6 +59,7 @@ class ConnectionHandler
 
 					match.onMessage("match-player-join", msg =>
 					{
+						console.log(msg.userData);
 						if (msg.userData.id === this.player.id)
 							return;
 

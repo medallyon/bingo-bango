@@ -262,7 +262,7 @@ class DiscordPlayer extends GuestPlayer
 {
 	constructor(client, user)
 	{
-		super(client);
+		super(client, user);
 
 		this.provider = "discord";
 		this.id = user.id;
@@ -520,7 +520,7 @@ class MatchRoom extends colyseus.Room
 		console.log(player);
 
 		this.broadcast("match-player-join", {
-			userData: player
+			userData: player.toJSON()
 		});
 
 		player.sessionId = client.sessionId;
@@ -528,7 +528,7 @@ class MatchRoom extends colyseus.Room
 
 		const players = [];
 		for (const client of this.clients)
-			players.push(this.state.players.get(client.sessionId));
+			players.push(this.state.players.get(client.sessionId).toJSON());
 		client.send("match-clients", { players });
 
 		if (this.clients.length === 1)

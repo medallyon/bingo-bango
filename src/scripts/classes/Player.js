@@ -10,13 +10,14 @@ class Player
 
 	get avatarURL()
 	{
-		if (this.provider !== "discord")
-			return undefined;
-		return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
+		if (this.provider === "discord")
+			return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
+		return undefined;
 	}
 
 	constructor(user = {})
 	{
+		console.log(user);
 		this.provider = user.provider || "bingo-bango";
 		this.id = user.id || hash.encode(Math.floor(Math.random() * 1000000));
 		this.username = user.username || "Guest";
