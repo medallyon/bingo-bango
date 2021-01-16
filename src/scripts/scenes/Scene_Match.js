@@ -134,6 +134,9 @@ class Scene_Match extends Scene
 	{
 		super.create(data);
 
+		this.connection = this.game.connection;
+		this.connection.matchScene = this;
+
 		this.cards = data.cards;
 		this.interval = data.interval;
 		this.match = data.match;
@@ -141,9 +144,6 @@ class Scene_Match extends Scene
 		this.score.players = new Map();
 		for (const player of this.connection.players.values())
 			this.score.players.set(player.id, 0);
-
-		this.connection = this.game.connection;
-		this.connection.matchScene = this;
 
 		// [Button] Exit Match
 		this.add.existing(new SceneButton(null, {

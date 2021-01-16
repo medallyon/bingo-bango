@@ -508,11 +508,16 @@ class MatchRoom extends colyseus.Room
 	{
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
+		console.log(options.userData.provider === "discord");
+		console.log(options);
+
 		let player;
 		if (options.userData.provider === "discord")
 			player = new DiscordPlayer(client, options.userData);
 		else
 			player = new GuestPlayer(client, options.userData);
+
+		console.log(player);
 
 		this.broadcast("match-player-join", {
 			userData: player
@@ -586,10 +591,11 @@ console.log("Building WebPack using Production Configuration");
 build()
 	.then(function(stats)
 	{
-		console.log(stats.toString({
-			chunks: false,
-			colors: true
-		}));
+		if (process.env.NODE_ENV !== "production")
+			console.log(stats.toString({
+				chunks: false,
+				colors: true
+			}));
 		console.log(`\nGame packed and running on port ${process.env.PORT}`);
 
 		try

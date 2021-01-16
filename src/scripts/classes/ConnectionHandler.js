@@ -52,6 +52,8 @@ class ConnectionHandler
 						this.players = new Map();
 						for (const player of msg.players)
 							this.players.set(player.id, new Player(player));
+
+						console.log(this.players);
 					});
 
 					match.onMessage("match-player-join", msg =>
@@ -60,11 +62,13 @@ class ConnectionHandler
 							return;
 
 						this.players.set(msg.userData.id, new Player(msg.userData));
+						console.log(this.players);
 					});
 
 					match.onMessage("match-player-leave", msg =>
 					{
 						this.players.delete(msg.userData.id);
+						console.log(this.players);
 					});
 
 					match.onMessage("match-load", () =>

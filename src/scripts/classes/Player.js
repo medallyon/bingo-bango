@@ -17,7 +17,7 @@ class Player
 
 	constructor(user = {})
 	{
-		this.provider = user.provider;
+		this.provider = user.provider || "bingo-bango";
 		this.id = user.id || hash.encode(Math.floor(Math.random() * 1000000));
 		this.username = user.username || "Guest";
 		this.discriminator = user.discriminator || (new Array(4)).fill(0).reduce((acc) => acc += Math.floor(Math.random() * 10).toString(), "");
