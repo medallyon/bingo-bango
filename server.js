@@ -364,7 +364,7 @@ class MatchRoom extends colyseus.Room
 
 					// database call here to REST api to increase every 'this.clients' global XP += client.score
 				}
-			}, 6000);
+			}, 1000 * this.state.interval);
 		});
 
 		this.onMessage("match-score-scored", (client, data) =>
@@ -374,10 +374,10 @@ class MatchRoom extends colyseus.Room
 			const player = this.state.players.get(client.sessionId);
 			player.setScore(player.score + data.score);
 
-			console.log(`Player { ${player.username} } received ${data.score} match points.`);
+			console.log(`{ ${player.tag} } received ${data.score} match points.`);
 
 			this.broadcast("match-score-update", {
-				id: player.sessionId,
+				id: player.id,
 				score: player.score
 			});
 		});
@@ -409,7 +409,7 @@ class MatchRoom extends colyseus.Room
 
 		const players = [];
 		for (const client of this.clients)
-			players.push(this.state.players.get(client.sessionId));
+			players.push(this.state.players.get(client.sessionId).toJSON());
 		client.send("match-clients", { players });
 
 		if (this.clients.length === 1)

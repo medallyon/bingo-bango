@@ -18,8 +18,7 @@ class CardTile extends Button
 					fontStyle: "bold"
 				}
 			}),
-			defaultButtonHoverEvents: true,
-			defaultButtonClickEvents: true
+			defaultButtonHoverEvents: true
 		}));
 
 		this.overlay.text.setStroke("#000", 6);

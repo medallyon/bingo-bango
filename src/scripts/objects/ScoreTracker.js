@@ -10,6 +10,8 @@ class ScoreTracker extends Phaser.GameObjects.Container
 	}
 	set score(value)
 	{
+		this.scene.connection.match.send("match-score-scored", { score: value - this._score });
+
 		this._score = Math.max(0, value);
 		this.overlay.text.setText(this._score);
 	}

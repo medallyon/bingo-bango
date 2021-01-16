@@ -14,15 +14,20 @@ class Scene_Match extends Scene
 			wallpaper: true
 		});
 
+		this.waitingText = null;
 		this.connection = null;
 
-		this.waitingText = null;
+		this.cards = 2;
+		this.interval = 7.5;
+		this.players = null;
+		this.match = null;
 
-		this.cards = null;
+		this.cardHolder = null;
 		this.queue = null;
 		this.score = {
 			tracker: null,
-			board: null
+			board: null,
+			players: {}
 		};
 	}
 
@@ -37,15 +42,13 @@ class Scene_Match extends Scene
 		});
 		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
 		this.confetti.play("Confetti");
-		this.game.audio.effects.play("audio_effects_cheering", {
-			volume: .25
-		});
+		this.game.audio.effects.play("audio_effects_cheering", { volume: .25 });
 	}
 
 	_createCards(layout = 2)
 	{
-		this.cards = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
-		this.add.existing(this.cards);
+		this.cardHolder = new CardHolder(layout, this, this.width * .5, this.height * (layout < 3 ? .25 : .12));
+		this.add.existing(this.cardHolder);
 	}
 
 	_createScoreTracker()
@@ -59,16 +62,47 @@ class Scene_Match extends Scene
 		this.add.existing(this.score.tracker);
 	}
 
-	_createScoreBoard(players = {})
+	_createScoreBoard()
 	{
-		this.score.board = new ScoreBoard({
-			scene: this,
-			x: this.width * .88,
+		this.score.board = this.rexUI.add.scrollablePanel({
+			x: this.width * .85,
 			y: this.height * .5,
-			players
-		});
-		this.score.board.setScale(.5);
-		this.add.existing(this.score.board);
+			width: this.width * .2,
+			height: this.height * .4,
+
+			scrollMode: 0,
+
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
+
+			panel: {
+				child: this.rexUI.add.fixWidthSizer({
+					align: "right",
+					anchor: "center",
+					space: {
+						left: 5,
+						right: 5,
+						top: 3,
+						bottom: 3,
+						item: 8,
+						line: 8,
+					}
+				}),
+
+				mask: {
+					padding: 1
+				},
+			},
+
+			space: {
+				left: 10,
+				right: 10,
+				top: 10,
+				bottom: 10,
+
+				panel: 10,
+			}
+		}).layout();
+		this.updateScores();
 	}
 
 	_createBallCounter()
@@ -103,8 +137,19 @@ class Scene_Match extends Scene
 	{
 		super.create(data);
 
+		this.cards = data.cards;
+		this.interval = data.interval;
+		this.players = data.players;
+		this.match = data.match;
+
+		this.score.players = new Map();
+		for (const player of this.players.values())
+			this.score.players.set(player.id, 0);
+
 		this.connection = this.game.connection;
 		this.connection.matchScene = this;
+
+		// [Button] Exit Match
 		this.add.existing(new SceneButton(null, {
 			scene: this,
 			x: this.width / 1.12,
@@ -117,19 +162,20 @@ class Scene_Match extends Scene
 				this.connection.leaveMatch();
 			}
 		}).setScale(.5));
+
 		this._createBallCounter();
-		this._createCards(data.cards || 2);
+		this._createCards(this.cards);
 		this._createScoreTracker();
-		this._createScoreBoard(data.players);
+		this._createScoreBoard(this.players);
 		this._createBallQueue();
-		this.cards.visible = false;
+		this.cardHolder.visible = false;
 		this.score.tracker.visible = false;
 		this.score.board.visible = false;
 		this.queue.visible = false;
 
 		(this.waitingText = this.add.text({
-			x: this.width / 2,
-			y: this.height / 2,
+			x: this.width * .5,
+			y: this.height * .5,
 			text: "Waiting for Players...",
 			style: {
 				fontSize: 42,
@@ -139,6 +185,12 @@ class Scene_Match extends Scene
 		}))
 			.setOrigin(.5)
 			.setStroke("#fff", 6);
+
+		this.connection.match.onMessage("match-score-update", msg =>
+		{
+			this.score.players.set(msg.id, msg.score);
+			this.updateScores();
+		});
 
 		this.connection.match.send("match-ready");
 	}
@@ -162,16 +214,35 @@ class Scene_Match extends Scene
 		this._createConfetti();
 	}
 
-	updateScores(scores)
+	updateScores()
 	{
+		const sizer = this.score.board.getElement("panel");
 
+		sizer.clear(true);
+		for (const [ id, score ] of this.score.players.entries())
+		{
+			const item = this.add.text(0, 0, `${this.players.get(id).tag}: ${score}`, {
+				x: this.width / 1.6,
+				y: this.height / 5,
+				align: "right",
+				fontSize: 28,
+				fontStyle: "bold"
+			});
+			item.setOrigin(.5)
+				.setStroke("#000", 5);
+
+			sizer.add(item);
+		}
+
+		this.score.board.layout();
+		return this.score.board;
 	}
 
 	start()
 	{
 		this.waitingText.destroy();
 
-		this.cards.visible = true;
+		this.cardHolder.visible = true;
 		this.score.tracker.visible = true;
 		this.score.board.visible = true;
 		this.queue.visible = true;

@@ -12,6 +12,7 @@ class ConnectionHandler
 
 		this.match = null;
 		this.matchScene = null;
+		this.players = null;
 
 		try
 		{
@@ -47,27 +48,42 @@ class ConnectionHandler
 				{
 					this.match = match;
 
+					match.onMessage("match-clients", msg =>
+					{
+						this.players = new Map();
+						for (const player of msg.players)
+							this.players.set(player.id, new Player(player));
+					});
+
+					match.onMessage("match-player-join", msg =>
+					{
+						if (msg.userData.id === this.player.id)
+							return;
+
+						this.players.set(msg.userData.id, new Player(msg.userData));
+					});
+
 					match.onMessage("match-load", () =>
 					{
 						// load 'Scene_Match' here
 						this.game.scene.stop("Scene_Menu_Lobby");
-						this.game.scene.start("Scene_Match");
+						this.game.scene.start("Scene_Match", {
+							cards: match.state.cards,
+							interval: match.state.interval,
+							players: this.players,
+							match
+						});
 					});
 
-					match.onMessage("match-score-update", msg =>
+					match.onMessage("match-start", () =>
 					{
-						// this.matchScene.updateScores(msg.scores);
+						this.matchScene.start();
 					});
 
 					match.onMessage("match-ball", msg =>
 					{
 						if (this.matchScene)
 							this.matchScene.playBall(msg.ball);
-					});
-
-					match.onMessage("match-start", () =>
-					{
-						this.matchScene.start();
 					});
 
 					match.onMessage("match-end", () =>
@@ -103,6 +119,7 @@ class ConnectionHandler
 		this.match.removeAllListeners();
 		this.match.leave();
 		this.match = null;
+		this.players = null;
 
 		if (this.matchScene)
 		{

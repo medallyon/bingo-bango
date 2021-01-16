@@ -1,6 +1,5 @@
 import * as Phaser from "phaser";
 
-import BingoNumberGenerator from "../classes/BingoNumberGenerator.js";
 import Ball from "./Ball.js";
 
 class BallQueue extends Phaser.GameObjects.Container
