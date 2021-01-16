@@ -70,6 +70,23 @@ class Scene_Match extends Scene
 		this.add.existing(this.score.board);
 	}
 
+	_createBallCounter()
+	{
+		// Ball Counter Panel
+		this.add.image(this.game.renderer.width / 21, this.game.renderer.height / 10, "panel_ball_count")
+			.setScale(0.4);
+		// Ball Counter Text
+		this.add.text({
+			x: this.width / 21,
+			y: this.height / 10,
+			text: "Ball Counter",
+			style: {
+				font: "18px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
+	}
 	_createBallQueue()
 	{
 		this.queue = new BallQueue({
@@ -99,7 +116,7 @@ class Scene_Match extends Scene
 				this.connection.leaveMatch();
 			}
 		}).setScale(.5));
-
+		this._createBallCounter();
 		this._createCards(data.cards || 2);
 		this._createScoreTracker();
 		this._createScoreBoard(data.players);
