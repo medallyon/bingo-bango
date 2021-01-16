@@ -11,7 +11,7 @@ class Player
 	get avatarURL()
 	{
 		if (this.provider !== "discord")
-			return "";
+			return undefined;
 		return `https://cdn.discordapp.com/avatars/${this.id}/${this.avatar}.png`;
 	}
 

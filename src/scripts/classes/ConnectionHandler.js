@@ -16,14 +16,6 @@ class ConnectionHandler
 
 		try
 		{
-			console.log(JSON.parse(decodeURIComponent((name => // https://stackoverflow.com/a/15724300/4672263
-			{
-				const value = `; ${document.cookie}`;
-				const parts = value.split(`; ${name}=`);
-				if (parts.length === 2)
-					return parts.pop().split(";").shift();
-			})("user"))));
-
 			this.player = new Player(JSON.parse(decodeURIComponent((name => // https://stackoverflow.com/a/15724300/4672263
 			{
 				const value = `; ${document.cookie}`;
@@ -37,6 +29,8 @@ class ConnectionHandler
 		{
 			this.player = new Player();
 		}
+
+		console.log(this.player);
 	}
 
 	joinOrCreateMatch()
