@@ -349,7 +349,7 @@ class MatchRoom extends colyseus.Room
 
 					// database call here to REST api to increase every 'this.clients' global XP += client.score
 				}
-			}, 7500);
+			}, 6000);
 		});
 
 		this.onMessage("match-score-scored", (client, data) =>
