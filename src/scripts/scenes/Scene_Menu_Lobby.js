@@ -58,7 +58,7 @@ class Scene_Menu_Lobby extends Scene
 		this.connection = this.game.connection;
 
 		/* Lobbies Panel Background */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_customLobby_split")
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_customLobby_split03")
 			.setScale(1);
 
 		// [Button] Back
@@ -87,10 +87,10 @@ class Scene_Menu_Lobby extends Scene
 		});*/
 
 		const scrollablePanel = this.rexUI.add.scrollablePanel({
-			x: this.width * .6,
-			y: this.height * .4,
+			x: this.width * .61,
+			y: this.height * .47,
 			width: this.width * .2,
-			height: this.height * .5,
+			height: this.height * .45,
 
 			scrollMode: 0,
 
