@@ -82,7 +82,7 @@ class Scene_Menu_Lobby extends Scene
 
 			scrollMode: 0,
 
-			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d22),//0x222d2e
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
 
 			panel: {
 				child: this.rexUI.add.fixWidthSizer({

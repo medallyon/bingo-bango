@@ -36,8 +36,7 @@ class Scene_Match extends Scene
 		});
 		this.confetti=this.add.sprite(this.width / 2,this.height / 1,"confetti");
 		this.confetti.play("Confetti");
-		//Audio
-		this.scene.game.audio.effects.play("audio_effects_cheering");
+		this.game.audio.effects.play("audio_effects_cheering");
 	}
 
 	_createCards(layout = 2)
@@ -86,7 +85,6 @@ class Scene_Match extends Scene
 
 		this.connection = this.game.connection;
 		this.connection.matchScene = this;
-
 		this.add.existing(new SceneButton(null, {
 			scene: this,
 			x: this.width / 1.12,
@@ -104,10 +102,7 @@ class Scene_Match extends Scene
 		this._createScoreTracker();
 		this._createScoreBoard(data.players);
 		this._createBallQueue();
-
 		this.connection.match.send("match-ready");
-		//Delete this
-		//this.end();
 	}
 
 	playBall(ball)
@@ -127,16 +122,37 @@ class Scene_Match extends Scene
 	end()
 	{
 		/* End Panel */
-		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 2, "panel_end");
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, "panel_end");
 		this.add.existing(new SceneButton("Scene_Menu_Main", {
 			scene: this,
 			x: this.width * .5,
-			y: this.height * .8,
+			y: this.height * .9,
 			defaultButtonEvents: true,
 			texture: "button_main_menu"
 		}).setScale(.5));
+		this.make.text({
+			x: this.width / 2.4,
+			y: this.height / 3.2,
+			text: "Name",
+			style: {
+				font: "30px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
+
+		this.make.text({
+			x: this.width / 1.7,
+			y: this.height / 3.2,
+			text: "Score",
+			style: {
+				font: "30px monospace",
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}).setOrigin(.5);
 		//ANIMATION
-		this._createConfetti().setScale(1.5);
+		this._createConfetti();
 	}
 }
 

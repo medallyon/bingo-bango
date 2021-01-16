@@ -42,6 +42,7 @@ class CardTile extends Button
 	complete()
 	{
 		this.completed = true;
+		this.scene.game.audio.effects.play("audio_button_03");
 		this.removeAllListeners();
 		this.overlay = new ImageOverlay(this.scene, "star").setScale(.8);
 		this.scene.score.tracker.score += CardTile.BASE_SCORE;
