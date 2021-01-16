@@ -1,10 +1,5 @@
-import * as Phaser from "phaser";
-
 import Scene from "../objects/Scene.js";
 import SceneButton from "../objects/SceneButton.js";
-import Button from "../objects/buttons/Button.js";
-import Playerlist from "../objects/Playerlist.js";
-import Player from "../classes/Player.js";
 
 class Scene_Menu_Lobbies extends Scene
 {
@@ -14,6 +9,7 @@ class Scene_Menu_Lobbies extends Scene
 			key: "Scene_Menu_Lobbies",
 			wallpaper: true
 		});
+
 		this.connection = null;
 		this.players = [];
 
@@ -34,20 +30,15 @@ class Scene_Menu_Lobbies extends Scene
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,
-			userDecision: "Are you sure you want to leave the lobby and return to the menu?",
-			defaultButtonEvents: true,
-			clickCallback: () =>
-			{
-				this.connection.leaveMatch();
-			}
+			defaultButtonEvents: true
 		}).setScale(.5));
 
 		/* Lobbies Panel */
 		this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.40, "panel_lobbies")
 			.setScale(1);
 
-		//Text
-		this.make.text({
+		// Lobby
+		this.add.text({
 			x: this.width / 2.7,
 			y: this.height / 5,
 			text: "Lobby",
@@ -58,7 +49,8 @@ class Scene_Menu_Lobbies extends Scene
 			}
 		}).setOrigin(.5);
 
-		this.make.text({
+		// Players
+		this.add.text({
 			x: this.width / 2,
 			y: this.height / 5,
 			text: "Players",
@@ -69,7 +61,8 @@ class Scene_Menu_Lobbies extends Scene
 			}
 		}).setOrigin(.5);
 
-		this.make.text({
+		// Status
+		this.add.text({
 			x: this.width / 1.6,
 			y: this.height / 5,
 			text: "Status",
@@ -80,7 +73,7 @@ class Scene_Menu_Lobbies extends Scene
 			}
 		}).setOrigin(.5);
 
-		//Scrollable Panel
+		// Scrollable Panel
 		const scrollablePanel = this.rexUI.add.scrollablePanel({
 			x: this.width / 2,
 			y: this.height / 2.1,
@@ -89,7 +82,7 @@ class Scene_Menu_Lobbies extends Scene
 
 			scrollMode: 0,
 
-			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),//0x222d2e
+			background: this.rexUI.add.roundRectangle(0, 0, 2, 2, 10, 0x222d2e),
 
 			panel: {
 				child: this.rexUI.add.fixWidthSizer({
@@ -141,9 +134,8 @@ class Scene_Menu_Lobbies extends Scene
 			scrollablePanel.layout();
 			return scrollablePanel;
 		};
-		updatePanel();
 
-		//Buttons
+		// [Button] Join Lobby
 		this.add.existing(new SceneButton("Scene_Menu_Lobby", {
 			scene: this,
 			x: this.width * .4,
@@ -152,7 +144,7 @@ class Scene_Menu_Lobbies extends Scene
 			texture: "button_join_lobby"
 		}).setScale(.5));
 
-		//Buttons
+		// [Button] Create Lobby
 		this.add.existing(new SceneButton("Scene_Menu_Lobby", {
 			scene: this,
 			x: this.width * .6,

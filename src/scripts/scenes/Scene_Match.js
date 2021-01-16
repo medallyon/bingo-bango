@@ -21,6 +21,8 @@ class Scene_Match extends Scene
 			board: null
 		};
 
+		this.waitingText = null;
+
 		this.cards = null;
 		this.queue = null;
 	}
@@ -102,6 +104,24 @@ class Scene_Match extends Scene
 		this._createScoreTracker();
 		this._createScoreBoard(data.players);
 		this._createBallQueue();
+		this.cards.visible = false;
+		this.score.tracker.visible = false;
+		this.score.board.visible = false;
+		this.queue.visible = false;
+
+		(this.waitingText = this.add.text({
+			x: this.width / 2,
+			y: this.height / 2,
+			text: "Waiting for Players...",
+			style: {
+				fontSize: 42,
+				fill: "#FFFFFF",
+				align: "center"
+			}
+		}))
+			.setOrigin(.5)
+			.setStroke("#fff", 6);
+
 		this.connection.match.send("match-ready");
 	}
 
@@ -119,6 +139,16 @@ class Scene_Match extends Scene
 
 	}
 
+	start()
+	{
+		this.waitingText.destroy();
+
+		this.cards.visible = true;
+		this.score.tracker.visible = true;
+		this.score.board.visible = true;
+		this.queue.visible = true;
+	}
+
 	end()
 	{
 		/* End Panel */
@@ -130,6 +160,7 @@ class Scene_Match extends Scene
 			defaultButtonEvents: true,
 			texture: "button_main_menu"
 		}).setScale(.5));
+
 		this.make.text({
 			x: this.width / 2.4,
 			y: this.height / 3.2,
@@ -151,6 +182,7 @@ class Scene_Match extends Scene
 				align: "center"
 			}
 		}).setOrigin(.5);
+
 		//ANIMATION
 		this._createConfetti();
 	}

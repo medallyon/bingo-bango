@@ -29,7 +29,7 @@ class SceneButton extends Button
 				oldEvent.call(this, pointer);
 
 			data.scene.scene.stop();
-			data.scene.scene.start(targetScene);
+			data.scene.scene.start(targetScene, data.sceneData);
 		};
 
 		super(Object.assign({

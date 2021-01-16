@@ -26,7 +26,7 @@ class Scene_Menu_Lobby extends Scene
 		this.connection = this.game.connection;
 
 		// [Button] Back
-		this.add.existing(new SceneButton("Scene_Menu_Main", {
+		this.add.existing(new SceneButton("Scene_Menu_Lobbies", {
 			scene: this,
 			x: this.width * .1,
 			y: this.height * .075,
@@ -136,7 +136,6 @@ class Scene_Menu_Lobby extends Scene
 			scrollablePanel.layout();
 			return scrollablePanel;
 		};
-		updatePanel();
 
 		// [Button] Begin Game
 		let btnBegin = new Button({
@@ -198,8 +197,10 @@ class Scene_Menu_Lobby extends Scene
 				// triggered whenever a player leaves
 				match.onMessage("match-player-leave", msg =>
 				{
-					if (this.players.indexOf(msg.userData.tag) !== -1)
-						this.players.splice(this.players.indexOf(msg.userData.tag), 1);
+					if (this.players.indexOf(msg.userData.tag) === -1)
+						return;
+
+					this.players.splice(this.players.indexOf(msg.userData.tag), 1);
 					updatePanel();
 				});
 			}).catch(console.error);

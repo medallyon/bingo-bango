@@ -50,7 +50,6 @@ class ConnectionHandler
 					match.onMessage("match-load", () =>
 					{
 						// load 'Scene_Match' here
-						console.log("Start Scene_Match");
 						this.game.scene.stop("Scene_Menu_Lobby");
 						this.game.scene.start("Scene_Match");
 					});
@@ -64,6 +63,11 @@ class ConnectionHandler
 					{
 						if (this.matchScene)
 							this.matchScene.playBall(msg.ball);
+					});
+
+					match.onMessage("match-start", () =>
+					{
+						this.matchScene.start();
 					});
 
 					match.onMessage("match-end", () =>
