@@ -508,11 +508,12 @@ class MatchRoom extends colyseus.Room
 	{
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
+		console.log(options);
 		let player;
-		if (!options.userData.id)
-			player = new GuestPlayer(client, options.userData);
-		else
+		if (options.userData.provider === "discord")
 			player = new DiscordPlayer(client, options.userData);
+		else
+			player = new GuestPlayer(client, options.userData);
 
 		this.broadcast("match-player-join", {
 			userData: player.toJSON()
