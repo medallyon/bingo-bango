@@ -19,7 +19,6 @@ class Scene_Match extends Scene
 
 		this.cards = 2;
 		this.interval = 7.5;
-		this.players = null;
 		this.match = null;
 
 		this.cardHolder = null;
@@ -137,11 +136,10 @@ class Scene_Match extends Scene
 
 		this.cards = data.cards;
 		this.interval = data.interval;
-		this.players = data.players;
 		this.match = data.match;
 
 		this.score.players = new Map();
-		for (const player of this.players.values())
+		for (const player of this.connection.players.values())
 			this.score.players.set(player.id, 0);
 
 		this.connection = this.game.connection;
@@ -164,7 +162,7 @@ class Scene_Match extends Scene
 		this._createBallCounter();
 		this._createCards(this.cards);
 		this._createScoreTracker();
-		this._createScoreBoard(this.players);
+		this._createScoreBoard(this.connection.players);
 		this._createBallQueue();
 		this.cardHolder.visible = false;
 		this.score.tracker.visible = false;
@@ -219,7 +217,7 @@ class Scene_Match extends Scene
 		sizer.clear(true);
 		for (const [ id, score ] of this.score.players.entries())
 		{
-			const item = this.add.text(0, 0, `${this.players.get(id).tag}: ${score}`, {
+			const item = this.add.text(0, 0, `${this.connection.players.get(id).tag}: ${score}`, {
 				x: this.width / 1.6,
 				y: this.height / 5,
 				align: "right",

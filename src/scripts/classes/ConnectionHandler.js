@@ -12,7 +12,7 @@ class ConnectionHandler
 
 		this.match = null;
 		this.matchScene = null;
-		this.players = null;
+		this.players = new Map();
 
 		try
 		{
@@ -60,6 +60,11 @@ class ConnectionHandler
 							return;
 
 						this.players.set(msg.userData.id, new Player(msg.userData));
+					});
+
+					match.onMessage("match-player-leave", msg =>
+					{
+						this.players.delete(msg.userData.id);
 					});
 
 					match.onMessage("match-load", () =>
