@@ -1,7 +1,13 @@
 require("dotenv").config();
 
-const join = require("path").join
-	, BingoNumberGenerator = require(join(__dirname, "server", "ServerBingoNumberGenerator.js"));
+process.env.NODE_ENV = process.env.NODE_ENV || process.env.VERCEL_ENV;
+
+const join = require("path").join,
+	BingoNumberGenerator = require(join(
+		__dirname,
+		"server",
+		"ServerBingoNumberGenerator.js"
+	));
 
 /*
  * [ WEBPACK ]
@@ -9,18 +15,20 @@ const join = require("path").join
 
 const webpack = require("webpack");
 
-let compiling = true
-	, webpackError;
+let compiling = true,
+	webpackError;
 
-const compiler = webpack(require(join(__dirname, "webpack", `webpack.${process.env.NODE_ENV === "production" ? "prod" : "dev"}.js`)));
-function build()
-{
-	return new Promise(function(resolve, reject)
-	{
-		compiler.run(function(err, stats)
-		{
-			if (err)
-				return reject(webpackError = err);
+const compiler = webpack(
+	require(join(
+		__dirname,
+		"webpack",
+		`webpack.${process.env.NODE_ENV === "production" ? "prod" : "dev"}.js`
+	))
+);
+function build() {
+	return new Promise(function (resolve, reject) {
+		compiler.run(function (err, stats) {
+			if (err) return reject((webpackError = err));
 
 			compiling = false;
 			resolve(stats);
@@ -32,9 +40,9 @@ function build()
  * [ APP SETTINGS ]
  */
 
-const express = require("express")
-	, cookieParser = require("cookie-parser")
-	, app = express();
+const express = require("express"),
+	cookieParser = require("cookie-parser"),
+	app = express();
 
 app.set("trust proxy", true);
 app.set("view engine", "ejs");
@@ -44,10 +52,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // configure CORS (https://enable-cors.org/server_expressjs.html)
-app.use(function(req, res, next)
-{
+app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept"
+	);
 	next();
 });
 
@@ -55,146 +65,160 @@ app.use(function(req, res, next)
  * [ SESSION ]
  */
 
-const session = require("express-session")
-	, FileStore = require("session-file-store")(session);
+const session = require("express-session"),
+	FileStore = require("session-file-store")(session);
 
-app.use(session({
-	resave: true,
-	saveUninitialized: false,
-	secret: process.env.DOMAIN_ROOT,
-	store: new FileStore({
-		path: join(__dirname, "sessions"),
-		secret: process.env.PASSPORT_SECRET_DISCORD
+app.use(
+	session({
+		resave: true,
+		saveUninitialized: false,
+		secret: process.env.DOMAIN_ROOT,
+		store: new FileStore({
+			path: join(__dirname, "sessions"),
+			secret: process.env.PASSPORT_SECRET_DISCORD,
+		}),
 	})
-}));
+);
 
 /*
  * [ OAuth2 ]
  */
 
-const passport = require("passport")
-	, DiscordStrategy = require("passport-discord").Strategy;
+/* const passport = require("passport"),
+	DiscordStrategy = require("passport-discord").Strategy;
 
-passport.serializeUser(function(user, done)
-{
+passport.serializeUser(function (user, done) {
 	done(null, user);
 });
-passport.deserializeUser(function(obj, done)
-{
+passport.deserializeUser(function (obj, done) {
 	done(null, obj);
 });
 
-passport.use(new DiscordStrategy({
-	clientID: process.env.PASSPORT_DISCORD_ID,
-	clientSecret: process.env.PASSPORT_DISCORD_SECRET,
-	callbackURL: `https://${process.env.DOMAIN_ROOT}/auth`,
-	scope: [ "identify" ]
-},
-function(accessToken, refreshToken, profile, cb)
-{
-	cb(null, profile);
-}));
+passport.use(
+	new DiscordStrategy(
+		{
+			clientID: process.env.PASSPORT_DISCORD_ID,
+			clientSecret: process.env.PASSPORT_DISCORD_SECRET,
+			callbackURL: `https://${process.env.DOMAIN_ROOT}/auth`,
+			scope: ["identify"],
+		},
+		function (_, _, profile, cb) {
+			cb(null, profile);
+		}
+	)
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/login_actual", passport.authenticate("discord"));
-app.get("/auth", passport.authenticate("discord", {
-	successRedirect: "/",
-	failureRedirect: "/"
-}), function(req, res)
-{
-	res.redirect("/");
-});
+app.get(
+	"/auth",
+	passport.authenticate("discord", {
+		successRedirect: "/",
+		failureRedirect: "/",
+	}),
+	function (_, res) {
+		res.redirect("/");
+	}
+); */
 
 /*
  * [ ROUTES ]
  */
 
-if (process.env.NODE_ENV !== "production")
-{
-	try
-	{
+if (process.env.NODE_ENV !== "production") {
+	try {
 		const colyseusMonit = require("@colyseus/monitor").monitor;
 		app.use("/monitor", colyseusMonit());
-	}
-
-	catch (err)
-	{
+	} catch (err) {
 		console.warn(err);
 	}
 }
 
-const MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED = (req, res, next) =>
-{
-	if (req.isAuthenticated() && req.user)
-		return res.redirect("/game");
+/* const MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED = (req, res, next) => {
+	if (req.isAuthenticated() && req.user) return res.redirect("/game");
 	next();
-};
+}; */
 
-if (process.env.NODE_ENV === "production")
-{
-	app.get("/", MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED, function(req, res)
-	{
+/* if (process.env.NODE_ENV === "production") {
+	app.get("/", MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED, function (_, res) {
 		res.sendFile(join(__dirname, "dist", "login.html"));
 	});
 	app.use("/", express.static(join(__dirname, "dist")));
 
-	app.get("/login", MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED, function(req, res)
-	{
+	app.get("/login", MIDDLE_MOVE_TO_GAME_IF_AUTHENTICATED, function (_, res) {
 		res.redirect("/login_actual");
 	});
 
-	app.use("/game", function(req, res, next)
-	{
+	app.use(
+		"/",
+		function (_, res, next) {
+			if (compiling)
+				return res
+					.status(202)
+					.send("Please wait while the game is being compiled...");
+
+			if (webpackError) return res.status(500).send(webpackError);
+
+			next();
+		},
+		function (req, res, next) {
+			// save discord user info in cookies
+			res.cookie("user", JSON.stringify(req.user));
+
+			next();
+		},
+		express.static(join(__dirname, "dist"))
+	);
+} else {
+	app.use(
+		"/",
+		function (_, res, next) {
+			if (compiling)
+				return res
+					.status(202)
+					.send("Please wait while the game is being compiled...");
+
+			if (webpackError) return res.status(500).send(webpackError);
+
+			next();
+		},
+		express.static(join(__dirname, "dist"))
+	);
+} */
+
+app.use(
+	"/",
+	function (_, res, next) {
 		if (compiling)
-			return res.status(202).send("Please wait while the game is being compiled...");
+			return res
+				.status(202)
+				.send("Please wait while the game is being compiled...");
 
-		if (webpackError)
-			return res.status(500).send(webpackError);
-
-		next();
-	}, function(req, res, next)
-	{
-		// save discord user info in cookies
-		res.cookie("user", JSON.stringify(req.user));
+		if (webpackError) return res.status(500).send(webpackError);
 
 		next();
-	}, express.static(join(__dirname, "dist")));
-}
-
-else
-{
-	app.use("/", function(req, res, next)
-	{
-		if (compiling)
-			return res.status(202).send("Please wait while the game is being compiled...");
-
-		if (webpackError)
-			return res.status(500).send(webpackError);
-
-		next();
-	}, express.static(join(__dirname, "dist")));
-}
+	},
+	express.static(join(__dirname, "dist"))
+);
 
 /*
  * [ IO Setup ]
  */
 
-const hash = new (require("hashids/cjs"))(process.env.DOMAIN_ROOT, 6)
-	, colyseus = require("colyseus")
-	, schema = require("@colyseus/schema")
-	, http = require("http")
-	, request = require("request");
+const hash = new (require("hashids/cjs"))(process.env.DOMAIN_ROOT, 6),
+	{ Server, Room, LobbyRoom } = require("colyseus"),
+	{ defineTypes, Schema, MapSchema } = require("@colyseus/schema"),
+	{ createServer } = require("http"),
+	request = require("request");
 
-const io = new colyseus.Server({
-	server: http.createServer(app)
+const io = new Server({
+	server: createServer(app),
 });
 
-class Player extends schema.Schema
-{
-	constructor(client)
-	{
+class Player extends Schema {
+	constructor(client) {
 		super();
 
 		this.client = client;
@@ -207,15 +231,15 @@ class Player extends schema.Schema
 		this.sessionId = null;
 	}
 
-	setScore(value)
-	{
+	setScore(value) {
 		this.xp += value - this._score;
 		this.score = value;
 	}
 
-	toJson() { return this.toJSON(); } // eslint-disable-line
-	toJSON()
-	{
+	toJson() {
+		return this.toJSON();
+	} // eslint-disable-line
+	toJSON() {
 		return {
 			provider: this.provider,
 			id: this.id,
@@ -224,44 +248,43 @@ class Player extends schema.Schema
 			username: this.username,
 			discriminator: this.discriminator,
 			tag: this.tag,
-			avatar: this.avatar
+			avatar: this.avatar,
 		};
 	}
 }
-schema.defineTypes(Player, {
+defineTypes(Player, {
 	provider: "string",
 	id: "string",
 	xp: "number",
 	score: "number",
 });
 
-class GuestPlayer extends Player
-{
-	constructor(client, user = {})
-	{
+class GuestPlayer extends Player {
+	constructor(client, user = {}) {
 		super(client);
 
 		this.client = client;
 
 		this.username = user.username || "Guest";
-		this.discriminator = user.discriminator || (new Array(4)).fill(0).reduce((acc) => acc += Math.floor(Math.random() * 10).toString(), "");
+		this.discriminator =
+			user.discriminator ||
+			new Array(4)
+				.fill(0)
+				.reduce(
+					(acc) => (acc += Math.floor(Math.random() * 10).toString()),
+					""
+				);
 		this.tag = `${this.username}#${this.discriminator}`;
 	}
 }
-schema.defineTypes(GuestPlayer, {
-	provider: "string",
-	id: "string",
-	xp: "number",
-	score: "number",
+defineTypes(GuestPlayer, {
 	username: "string",
 	discriminator: "string",
-	tag: "string"
+	tag: "string",
 });
 
-class DiscordPlayer extends GuestPlayer
-{
-	constructor(client, user)
-	{
+class DiscordPlayer extends GuestPlayer {
+	constructor(client, user) {
 		super(client, user);
 
 		this.provider = "discord";
@@ -269,125 +292,108 @@ class DiscordPlayer extends GuestPlayer
 		this.avatar = user.avatar;
 
 		this.fetchXP()
-			.then(xp =>
-			{
+			.then((xp) => {
 				this.xp = xp;
 				this.client.send("client-xp", { xp });
-			}).catch(() => {});
+			})
+			.catch(() => {});
 	}
 
-	fetchXP()
-	{
-		return new Promise((resolve, reject) =>
-		{
-			request({
-				uri: "https://api.medallyon.me/uni/2020/wgd/scores",
-				json: true,
-				headers: {
-					"Authorization": process.env.DATABASE_SCORES_SECRET
-				}
-			}, (err, res, body) =>
-			{
-				if (err)
-					return reject(err);
+	fetchXP() {
+		return new Promise((resolve, reject) => {
+			request(
+				{
+					uri: "https://api.medallyon.me/uni/2020/wgd/scores",
+					json: true,
+					headers: {
+						Authorization: process.env.DATABASE_SCORES_SECRET,
+					},
+				},
+				(err, _, body) => {
+					if (err) return reject(err);
 
-				if (body[this.id])
-					resolve(body[this.id]);
-				else
-					reject(new Error(`Global Scores doesn't contain ${this.id} (yet)`));
-			});
+					if (body[this.id]) resolve(body[this.id]);
+					else
+						reject(new Error(`Global Scores doesn't contain ${this.id} (yet)`));
+				}
+			);
 		});
 	}
 
-	updateXP()
-	{
-		return new Promise((resolve, reject) =>
-		{
-			request({
-				uri: "https://api.medallyon.me/uni/2020/wgd/scores",
-				json: true,
-				method: "POST",
-				headers: {
-					"Authorization": process.env.DATABASE_SCORES_SECRET
+	updateXP() {
+		return new Promise((resolve, reject) => {
+			request(
+				{
+					uri: "https://api.medallyon.me/uni/2020/wgd/scores",
+					json: true,
+					method: "POST",
+					headers: {
+						Authorization: process.env.DATABASE_SCORES_SECRET,
+					},
+					data: {
+						id: this.id,
+						user: {
+							tag: this.tag,
+							xp: this.xp,
+						},
+					},
 				},
-				data: {
-					id: this.id,
-					user: {
-						tag: this.tag,
-						xp: this.xp
-					}
-				}
-			}, (err, res, body) =>
-			{
-				if (err)
-					return reject(err);
+				(err, res) => {
+					if (err) return reject(err);
 
-				if (res.statusCode.toString().startsWith("2"))
-					resolve();
-				else
-					reject(new Error(`Response returned code ${res.statusCode}`));
-			});
+					if (res.statusCode.toString().startsWith("2")) resolve();
+					else reject(new Error(`Response returned code ${res.statusCode}`));
+				}
+			);
 		});
 	}
 }
-schema.defineTypes(DiscordPlayer, {
-	provider: "string",
-	id: "string",
-	xp: "number",
-	score: "number",
-	username: "string",
-	discriminator: "string",
-	tag: "string",
-	avatar: "string"
+defineTypes(DiscordPlayer, {
+	avatar: "string",
 });
 
-class MatchState extends schema.Schema
-{
-	constructor()
-	{
+class MatchState extends Schema {
+	constructor() {
 		super();
 
 		this.generator = new BingoNumberGenerator();
 
 		this.cards = 2;
 		this.interval = 7.5;
-		this.players = new schema.MapSchema();
+		this.players = new MapSchema();
 	}
 }
-schema.defineTypes(MatchState, {
+defineTypes(MatchState, {
 	host: "string",
 	cards: "number",
 	interval: "number",
 	players: {
-		map: Player
-	}
+		map: Player,
+	},
 });
 
-class MatchRoom extends colyseus.Room
-{
-	_fetchScores()
-	{
-		return new Promise((resolve, reject) =>
-		{
-			request({
-				uri: "https://api.medallyon.me/uni/2020/wgd/scores",
-				json: true,
-				headers: {
-					"Authorization": process.env.DATABASE_SCORES_SECRET
-				}
-			}, (err, res, body) =>
-			{
-				if (err)
-					return reject(err);
+class MatchRoom extends Room {
+	_fetchScores() {
+		return new Promise((resolve, reject) => {
+			request(
+				{
+					uri: "https://api.medallyon.me/uni/2020/wgd/scores",
+					json: true,
+					headers: {
+						Authorization: process.env.DATABASE_SCORES_SECRET,
+					},
+				},
+				(err, res, body) => {
+					if (err) return reject(err);
 
-				resolve(body);
-			});
+					resolve(body);
+				}
+			);
 		});
 	}
 
 	// When room is initialized
-	onCreate(options)
-	{
+	onCreate(options) {
 		console.log("MatchRoom created");
 
 		this.generator = new BingoNumberGenerator();
@@ -396,93 +402,79 @@ class MatchRoom extends colyseus.Room
 
 		this.setState(new MatchState());
 
-		this.onMessage("match-host-begin", client =>
-		{
+		this.onMessage("match-host-begin", (client) => {
 			console.log(`[${client.sessionId}] match-host-begin`);
 
-			if (client.sessionId !== this.state.host)
-				return;
+			if (client.sessionId !== this.state.host) return;
 
 			this.started = true;
 			this.lock();
 			this.broadcast("match-load");
 		});
 
-		this.onMessage("match-settings-cards", (client, msg) =>
-		{
-			if (this.state.host === client.sessionId)
-				this.state.cards = msg.cards;
+		this.onMessage("match-settings-cards", (client, msg) => {
+			if (this.state.host === client.sessionId) this.state.cards = msg.cards;
 		});
-		this.onMessage("match-settings-interval", (client, msg) =>
-		{
+		this.onMessage("match-settings-interval", (client, msg) => {
 			if (this.state.host === client.sessionId)
 				this.state.interval = msg.interval;
 		});
 
-		this.onMessage("match-ready", client =>
-		{
+		this.onMessage("match-ready", (client) => {
 			console.log(`[${client.sessionId}] match-ready`);
 
 			if (!this.ready.includes(client.sessionId))
 				this.ready.push(client.sessionId);
 
-			if (this.ready.length !== this.clients.length)
-				return;
+			if (this.ready.length !== this.clients.length) return;
 
 			this.broadcast("match-start");
 
 			this.clock.start();
 			this.ballsCounted = 0;
-			this.matchInterval = this.clock.setInterval(() =>
-			{
+			this.matchInterval = this.clock.setInterval(() => {
 				this.broadcast("match-ball", {
-					ball: this.generator.random()
+					ball: this.generator.random(),
 				});
 
-				if (++this.ballsCounted === 45)
-				{
+				if (++this.ballsCounted === 45) {
 					this.clock.clear();
 					this.broadcast("match-end", {
-						players: this.state.players
+						players: this.state.players,
 					});
 
 					// database call to REST api to increase every 'this.clients' global XP += client.score
-					for (const player of this.state.players.values())
-					{
-						if (!(player instanceof DiscordPlayer))
-							continue;
+					for (const player of this.state.players.values()) {
+						if (!(player instanceof DiscordPlayer)) continue;
 
-						player.updateXP()
-							.catch(console.error);
+						player.updateXP().catch(console.error);
 					}
 				}
 			}, 1000 * this.state.interval);
 
-			this.onMessage("leaderboard-fetch-100", client =>
-			{
+			this.onMessage("leaderboard-fetch-100", (client) => {
 				this._fetchScores()
-					.then(scores =>
-					{
+					.then((scores) => {
 						console.log(scores);
 
 						let sorted = [];
-						for (const score of Object.values(scores))
-							sorted.push(score);
+						for (const score of Object.values(scores)) sorted.push(score);
 
-						sorted = sorted.sort((a, b) =>
-						{
-							a.xp - b.xp;
-						}).slice(0, 100);
+						sorted = sorted
+							.sort((a, b) => {
+								a.xp - b.xp;
+							})
+							.slice(0, 100);
 
 						console.log(sorted);
 
 						client.send("leaderboard-100", { scores: sorted });
-					}).catch(console.error);
+					})
+					.catch(console.error);
 			});
 		});
 
-		this.onMessage("match-score-scored", (client, data) =>
-		{
+		this.onMessage("match-score-scored", (client, data) => {
 			console.log(`[${client.sessionId}] match-score-scored, ${data}`);
 
 			const player = this.state.players.get(client.sessionId);
@@ -492,7 +484,7 @@ class MatchRoom extends colyseus.Room
 
 			this.broadcast("match-score-update", {
 				id: player.id,
-				score: player.score
+				score: player.score,
 			});
 		});
 	}
@@ -504,8 +496,7 @@ class MatchRoom extends colyseus.Room
 	}*/
 
 	// When client successfully joins the room
-	onJoin(client, options/*, auth*/)
-	{
+	onJoin(client, options /*, auth*/) {
 		console.log(`[Client ${client.id}] joined room MatchRoom`);
 
 		console.log(options.userData.provider === "discord");
@@ -514,13 +505,12 @@ class MatchRoom extends colyseus.Room
 		let player;
 		if (options.userData.provider === "discord")
 			player = new DiscordPlayer(client, options.userData);
-		else
-			player = new GuestPlayer(client, options.userData);
+		else player = new GuestPlayer(client, options.userData);
 
 		console.log(player);
 
 		this.broadcast("match-player-join", {
-			userData: player.toJSON()
+			userData: player.toJSON(),
 		});
 
 		player.sessionId = client.sessionId;
@@ -531,34 +521,27 @@ class MatchRoom extends colyseus.Room
 			players.push(this.state.players.get(client.sessionId).toJSON());
 		client.send("match-clients", { players });
 
-		if (this.clients.length === 1)
-			this.state.host = client.sessionId;
+		if (this.clients.length === 1) this.state.host = client.sessionId;
 	}
 
 	// When a client leaves the room
-	async onLeave(client, issuedByClient)
-	{
+	async onLeave(client, issuedByClient) {
 		console.log(`[Client ${client.id}] left room MatchRoom`);
 
 		// flag client as inactive for other users
 		this.state.players.get(client.sessionId).connected = false;
 
-		try
-		{
-			if (issuedByClient)
-				throw new Error("consented leave");
+		try {
+			if (issuedByClient) throw new Error("consented leave");
 
 			// allow disconnected client to reconnect into this room until 20 seconds
 			await this.allowReconnection(client, 10);
 
 			// client returned! let"s re-activate it.
 			this.state.players.get(client.sessionId).connected = true;
-		}
-
-		catch (e)
-		{
+		} catch (e) {
 			this.broadcast("match-player-leave", {
-				userData: this.state.players[client.sessionId].toJSON()
+				userData: this.state.players[client.sessionId].toJSON(),
 			});
 
 			// 20 seconds expired. let's remove the client.
@@ -570,15 +553,13 @@ class MatchRoom extends colyseus.Room
 	}
 
 	// Cleanup callback, called after there are no more clients in the room. (see `autoDispose`)
-	onDispose()
-	{
+	onDispose() {
 		console.log(`Disposing of MatchRoom { ${this.roomId} }`);
 	}
 }
 
-io.define("lobby", colyseus.LobbyRoom);
-io.define("match", MatchRoom)
-	.sortBy({ clients: -1 });
+io.define("lobby", LobbyRoom);
+io.define("match", MatchRoom).sortBy({ clients: -1 });
 
 /*
  * [ SERVER LISTEN ]
@@ -589,27 +570,25 @@ io.listen(process.env.PORT);
 
 console.log("Building WebPack using Production Configuration");
 build()
-	.then(function(stats)
-	{
+	.then(function (stats) {
 		if (process.env.NODE_ENV !== "production")
-			console.log(stats.toString({
-				chunks: false,
-				colors: true
-			}));
+			console.log(
+				stats.toString({
+					chunks: false,
+					colors: true,
+				})
+			);
 		console.log(`\nGame packed and running on port ${process.env.PORT}`);
 
-		try
-		{
+		try {
 			require("open")(`http://localhost:${process.env.PORT}`);
 		} catch (e) {} // eslint-disable-line
 	})
-	.catch(function(err)
-	{
+	.catch(function (err) {
 		console.error("\nEncountered an error while building WebPack:");
 		console.error(err.stack || err);
 
-		if (err.details)
-			console.error(err.details);
+		if (err.details) console.error(err.details);
 	});
 
 module.exports = io;
