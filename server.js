@@ -13,6 +13,7 @@ const join = require("path").join,
  * [ WEBPACK ]
  */
 
+const { stat } = require("fs/promises");
 const webpack = require("webpack");
 
 let compiling = true,
@@ -25,10 +26,32 @@ const compiler = webpack(
 		`webpack.${process.env.NODE_ENV === "production" ? "prod" : "dev"}.js`
 	))
 );
-function build() {
-	return new Promise(function (resolve, reject) {
-		compiler.run(function (err, stats) {
-			if (err) return reject((webpackError = err));
+
+async function buildExists(path = "dist")
+{
+	try {
+		await stat(path);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function build()
+{
+	return new Promise(async function (resolve, reject)
+	{
+		if (await buildExists())
+		{
+			resolve("Using existing build.");
+			compiling = false;
+			return;
+		}
+
+		compiler.run(function (err, stats)
+		{
+			if (err)
+				return reject((webpackError = err));
 
 			compiling = false;
 			resolve(stats);
