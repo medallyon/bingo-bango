@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="manifest" href="./manifest.json" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Bingo Bango" />
+    <meta name="apple-mobile-web-app-title" content="Bingo Bango" />
+    <meta name="msapplication-starturl" content="./" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=7k0awrmWR4">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=7k0awrmWR4">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=7k0awrmWR4">
+    <link rel="manifest" href="./site.webmanifest?v=7k0awrmWR4">
+    <link rel="mask-icon" href="./safari-pinned-tab.svg?v=7k0awrmWR4" color="#d78daf">
+    <link rel="shortcut icon" href="./favicon.ico?v=7k0awrmWR4">
+    <meta name="apple-mobile-web-app-title" content="Bingo Bango">
+    <meta name="application-name" content="Bingo Bango">
+    <meta name="msapplication-TileColor" content="#d78daf">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Bingo Bango</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background-color: #000000;
+      }
+    </style>
+
+    <noscript>Please enable javascript to continue using this application.</noscript>
+
+    <!-- installs the serviceWorker -->
+    <!-- <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+        })
+      }
+    </script> -->
+  <script defer src="vendors.bundle.js"></script><script defer src="main.bundle.js"></script></head>
+  <body>
+    <div id="phaser-game"></div>
+  </body>
+</html>

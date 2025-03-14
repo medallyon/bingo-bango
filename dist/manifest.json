@@ -1,0 +1,22 @@
+{
+  "short_name": "Bingo Bango",
+  "name": "Bingo bango",
+  "icons": [
+    {
+      "src": "./icons/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./icons/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#d78daf",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "scope": "./",
+  "theme_color": "#d78daf"
+}

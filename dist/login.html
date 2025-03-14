@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bingo Bango</title>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+
+	<style type="text/css">
+		* {
+			font-family: 'Josefin Sans', sans-serif;
+			color: #eee;
+		}
+
+		html { 
+			background: url(https://i.redd.it/52f61nfzmwl51.jpg) no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+		}
+
+		body {
+			margin: 0;
+			height: 100vh;
+			width: 100%;
+		}
+
+		.container {
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-direction: column;
+			-ms-flex-direction: column;
+			flex-direction: column;
+			-webkit-flex-wrap: wrap;
+			-ms-flex-wrap: wrap;
+			flex-wrap: wrap;
+			-webkit-justify-content: center;
+			-ms-flex-pack: center;
+			justify-content: center;
+			-webkit-align-content: center;
+			-ms-flex-line-pack: center;
+			align-content: center;
+			-webkit-align-items: center;
+			-ms-flex-align: center;
+			align-items: center;
+		}
+
+		.container > * {
+			padding-top: 1rem;
+		}
+	</style>
+</head>
+<body class="container">
+	<div class="container">
+		<h1 style="text-align: center;">Sign in</h1>
+		<a href="/login" target="_blank">
+			<img src="https://miro.medium.com/max/5000/1*9yqjjenFSf9xAkS8AmL1EA.png" width=150 />
+		</a>
+		<h2>OR</h2>
+		<a href="/game">continue as Guest</a>
+	</div>
+</body>
+</html>
